@@ -66,7 +66,12 @@ public class MainActivity extends Activity
 			alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// OKボタン押下時の処理
-					finish();
+					//finish();
+
+					// -----------------------  TEST ------------------------
+					Intent intent = new Intent(getApplication(), TestActivity.class);
+					startActivity(intent);
+					// -----------------------  TEST ------------------------
 				}
 			});
 

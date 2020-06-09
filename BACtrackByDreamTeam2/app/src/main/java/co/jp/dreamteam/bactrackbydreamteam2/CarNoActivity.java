@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-import java.util.HashMap;
-
 public class CarNoActivity extends Activity
 {
 	BroadcastReceiver mReceiver;
@@ -68,7 +66,6 @@ public class CarNoActivity extends Activity
 
 	/**
 	 * 車番エラー
-	 * @param message
 	 */
 	private void errorDriverNotFound()
 	{
@@ -169,7 +166,6 @@ public class CarNoActivity extends Activity
 		);
 
 		// パラメータセット
-		task.addPostHeader(getString(R.string.HTTP_HEADER_PARAM_KEY_AUTH), getString(R.string.HTTP_HEADER_PARAM_TOKEN));
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
 		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), editTextCarNo.getText().toString());
 

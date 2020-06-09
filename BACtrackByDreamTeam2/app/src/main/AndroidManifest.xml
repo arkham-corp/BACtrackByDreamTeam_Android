@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="co.jp.dreamteam.bactrackbydreamteam2">
 
@@ -5,19 +6,19 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Black.NoTitleBar">
+        <activity android:name=".TestActivity"></activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,32 +27,25 @@
         </activity>
         <activity
             android:name=".DriverActivity"
-            android:label="@string/title_activity_driver" >
-        </activity>
+            android:label="@string/title_activity_driver" />
         <activity
             android:name=".CarNoActivity"
-            android:label="@string/title_activity_car_no" >
-        </activity>
+            android:label="@string/title_activity_car_no" />
         <activity
             android:name=".InspectionActivity"
-            android:label="@string/title_activity_inspection" >
-        </activity>
+            android:label="@string/title_activity_inspection" />
         <activity
             android:name=".GPSActivity"
-            android:label="@string/title_activity_gps" >
-        </activity>
+            android:label="@string/title_activity_gps" />
         <activity
             android:name=".ResultActivity"
-            android:label="@string/title_activity_result" >
-        </activity>
+            android:label="@string/title_activity_result" />
         <activity
             android:name=".FinishActivity"
-            android:label="@string/title_activity_finish" >
-        </activity>
+            android:label="@string/title_activity_finish" />
         <activity
             android:name=".CompanyActivity"
-            android:label="@string/title_activity_company" >
-        </activity>
+            android:label="@string/title_activity_company" />
     </application>
 
 </manifest>

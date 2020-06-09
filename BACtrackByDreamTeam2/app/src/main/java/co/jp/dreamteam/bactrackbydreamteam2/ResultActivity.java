@@ -12,12 +12,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-
-import java.util.HashMap;
 
 public class ResultActivity extends Activity {
 
@@ -107,8 +104,6 @@ public class ResultActivity extends Activity {
 
 	/**
 	 * 送信エラー
-	 *
-	 * @param message
 	 */
 	private void errorSending() {
 		runOnUiThread(new Runnable() {
@@ -257,17 +252,7 @@ public class ResultActivity extends Activity {
 		String strCarNo = pref.getString(getString(R.string.PREF_KEY_CAR_NO), "");
 		String strAlcoholValue = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
 
-		String deviceId = "";
-		try {
-			TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-			deviceId = telephonyManager.getDeviceId();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 		// パラメータセット
-		task.addPostHeader(getString(R.string.HTTP_HEADER_PARAM_KEY_AUTH), getString(R.string.HTTP_HEADER_PARAM_TOKEN));
-
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), strDriver);
 		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), strCarNo);
@@ -275,7 +260,7 @@ public class ResultActivity extends Activity {
 		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LAT), strLat);
 		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LONG), strLong);
 		task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
-		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), deviceId);
+		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");
 
 		// タスクを開始

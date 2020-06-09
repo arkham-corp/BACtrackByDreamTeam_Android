@@ -165,7 +165,6 @@ public class CompanyActivity extends Activity
 		);
 
 		// パラメータセット
-		task.addPostHeader(getString(R.string.HTTP_HEADER_PARAM_KEY_AUTH), getString(R.string.HTTP_HEADER_PARAM_TOKEN));
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), editTextCompany.getText().toString());
 
 		// タスクを開始

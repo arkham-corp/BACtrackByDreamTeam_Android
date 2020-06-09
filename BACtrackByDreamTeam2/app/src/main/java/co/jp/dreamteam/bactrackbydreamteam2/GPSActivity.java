@@ -1,9 +1,5 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,16 +18,20 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class GPSActivity extends Activity implements LocationListener
-{
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+public class GPSActivity extends Activity implements LocationListener {
 	BroadcastReceiver mReceiver;
-	
+
 	SharedPreferences pref;
 	SharedPreferences.Editor editor;
 
@@ -46,24 +46,22 @@ public class GPSActivity extends Activity implements LocationListener
 	final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1000;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gps);
 
 		// BroadcastRecieverを LocalBroadcastManagerを使って登録
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-        mReceiver = new BroadcastReceiver() {
-            
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
+		mReceiver = new BroadcastReceiver() {
+
 			@Override
-			public void onReceive(Context context, Intent intent)
-			{
+			public void onReceive(Context context, Intent intent) {
 				LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-                finish();
+				finish();
 			}
-        };
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
+		};
+		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
 		// 設定ファイル取得
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
@@ -85,8 +83,7 @@ public class GPSActivity extends Activity implements LocationListener
 
 		this.findViewById(R.id.gps_btnDecision).setOnClickListener(btnDecisionClicked);
 
-		if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-		{
+		if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
 			// permissionが許可されていません
 			if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -106,24 +103,20 @@ public class GPSActivity extends Activity implements LocationListener
 		GetLocation();
 	}
 
-	private void GetLocation()
-	{
+	private void GetLocation() {
 		// LocationManager インスタンス生成
 		locationManagerGPS = (LocationManager) getSystemService(LOCATION_SERVICE);
 		locationManagerNET = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 		final boolean gpsEnabled = locationManagerGPS.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		if (!gpsEnabled)
-		{
+		if (!gpsEnabled) {
 			// GPSを設定するように促す
 			new AlertDialog.Builder(this)
 					.setTitle(getString(R.string.ALERT_TITLE_QUESTION))
 					.setMessage(getString(R.string.TEXT_GPS_SETTING))
-					.setPositiveButton(getString(R.string.ALERT_BTN_YES), new DialogInterface.OnClickListener()
-					{
+					.setPositiveButton(getString(R.string.ALERT_BTN_YES), new DialogInterface.OnClickListener() {
 						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
+						public void onClick(DialogInterface dialog, int which) {
 							enableLocationSettings();
 						}
 					})
@@ -167,22 +160,22 @@ public class GPSActivity extends Activity implements LocationListener
 		}
 	}
 
-	OnClickListener btnDecisionClicked = new OnClickListener()
-	{
+	OnClickListener btnDecisionClicked = new OnClickListener() {
 		@Override
-		public void onClick(View v)
-		{
+		public void onClick(View v) {
 			Intent intent = new Intent(getApplication(), CompanyActivity.class);
 			startActivity(intent);
 		}
 	};
 
 	@Override
-	protected void onResume()
-	{
-		if (locationManagerGPS != null)
-		{
+	protected void onResume() {
+		if (locationManagerGPS != null) {
 			if (locationManagerGPS.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
+				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+					return;
+				}
 				locationManagerGPS.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 			}
 		}
