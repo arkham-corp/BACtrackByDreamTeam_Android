@@ -10,10 +10,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Base64;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class ResultActivity extends Activity {
@@ -27,6 +30,9 @@ public class ResultActivity extends Activity {
 	SharedPreferences pref;
 	SharedPreferences.Editor editor;
 
+	Button btnFinish;
+	TextView textViewMessage;
+	TextView textViewTitle;
 	TextView textViewResultValue;
 	TextView textViewResultRemainValue;
 
@@ -48,39 +54,72 @@ public class ResultActivity extends Activity {
 		};
 		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
+		this.textViewMessage = (TextView) this.findViewById(R.id.result_textViewResultMessage);
+		this.textViewTitle = (TextView) this.findViewById(R.id.result_textViewResultTitle);
 		this.textViewResultValue = (TextView) this.findViewById(R.id.result_textViewResultValue);
-
-		this.findViewById(R.id.result_btnDecision).setOnClickListener(btnDecisionClicked);
+		this.textViewResultRemainValue = (TextView) this.findViewById(R.id.result_textViewRemainValue);
 
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
-		String measurement = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
-		textViewResultValue.setText(measurement);
-		// textViewResultValue.setText(pref.getString(getString(R.string.PREF_KEY_MEASUREMENT),
-		// ""));
+		// 測定値取得
+		String strMeasurement = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
+		double alcoholValue = Double.valueOf(strMeasurement);
+		double alcoholValueBreath = Double.valueOf(strMeasurement) * 5;
+		String strAlcoholValue = String.format("%.2f", alcoholValue);
+		String strAlcoholValueBreath = String.format("%.2f", alcoholValueBreath);
+
+		// 異常判定
+		if (Double.valueOf(strAlcoholValue) != 0)
+		{
+			textViewMessage.setText(getString(R.string.TEXT_RESULT_WARNING));
+			textViewMessage.setTextColor(Color.RED);
+		}
+
+		// 表示区分取得
+		String strAlcoholValueDiv = pref.getString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "");
+
+		if (strAlcoholValueDiv.equals("1"))
+		{
+			// 呼気を画面に表示
+			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BREATH));
+			textViewResultValue.setText(strAlcoholValueBreath + "%");
+		}
+		else
+		{
+			// 血中を画面に表示
+			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BLOOD));
+			textViewResultValue.setText(strAlcoholValue + "mg");
+		}
 
 		// 計測結果から残留目安時間を表示
-		this.textViewResultRemainValue = (TextView) this.findViewById(R.id.result_textViewRemainValue);
-		textViewResultRemainValue.setText(getRemainTime(measurement) + " です。");
+		textViewResultRemainValue.setText(getRemainTime(alcoholValue) + " です。");
 
+		// 終了ボタン
+		this.btnFinish = this.findViewById(R.id.result_btnFinish);
+		btnFinish.setOnClickListener(btnFinishClicked);
+
+		// 自動送信
+		exec_post();
 	}
 
-	OnClickListener btnDecisionClicked = new OnClickListener() {
+	View.OnClickListener btnFinishClicked = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			exec_post();
+			// LocalBroadcastManagerを使ってBroadcastを送信
+			Intent appFinishIntent = new Intent();
+			appFinishIntent.setAction(getString(R.string.BLOADCAST_FINISH));
+			LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(appFinishIntent);
+			finish();
 		}
 	};
 
 	/**
 	 * 計測値から残留時間を計算、アルコール消化時刻を返却
 	 *
-	 * @param measurement
+	 * @param alcoholValue
 	 * @return
 	 */
-	private String getRemainTime(String measurement) {
-
-		double alcoholValue = Double.valueOf(measurement);
+	private String getRemainTime(double alcoholValue) {
 
 		// 残留時間=計測結果/0.015(分計算は計算結果の小数に60を掛け、小数以下を四捨五入)
 		double remain = alcoholValue / ALCOHOL_REMOVAL_RATE;
@@ -228,9 +267,7 @@ public class ResultActivity extends Activity {
 					public void onPostCompleted(String response) {
 						// 受信結果をUIに表示
 						if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
-							// 画面移動
-							Intent intent = new Intent(getApplication(), FinishActivity.class);
-							startActivity(intent);
+							btnFinish.setVisibility(View.VISIBLE);
 						} else {
 							errorSending();
 						}
@@ -251,8 +288,17 @@ public class ResultActivity extends Activity {
 		String strDriver = pref.getString(getString(R.string.PREF_KEY_DRIVER), "");
 		String strCarNo = pref.getString(getString(R.string.PREF_KEY_CAR_NO), "");
 		String strAlcoholValue = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
+		// 画像取得
+		byte[] photoByte = null;
+		String strBitmap = pref.getString(getString(R.string.PREF_KEY_PHOTO), "");
+		if (!strBitmap.equals(""))
+		{
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			photoByte = Base64.decode(strBitmap, Base64.DEFAULT);
+		}
 
 		// パラメータセット
+		task.setHttp_multipart(true);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), strDriver);
 		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), strCarNo);
@@ -260,6 +306,7 @@ public class ResultActivity extends Activity {
 		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LAT), strLat);
 		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LONG), strLong);
 		task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
+		task.addPostParamJpeg(getString(R.string.HTTP_PARAM_PHOTO), photoByte);
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");
 

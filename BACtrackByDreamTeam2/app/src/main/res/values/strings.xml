@@ -6,9 +6,9 @@
     <string name="app_name2">マネージャー</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="BLOADCAST_FINISH">co.jp.dreamteam.bactrackbydreamteam.APP_FINISH</string>
+    <string name="BLOADCAST_FINISH">co.jp.dreamteam.bactrackbydreamteam2.APP_FINISH</string>
     <!-- <string name="HTTP_URL">https://al-check.com/AlcoholChecker</string> -->
-    <string name="HTTP_URL">http://128.0.0.43:8080/AlcoholChecker2/</string>
+    <string name="HTTP_URL">http://128.0.3.32:8080/AlcoholChecker2/</string>
     <string name="HTTP_COMPANY_CHECK">HttpCompanyMasterCheckServlet</string>
     <string name="HTTP_DRIVER_CHECK">HttpDriverMasterCheckServlet</string>
     <string name="HTTP_CAR_NO_CHECK">HttpCarNoMasterCheckServlet</string>
@@ -28,6 +28,7 @@
     <string name="PREF_GLOBAL">pref_global</string>
     <string name="PREF_KEY_AGREEMENT">PREF_KEY_AGREEMENT</string>
     <string name="PREF_KEY_COMPANY">PREF_KEY_COMPANY</string>
+    <string name="PREF_KEY_ALCOHOL_VALUE_DIV">PREF_KEY_ALCOHOL_VALUE_DIV</string>
     <string name="PREF_KEY_DRIVER">PREF_KEY_DRIVER</string>
     <string name="PREF_KEY_CAR_NO">PREF_KEY_CAR_NO</string>
     <string name="PREF_KEY_ADDRESS">PREF_KEY_ADDRESS</string>
@@ -90,6 +91,10 @@
     <string name="TEXT_MEAS_PREPARATION">準備中</string>
     <string name="TEXT_MEAS_PREPARATION_CAPT">準備が完了したら、\n息を吐いてください。</string>
     <string name="TEXT_RESULT_TITLE">測定結果</string>
+    <string name="TEXT_RESULT_TITLE_BLOOD">測定結果(血中)</string>
+    <string name="TEXT_RESULT_TITLE_BREATH">測定結果(呼気)</string>
+    <string name="TEXT_RESULT_OK">【検査OK】\n本日も安全運転で\nお願いします</string>
+    <string name="TEXT_RESULT_WARNING">【警告】\n現状態での運転禁止\n管理者へ報告する事</string>
     <string name="TEXT_SENDING">送信中</string>
     <string name="TEXT_SEND_ERROR">送信できませんでした</string>
     <string name="TEXT_FINISH1">送信完了</string>

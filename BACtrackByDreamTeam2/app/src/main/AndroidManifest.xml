@@ -14,8 +14,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Black.NoTitleBar">
-        <activity android:name=".TestActivity"></activity>
+        android:theme="@android:style/Theme.Black.NoTitleBar"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -40,9 +40,6 @@
         <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result" />
-        <activity
-            android:name=".FinishActivity"
-            android:label="@string/title_activity_finish" />
         <activity
             android:name=".CompanyActivity"
             android:label="@string/title_activity_company" />

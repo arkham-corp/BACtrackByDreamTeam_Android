@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-import java.util.HashMap;
-
 public class CompanyActivity extends Activity
 {
 	BroadcastReceiver mReceiver;
@@ -139,10 +137,11 @@ public class CompanyActivity extends Activity
 					public void onPostCompleted(String response)
 					{
 						// 受信結果をUIに表示
-						if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK)))
+						if (!response.equals(""))
 						{
 							// 値保存
 							editor = pref.edit();
+							editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), response);
 							editor.putString(getString(R.string.PREF_KEY_COMPANY), editTextCompany.getText().toString());
 							editor.commit();
 

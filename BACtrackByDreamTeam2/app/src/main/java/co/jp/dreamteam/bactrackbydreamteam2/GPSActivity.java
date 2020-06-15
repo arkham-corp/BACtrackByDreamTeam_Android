@@ -285,11 +285,18 @@ public class GPSActivity extends Activity implements LocationListener {
 				StringBuilder sb = new StringBuilder();
 
 				String buf;
+
 				for (int i = 0; (buf = address.getAddressLine(i)) != null; i++)
 				{
 					if (buf.equals("日本"))
 					{
 						continue;
+					}
+
+					if (buf.startsWith("日本、"))
+					{
+						// 除去
+						buf = buf.substring(3);
 					}
 
 					if (buf.startsWith("〒"))
