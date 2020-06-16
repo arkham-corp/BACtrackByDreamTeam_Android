@@ -16,12 +16,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import BACtrackAPI.API.BACtrackAPI;
+
 public class MainActivity extends Activity
 {
 	BroadcastReceiver mReceiver;
 
 	SharedPreferences pref;
 	SharedPreferences.Editor editor;
+
+	private BACtrackAPI mAPI;
 
 	/**
 	 * 初期処理
@@ -99,6 +103,7 @@ public class MainActivity extends Activity
 		String agreement = pref.getString(getString(R.string.PREF_KEY_AGREEMENT), "");
 
 		if (agreement.equals("")) {
+
 			// 利用規約ダイアログ
 			LayoutInflater inflater = (LayoutInflater) this.getSystemService(
 					LAYOUT_INFLATER_SERVICE);

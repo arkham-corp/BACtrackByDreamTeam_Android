@@ -236,7 +236,63 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
 
     private void WriteOutputStreamMultipart(HttpsURLConnection con) throws Exception
     {
+        final String twoHyphens = "--";
+        final String boundary =  "*****"+ UUID.randomUUID().toString()+"*****";
+        final String lineEnd = "\r\n";
+        final int maxBufferSize = 1024*1024*3;
 
+        DataOutputStream outputStream;
+
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setUseCaches(false);
+
+        con.setRequestProperty("Connection", "Keep-Alive");
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary="+boundary);
+
+        for (String key : post_headers.keySet())
+        {
+            con.setRequestProperty(key, post_headers.get(key));
+        }
+
+        outputStream = new DataOutputStream(con.getOutputStream());
+
+        for (String key : post_params_jpeg.keySet())
+        {
+            String fileName = key + ".jpg";
+            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName +"\"" + lineEnd);
+            outputStream.writeBytes("Content-Type: application/octet-stream" + lineEnd);
+            outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
+            outputStream.writeBytes(lineEnd);
+
+            byte[] buffer = post_params_jpeg.get(key);
+
+            for(int i = 0; i < buffer.length; i++)
+            {
+                outputStream.write(buffer[i]);
+            }
+
+            outputStream.writeBytes(lineEnd);
+        }
+
+        for (String key : post_params.keySet())
+        {
+            String value = post_params.get(key);
+            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
+            outputStream.writeBytes(lineEnd);
+            byte[] buffer = value.getBytes("UTF-8");
+            for(int i = 0; i < buffer.length; i++)
+            {
+                outputStream.write(buffer[i]);
+            }
+            outputStream.writeBytes(lineEnd);
+        }
+
+        outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+        outputStream.close();
     }
 
     private void doInBackgroundHttp()

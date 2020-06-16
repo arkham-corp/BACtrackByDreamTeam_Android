@@ -19,7 +19,6 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -37,7 +36,6 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import BACtrackAPI.API.BACtrackAPI;
 import BACtrackAPI.API.BACtrackAPICallbacks;
@@ -84,6 +82,8 @@ public class InspectionActivity extends Activity
 	CaptureRequest.Builder mPreviewRequestBuilder = null;
 
 	final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+
+	final String apiKey = "e10582efcaf64f7d90d947c2899b43";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -283,73 +283,20 @@ public class InspectionActivity extends Activity
 		progress_max = -1;
 		this.progressBar.setProgress(0);
 
-		try
-		{
-			String apiKey = "e10582efcaf64f7d90d947c2899b43";
-
+		// バックトラックAPI
+		try {
 			mAPI = new BACtrackAPI(this, mCallbacks, apiKey);
-
-			// タイマーで接続されるまで開始を待機
-			timerConnect.schedule(new TimerTask()
-			{
-				@Override
-				public void run()
-				{
-					// mHandlerを通じてUI Threadへ処理をキューイング
-					mHandler.post(new Runnable()
-					{
-						public void run()
-						{
-							if (blnFind)
-							{
-								timerConnect.cancel();
-							}
-							else
-							{
-								// 接続
-								connectNearest();
-							}
-						}
-					});
-				}
-			}, 1000, 5000);
-
-			// タイマーで接続されるまで開始を待機
-			timerStart.schedule(new TimerTask()
-			{
-				@Override
-				public void run()
-				{
-					// mHandlerを通じてUI Threadへ処理をキューイング
-					mHandler.post(new Runnable()
-					{
-						public void run()
-						{
-							if (blnConnected)
-							{
-								startBlowProcess();
-
-								timerStart.cancel();
-							}
-						}
-					});
-				}
-			}, 1000, 1000);
-
-			setStatus(R.string.TEXT_CONNECTING);
-		}
-		catch (BluetoothLENotSupportedException e)
-		{
-			e.printStackTrace();
+			mAPI.connectToNearestBreathalyzer();
+			this.setStatus(R.string.TEXT_CONNECTING);
+		} catch (BluetoothLENotSupportedException e) {
 			this.setStatus(R.string.TEXT_ERR_BLE_NOT_SUPPORTED);
-		}
-		catch (BluetoothNotEnabledException e)
-		{
-			e.printStackTrace();
+			return;
+		} catch (BluetoothNotEnabledException e) {
 			this.setStatus(R.string.TEXT_ERR_BT_NOT_ENABLED);
+			return;
 		} catch (LocationServicesNotEnabledException e) {
-			e.printStackTrace();
 			this.setStatus("LocationServicesNotEnabledException");
+			return;
 		}
 	}
 
@@ -379,40 +326,6 @@ public class InspectionActivity extends Activity
 		if (mAPI != null)
 		{
 			mAPI.disconnect();
-		}
-	}
-
-	/**
-	 * BACtrack接続
-	 */
-	private void connectNearest()
-	{
-		if (mAPI != null)
-		{
-			mAPI.connectToNearestBreathalyzer();
-		}
-	}
-
-	/**
-	 * 測定開始
-	 */
-	private void startBlowProcess()
-	{
-		boolean result = false;
-
-		if (mAPI != null)
-		{
-			result = mAPI.startCountdown();
-		}
-		if (!result)
-		{
-			setStatus(R.string.TEXT_ERR_START_COUNTDOWN);
-
-			Log.e(TAG, "mAPI.startCountdown() failed");
-		}
-		else
-		{
-			Log.d(TAG, "Blow process start requested");
 		}
 	}
 
@@ -510,32 +423,6 @@ public class InspectionActivity extends Activity
 		});
 	}
 
-	private class APIKeyVerificationAlert extends AsyncTask<String, Void, String> {
-		@Override
-		protected String doInBackground(String... urls) {
-			return urls[0];
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			AlertDialog.Builder apiApprovalAlert = new AlertDialog.Builder(mContext);
-			apiApprovalAlert.setTitle("API Approval Failed");
-			apiApprovalAlert.setMessage(result);
-			apiApprovalAlert.setPositiveButton(
-					"Ok",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							mAPI.disconnect();
-							setStatus(R.string.TEXT_DISCONNECTED);
-							dialog.cancel();
-						}
-					});
-
-			apiApprovalAlert.create();
-			apiApprovalAlert.show();
-		}
-	}
-
 	/**
 	 * BACtrackAPICallbacks
 	 */
@@ -543,13 +430,12 @@ public class InspectionActivity extends Activity
 	{
 		@Override
 		public void BACtrackAPIKeyDeclined(String errorMessage) {
-			APIKeyVerificationAlert verify = new APIKeyVerificationAlert();
-			verify.execute(errorMessage);
+			Log.d(TAG, "BACtrackAPIKeyDeclined");
 		}
 
 		@Override
 		public void BACtrackAPIKeyAuthorized() {
-
+			Log.d(TAG, "BACtrackAPIKeyAuthorized");
 		}
 
 		@Override
@@ -566,7 +452,15 @@ public class InspectionActivity extends Activity
 				e.printStackTrace();
 			}
 
-			blnConnected = true;
+			runOnUiThread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mAPI.startCountdown();
+				}
+			});
+
 		}
 
 		@Override
@@ -581,6 +475,8 @@ public class InspectionActivity extends Activity
 		public void BACtrackDisconnected()
 		{
 			//setStatus(R.string.TEXT_DISCONNECTED);
+			Log.d(TAG, "BACtrackDisconnected");
+			setStatus(R.string.TEXT_MEAS_DISCONNECT);
 		}
 
 		@Override

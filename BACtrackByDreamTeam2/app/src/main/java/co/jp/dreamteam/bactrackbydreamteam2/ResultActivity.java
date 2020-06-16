@@ -1,6 +1,5 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -35,6 +34,8 @@ public class ResultActivity extends Activity {
 	TextView textViewTitle;
 	TextView textViewResultValue;
 	TextView textViewResultRemainValue;
+
+	int errorCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,18 +149,37 @@ public class ResultActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+
+				errorCount += 1;
+
 				AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResultActivity.this);
-
-				// ダイアログの設定
 				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-				alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR));
 
-				// OK(肯定的な)ボタンの設定
-				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						// OKボタン押下時の処理
-					}
-				});
+				if (errorCount < 3) {
+					// ダイアログの設定
+					alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR));
+
+					// OK(肯定的な)ボタンの設定
+					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							// OKボタン押下時の処理
+							exec_post();
+						}
+					});
+				}
+				else
+				{
+					// ダイアログの設定
+					alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR_LAST));
+
+					// OK(肯定的な)ボタンの設定
+					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							// OKボタン押下時の処理
+							btnFinish.setVisibility(View.VISIBLE);
+						}
+					});
+				}
 
 				alertDialog.show();
 			}
@@ -197,65 +217,7 @@ public class ResultActivity extends Activity {
 	}
 
 	// POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-	private void exec_post() {
-
-		if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-		{
-
-			// permissionが許可されていません
-			if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-				// 許可ダイアログで今後表示しないにチェックされていない場合
-			}
-
-			// permissionを許可してほしい理由の表示など
-
-			// 許可ダイアログの表示
-			// MY_PERMISSIONS_REQUEST_READ_CONTACTSはアプリ内で独自定義したrequestCodeの値
-			requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-					MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-
-			return;
-		}
-
-		exec_post_next();
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-		switch (requestCode) {
-			// 先ほどの独自定義したrequestCodeの結果確認
-			case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// ユーザーが許可したとき
-					// 許可が必要な機能を改めて実行する
-					exec_post_next();
-				} else {
-					// ユーザーが許可しなかったとき
-					// 許可されなかったため機能が実行できないことを表示する
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-					// ダイアログの設定
-					alertDialog.setCancelable(false);
-					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-					alertDialog.setMessage("端末情報が使用できません");
-
-					// OK(肯定的な)ボタンの設定
-					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							// OKボタン押下時の処理
-							finish();
-						}
-					});
-
-					alertDialog.show();
-				}
-				return;
-			}
-		}
-	}
-
-	private void exec_post_next() {
-
+	public void exec_post() {
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(this,
 				getString(R.string.HTTP_URL) + "/" + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
@@ -313,4 +275,5 @@ public class ResultActivity extends Activity {
 		// タスクを開始
 		task.execute();
 	}
+
 }
