@@ -284,10 +284,18 @@ public class InspectionActivity extends Activity
 		this.progressBar.setProgress(0);
 
 		// バックトラックAPI
+		String firstConnection = pref.getString(getString(R.string.PREF_KEY_FIRST_CONNECTION), "");
+
 		try {
 			mAPI = new BACtrackAPI(this, mCallbacks, apiKey);
-			mAPI.connectToNearestBreathalyzer();
 			this.setStatus(R.string.TEXT_CONNECTING);
+			if (firstConnection.equals("")) {
+				Thread.sleep(3000);
+				editor = pref.edit();
+				editor.putString(getString(R.string.PREF_KEY_FIRST_CONNECTION), "1");
+				editor.commit();
+			}
+			mAPI.connectToNearestBreathalyzer();
 		} catch (BluetoothLENotSupportedException e) {
 			this.setStatus(R.string.TEXT_ERR_BLE_NOT_SUPPORTED);
 			return;
@@ -297,6 +305,8 @@ public class InspectionActivity extends Activity
 		} catch (LocationServicesNotEnabledException e) {
 			this.setStatus("LocationServicesNotEnabledException");
 			return;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 

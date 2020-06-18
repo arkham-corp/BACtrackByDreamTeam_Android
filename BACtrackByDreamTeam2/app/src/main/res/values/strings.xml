@@ -27,6 +27,7 @@
     <string name="HTTP_PARAM_APP_ID">AppId</string>
     <string name="PREF_GLOBAL">pref_global</string>
     <string name="PREF_KEY_AGREEMENT">PREF_KEY_AGREEMENT</string>
+    <string name="PREF_KEY_FIRST_CONNECTION">PREF_KEY_FIRST_CONNECTION</string>
     <string name="PREF_KEY_COMPANY">PREF_KEY_COMPANY</string>
     <string name="PREF_KEY_ALCOHOL_VALUE_DIV">PREF_KEY_ALCOHOL_VALUE_DIV</string>
     <string name="PREF_KEY_DRIVER">PREF_KEY_DRIVER</string>
