@@ -308,6 +308,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
 
             con.setDoOutput(true);
             con.setRequestMethod("POST");
+            con.setReadTimeout(5000);
             if (http_multipart)
             {
                 WriteOutputStreamMultipart(con);
@@ -391,6 +392,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
 
             con.setDoOutput(true);
             con.setRequestMethod("POST");
+            con.setReadTimeout(5000);
             if (http_multipart)
             {
                 WriteOutputStreamMultipart(con);

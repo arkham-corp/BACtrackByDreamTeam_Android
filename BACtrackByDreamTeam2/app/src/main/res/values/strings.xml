@@ -3,7 +3,7 @@
 
     <string name="app_name">アルコールマネージャー2</string>
     <string name="app_name1">アルコール</string>
-    <string name="app_name2">マネージャー</string>
+    <string name="app_name2">マネージャー2</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="BLOADCAST_FINISH">co.jp.dreamteam.bactrackbydreamteam2.APP_FINISH</string>
@@ -76,6 +76,7 @@
     <string name="TEXT_ERR_NO_BREATHALYZERS_FOUND">アルコールマネージャが検出できません</string>
     <string name="TEXT_ERR_BT_NOT_ENABLED">Bluetoothが無効です</string>
     <string name="TEXT_ERR_BLE_NOT_SUPPORTED">Bluetoothをサポートしていません</string>
+    <string name="TEXT_ERR_LOCATION_NOT_ENABLED">位置情報が無効です</string>
     <string name="TEXT_ERR_BLOW_ERROR">息の検出に失敗しました</string>
     <string name="TEXT_ERR_START_COUNTDOWN">準備処理に失敗しました</string>
     <string name="TEXT_ERR_CONNECTION_TIMEOUT">接続タイムアウト</string>

@@ -303,7 +303,7 @@ public class InspectionActivity extends Activity
 			this.setStatus(R.string.TEXT_ERR_BT_NOT_ENABLED);
 			return;
 		} catch (LocationServicesNotEnabledException e) {
-			this.setStatus("LocationServicesNotEnabledException");
+			this.setStatus(R.string.TEXT_ERR_LOCATION_NOT_ENABLED);
 			return;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
