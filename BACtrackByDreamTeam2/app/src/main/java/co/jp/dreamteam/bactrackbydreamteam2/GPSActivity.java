@@ -213,6 +213,11 @@ public class GPSActivity extends Activity implements LocationListener {
 		// 緯度経度を住所に変換
 		String strAddress = getAddressFromPoint(dblLatitude, dblLongitude);
 
+		if (strAddress.equals(""))
+		{
+			return;
+		}
+
 		// 住所表示
 		textViewAddress.setText(strAddress);
 
