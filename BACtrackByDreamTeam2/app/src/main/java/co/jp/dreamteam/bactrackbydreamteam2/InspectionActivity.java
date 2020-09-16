@@ -3,7 +3,6 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -40,6 +40,7 @@ import java.util.Timer;
 import BACtrackAPI.API.BACtrackAPI;
 import BACtrackAPI.API.BACtrackAPICallbacks;
 import BACtrackAPI.Constants.BACTrackDeviceType;
+import BACtrackAPI.Constants.BACtrackUnit;
 import BACtrackAPI.Exceptions.BluetoothLENotSupportedException;
 import BACtrackAPI.Exceptions.BluetoothNotEnabledException;
 import BACtrackAPI.Exceptions.LocationServicesNotEnabledException;
@@ -55,6 +56,7 @@ public class InspectionActivity extends Activity
 	private static String TAG = "InspectionActivity";
 
 	private TextView statusMessageTextView;
+	private TextView statusMessageTextView2;
 	private TextView statusMessageCaption;
 	private ProgressBar progressBar;
 	private int progress_max;
@@ -278,6 +280,7 @@ public class InspectionActivity extends Activity
 
 		// 測定
 		this.statusMessageTextView = (TextView) this.findViewById(R.id.meas_status_message_text_view_id);
+		this.statusMessageTextView2 = (TextView) this.findViewById(R.id.meas_status2_message_text_view_id);
 		this.progressBar = (ProgressBar) this.findViewById(R.id.meas_progressBar);
 
 		progress_max = -1;
@@ -349,6 +352,15 @@ public class InspectionActivity extends Activity
 	}
 
 	/**
+	 * BACtrackAPIのステータス更新用2
+	 * @param resourceId
+	 */
+	private void setStatus2(int resourceId)
+	{
+		this.setStatus2(this.getResources().getString(resourceId));
+	}
+
+	/**
 	 * BACtrackAPIのステータス更新用(メインメッセージ)
 	 */
 	private void setStatus(final String message)
@@ -359,6 +371,51 @@ public class InspectionActivity extends Activity
 			public void run()
 			{
 				statusMessageTextView.setText(message);
+			}
+		});
+	}
+
+	/**
+	 * BACtrackAPIのステータス更新用(メインメッセージ)
+	 */
+	private void setStatus2(final String message)
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				statusMessageTextView2.setText(message);
+			}
+		});
+	}
+
+	/**
+	 * BACtrackAPIのステータス2白
+	 */
+	private void setStatus2WhiteColor()
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				statusMessageTextView2.setTextColor(Color.WHITE);
+			}
+		});
+	}
+
+	/**
+	 * BACtrackAPIのステータス2赤
+	 */
+	private void setStatus2RedColor()
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				statusMessageTextView2.setTextColor(Color.RED);
 			}
 		});
 	}
@@ -467,6 +524,7 @@ public class InspectionActivity extends Activity
 				@Override
 				public void run()
 				{
+					mAPI.getBreathalyzerBatteryVoltage();
 					mAPI.startCountdown();
 				}
 			});
@@ -496,8 +554,8 @@ public class InspectionActivity extends Activity
 		}
 
 		@Override
-		public void BACtrackFoundBreathalyzer(BluetoothDevice bluetoothDevice) {
-			Log.d(TAG, "Found breathalyzer : " + bluetoothDevice.getName());
+		public void BACtrackFoundBreathalyzer(BACtrackAPI.BACtrackDevice baCtrackDevice) {
+			Log.d(TAG, "Found breathalyzer : " + baCtrackDevice.device.getName());
 		}
 
 		@Override
@@ -523,8 +581,7 @@ public class InspectionActivity extends Activity
 		}
 
 		@Override
-		public void BACtrackBlow()
-		{
+		public void BACtrackBlow(float v) {
 			SavePhoto();
 			setStatus(R.string.TEXT_KEEP_BLOWING);
 		}
@@ -572,7 +629,8 @@ public class InspectionActivity extends Activity
 
 		@Override
 		public void BACtrackFirmwareVersion(String version) {
-			setStatus(getString(R.string.TEXT_FIRMWARE_VERSION) + " " + version);
+			Log.d(TAG, "FirmwareVersion: " + version);
+			//setStatus(getString(R.string.TEXT_FIRMWARE_VERSION) + " " + version);
 		}
 
 		@Override
@@ -583,38 +641,86 @@ public class InspectionActivity extends Activity
 		@Override
 		public void BACtrackUseCount(int useCount) {
 			Log.d(TAG, "UseCount: " + useCount);
-			setStatus(getString(R.string.TEXT_USE_COUNT) + " " + useCount);
+			//setStatus(getString(R.string.TEXT_USE_COUNT) + " " + useCount);
 		}
 
 		@Override
 		public void BACtrackBatteryVoltage(float voltage) {
-
+			Log.d(TAG, "BatteryVoltage: " + voltage);
 		}
 
 		@Override
 		public void BACtrackBatteryLevel(int level) {
+			Log.d(TAG, "BatteryLevel: " + level);
 
+			if (level < 1)
+			{
+				setStatus2RedColor();
+				setStatus2("バッテリー残：" + String.valueOf(level) + " (低)");
+			}
+			else if (level < 2)
+			{
+				setStatus2WhiteColor();
+				setStatus2("バッテリー残：" + String.valueOf(level) + " (中)");
+			}
+			else
+			{
+				setStatus2WhiteColor();
+				setStatus2("バッテリー残：" + String.valueOf(level) + " (高)");
+			}
 		}
 
 		@Override
 		public void BACtrackError(int errorCode)
 		{
-			if (errorCode == Errors.ERROR_BLOW_ERROR)
+			// 切断
+			disConnect();
+
+			if (errorCode == Errors.ERROR_TIME_OUT)
 			{
-				//setStatus(R.string.TEXT_ERR_BLOW_ERROR);
-
-				// 切断
-				disConnect();
-
 				showErrorAlert(getString(R.string.TEXT_ERR_BLOW_ERROR));
+			}
+			else if (errorCode == Errors.ERROR_BLOW_ERROR)
+			{
+				showErrorAlert(getString(R.string.TEXT_ERR_BLOW_ERROR));
+			}
+			else if (errorCode == Errors.ERROR_OUT_OF_TEMPERATURE)
+			{
+				showErrorAlert("ERROR_OUT_OF_TEMPERATURE");
+			}
+			else if (errorCode == Errors.ERROR_LOW_BATTERY)
+			{
+				showErrorAlert("ERROR_LOW_BATTERY");
+			}
+			else if (errorCode == Errors.ERROR_CALIBRATION_FAIL)
+			{
+				showErrorAlert("ERROR_CALIBRATION_FAIL");
+			}
+			else if (errorCode == Errors.ERROR_NOT_CALIBRATED)
+			{
+				showErrorAlert("ERROR_NOT_CALIBRATED");
+			}
+			else if (errorCode == Errors.ERROR_COM_ERROR)
+			{
+				showErrorAlert("ERROR_COM_ERROR");
+			}
+			else if (errorCode == Errors.ERROR_INFLOW_ERROR)
+			{
+				showErrorAlert("ERROR_INFLOW_ERROR");
+			}
+			else if (errorCode == Errors.ERROR_SOLENOID_ERROR)
+			{
+				showErrorAlert("ERROR_SOLENOID_ERROR");
 			}
 			else
 			{
-				// 切断
-				disConnect();
-
 				showErrorAlert(getString(R.string.TEXT_ERR_EXCEPTION));
 			}
+		}
+
+		@Override
+		public void BACtrackUnits(BACtrackUnit baCtrackUnit) {
+
 		}
 	};
 }
