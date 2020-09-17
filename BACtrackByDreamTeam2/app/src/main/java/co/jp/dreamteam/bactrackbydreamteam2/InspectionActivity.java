@@ -56,7 +56,9 @@ public class InspectionActivity extends Activity
 	private static String TAG = "InspectionActivity";
 
 	private TextView statusMessageTextView;
-	private TextView statusMessageTextView2;
+	private TextView batteryMessageTextView1;
+	private TextView batteryMessageTextView2;
+	private TextView batteryMessageTextView3;
 	private TextView statusMessageCaption;
 	private ProgressBar progressBar;
 	private int progress_max;
@@ -280,7 +282,9 @@ public class InspectionActivity extends Activity
 
 		// 測定
 		this.statusMessageTextView = (TextView) this.findViewById(R.id.meas_status_message_text_view_id);
-		this.statusMessageTextView2 = (TextView) this.findViewById(R.id.meas_status2_message_text_view_id);
+		this.batteryMessageTextView1 = (TextView) this.findViewById(R.id.meas_battery_message_text_view_id1);
+		this.batteryMessageTextView2 = (TextView) this.findViewById(R.id.meas_battery_message_text_view_id2);
+		this.batteryMessageTextView3 = (TextView) this.findViewById(R.id.meas_battery_message_text_view_id3);
 		this.progressBar = (ProgressBar) this.findViewById(R.id.meas_progressBar);
 
 		progress_max = -1;
@@ -352,15 +356,6 @@ public class InspectionActivity extends Activity
 	}
 
 	/**
-	 * BACtrackAPIのステータス更新用2
-	 * @param resourceId
-	 */
-	private void setStatus2(int resourceId)
-	{
-		this.setStatus2(this.getResources().getString(resourceId));
-	}
-
-	/**
 	 * BACtrackAPIのステータス更新用(メインメッセージ)
 	 */
 	private void setStatus(final String message)
@@ -378,44 +373,72 @@ public class InspectionActivity extends Activity
 	/**
 	 * BACtrackAPIのステータス更新用(メインメッセージ)
 	 */
-	private void setStatus2(final String message)
+	private void setBatteryMessage1(final String message)
 	{
 		runOnUiThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				statusMessageTextView2.setText(message);
+				batteryMessageTextView1.setText(message);
+			}
+		});
+	}
+	private void setBatteryMessage2(final String message)
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				batteryMessageTextView2.setText(message);
+			}
+		});
+	}
+	private void setBatteryMessage3(final String message)
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				batteryMessageTextView3.setText(message);
 			}
 		});
 	}
 
-	/**
-	 * BACtrackAPIのステータス2白
-	 */
-	private void setStatus2WhiteColor()
+	private void setBatteryMessageWhiteColor3()
 	{
 		runOnUiThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				statusMessageTextView2.setTextColor(Color.WHITE);
+				batteryMessageTextView3.setTextColor(Color.WHITE);
 			}
 		});
 	}
 
-	/**
-	 * BACtrackAPIのステータス2赤
-	 */
-	private void setStatus2RedColor()
+	private void setBatteryMessageOrangeColor3()
 	{
 		runOnUiThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				statusMessageTextView2.setTextColor(Color.RED);
+				batteryMessageTextView3.setTextColor(Color.rgb(255, 165, 0));
+			}
+		});
+	}
+
+	private void setBatteryMessageRedColor3()
+	{
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				batteryMessageTextView3.setTextColor(Color.RED);
 			}
 		});
 	}
@@ -655,18 +678,24 @@ public class InspectionActivity extends Activity
 
 			if (level < 1)
 			{
-				setStatus2RedColor();
-				setStatus2("バッテリー残：" + String.valueOf(level) + " (低)");
+				setBatteryMessageRedColor3();
+				setBatteryMessage1("電池残量小");
+				setBatteryMessage2("まもなく電池が切れます");
+				setBatteryMessage3("充電してください");
 			}
 			else if (level < 2)
 			{
-				setStatus2WhiteColor();
-				setStatus2("バッテリー残：" + String.valueOf(level) + " (中)");
+				setBatteryMessageOrangeColor3();
+				setBatteryMessage1("電池残量中");
+				setBatteryMessage2("");
+				setBatteryMessage3("早めに充電してください");
 			}
 			else
 			{
-				setStatus2WhiteColor();
-				setStatus2("バッテリー残：" + String.valueOf(level) + " (高)");
+				setBatteryMessageWhiteColor3();
+				setBatteryMessage1("電池残量多");
+				setBatteryMessage2("");
+				setBatteryMessage3("");
 			}
 		}
 
