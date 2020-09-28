@@ -134,16 +134,6 @@
             android:textSize="@dimen/caption_size_middle"/>
 
         <TextView
-            android:id="@+id/meas_battery_message_text_view_id3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:text="@string/TEXT_DUMMY"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="@dimen/caption_size_middle"/>
-
-        <TextView
             android:id="@+id/meas_status_message_text_view_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

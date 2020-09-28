@@ -58,7 +58,6 @@ public class InspectionActivity extends Activity
 	private TextView statusMessageTextView;
 	private TextView batteryMessageTextView1;
 	private TextView batteryMessageTextView2;
-	private TextView batteryMessageTextView3;
 	private TextView statusMessageCaption;
 	private ProgressBar progressBar;
 	private int progress_max;
@@ -284,7 +283,6 @@ public class InspectionActivity extends Activity
 		this.statusMessageTextView = (TextView) this.findViewById(R.id.meas_status_message_text_view_id);
 		this.batteryMessageTextView1 = (TextView) this.findViewById(R.id.meas_battery_message_text_view_id1);
 		this.batteryMessageTextView2 = (TextView) this.findViewById(R.id.meas_battery_message_text_view_id2);
-		this.batteryMessageTextView3 = (TextView) this.findViewById(R.id.meas_battery_message_text_view_id3);
 		this.progressBar = (ProgressBar) this.findViewById(R.id.meas_progressBar);
 
 		progress_max = -1;
@@ -395,50 +393,39 @@ public class InspectionActivity extends Activity
 			}
 		});
 	}
-	private void setBatteryMessage3(final String message)
+
+	private void setBatteryMessageWhiteColor2()
 	{
 		runOnUiThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				batteryMessageTextView3.setText(message);
+				batteryMessageTextView2.setTextColor(Color.WHITE);
 			}
 		});
 	}
 
-	private void setBatteryMessageWhiteColor3()
+	private void setBatteryMessageOrangeColor2()
 	{
 		runOnUiThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				batteryMessageTextView3.setTextColor(Color.WHITE);
+				batteryMessageTextView2.setTextColor(Color.rgb(255, 165, 0));
 			}
 		});
 	}
 
-	private void setBatteryMessageOrangeColor3()
+	private void setBatteryMessageRedColor2()
 	{
 		runOnUiThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				batteryMessageTextView3.setTextColor(Color.rgb(255, 165, 0));
-			}
-		});
-	}
-
-	private void setBatteryMessageRedColor3()
-	{
-		runOnUiThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				batteryMessageTextView3.setTextColor(Color.RED);
+				batteryMessageTextView2.setTextColor(Color.RED);
 			}
 		});
 	}
@@ -678,24 +665,21 @@ public class InspectionActivity extends Activity
 
 			if (level < 1)
 			{
-				setBatteryMessageRedColor3();
-				setBatteryMessage1("電池残量小");
-				setBatteryMessage2("まもなく電池が切れます");
-				setBatteryMessage3("充電してください");
+				setBatteryMessageRedColor2();
+				setBatteryMessage1("電池残量：少");
+				setBatteryMessage2("充電してください");
 			}
 			else if (level < 2)
 			{
-				setBatteryMessageOrangeColor3();
-				setBatteryMessage1("電池残量中");
+				setBatteryMessageOrangeColor2();
+				setBatteryMessage1("電池残量：中");
 				setBatteryMessage2("");
-				setBatteryMessage3("早めに充電してください");
 			}
 			else
 			{
-				setBatteryMessageWhiteColor3();
-				setBatteryMessage1("電池残量多");
+				setBatteryMessageWhiteColor2();
+				setBatteryMessage1("電池残量：多");
 				setBatteryMessage2("");
-				setBatteryMessage3("");
 			}
 		}
 
