@@ -12,6 +12,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -29,6 +32,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -58,7 +62,7 @@ public class InspectionActivity extends Activity
 	private TextView statusMessageTextView;
 	private TextView batteryMessageTextView1;
 	private TextView batteryMessageTextView2;
-	private TextView statusMessageCaption;
+	private LinearLayout layoutTextureViewParent;
 	private ProgressBar progressBar;
 	private int progress_max;
 
@@ -94,6 +98,7 @@ public class InspectionActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_inspection);
 
+		layoutTextureViewParent = (LinearLayout) findViewById(R.id.layoutTextureViewParent);
 		mTextureView = (TextureView) findViewById(R.id.textureView);
 		mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 			@Override
@@ -209,9 +214,44 @@ public class InspectionActivity extends Activity
 
 	};
 
+	void configureTransformKeepAspect(TextureView textureView, int previewWidth, int previewHeight) {
+		int rotation = InspectionActivity.this.getWindowManager().getDefaultDisplay().getRotation();
+		Matrix matrix = new Matrix();
+		RectF viewRect = new RectF(0, 0, textureView.getWidth(), textureView.getHeight());
+		RectF bufferRect = new RectF(0, 0, previewWidth, previewHeight);
+		PointF center = new PointF(viewRect.centerX(), viewRect.centerY());
+
+		if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
+			bufferRect.offset(center.x - bufferRect.centerX(), center.y - bufferRect.centerY());
+			matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
+
+			float scale = Math.min(
+					(float) textureView.getWidth() / previewWidth,
+					(float) textureView.getHeight() / previewHeight);
+			matrix.postScale(scale, scale, center.x, center.y);
+
+			matrix.postRotate(90 * (rotation - 2), center.x, center.y);
+		} else {
+			bufferRect.offset(center.x - bufferRect.centerX(), center.y - bufferRect.centerY());
+			matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
+
+			float scale = Math.min(
+					(float) textureView.getWidth() / previewWidth,
+					(float) textureView.getHeight() / previewHeight);
+			matrix.postScale(scale, scale, center.x, center.y);
+
+			matrix.postRotate(90 * rotation, center.x, center.y);
+		}
+
+		textureView.setTransform(matrix);
+	}
+
 	private void createCameraPreviewSession()
 	{
 		try {
+			// アスペクト比調整
+			configureTransformKeepAspect(mTextureView, layoutTextureViewParent.getWidth(), layoutTextureViewParent.getHeight());
+
 			SurfaceTexture texture = mTextureView.getSurfaceTexture();
 
 			//バッファのサイズをプレビューサイズに設定(画面サイズ等適当な値を入れる)

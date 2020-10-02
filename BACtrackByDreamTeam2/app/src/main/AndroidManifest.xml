@@ -18,7 +18,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,22 +28,28 @@
         </activity>
         <activity
             android:name=".DriverActivity"
-            android:label="@string/title_activity_driver" />
+            android:label="@string/title_activity_driver"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CarNoActivity"
-            android:label="@string/title_activity_car_no" />
+            android:label="@string/title_activity_car_no"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".InspectionActivity"
-            android:label="@string/title_activity_inspection" />
+            android:label="@string/title_activity_inspection"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".GPSActivity"
-            android:label="@string/title_activity_gps" />
+            android:label="@string/title_activity_gps"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ResultActivity"
-            android:label="@string/title_activity_result" />
+            android:label="@string/title_activity_result"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CompanyActivity"
-            android:label="@string/title_activity_company" />
+            android:label="@string/title_activity_company"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
