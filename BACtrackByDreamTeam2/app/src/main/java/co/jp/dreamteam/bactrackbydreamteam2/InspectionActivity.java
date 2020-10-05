@@ -250,7 +250,17 @@ public class InspectionActivity extends Activity
 	{
 		try {
 			// アスペクト比調整
-			configureTransformKeepAspect(mTextureView, layoutTextureViewParent.getWidth(), layoutTextureViewParent.getHeight());
+			int width = mTextureView.getWidth();
+			int height = mTextureView.getHeight();
+			if (width < height)
+			{
+				height = width;
+			}
+			else {
+				width = height;
+			}
+			width = (int) (height * 0.75);
+			configureTransformKeepAspect(mTextureView, width, height);
 
 			SurfaceTexture texture = mTextureView.getSurfaceTexture();
 

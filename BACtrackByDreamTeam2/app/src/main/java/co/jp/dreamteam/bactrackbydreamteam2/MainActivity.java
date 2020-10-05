@@ -36,6 +36,15 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		boolean cameraTestFlg = false;
+
+		if (cameraTestFlg)
+		{
+			Intent intent = new Intent(getApplication(), CameraTestActivity.class);
+			startActivity(intent);
+			return;
+		}
+
 		// BroadcastRecieverを LocalBroadcastManagerを使って登録
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));

@@ -128,6 +128,7 @@
     <string name="title_activity_send">SendActivity</string>
     <string name="title_activity_finish">FinishActivity</string>
     <string name="title_activity_company">CompanyActivity</string>
+    <string name="title_activity_camera_test">CameraTestActivity</string>
     <string name="TEXT_RESULT_REMAIN_HEADER">アルコールの消化予定時刻は、</string>
     <string name="TEXT_RESULT_REMAIN_VALUE">00:00です。</string>
     <string name="TEXT_RESULT_REMAIN_FOOTER">※あくまで目安です</string>
