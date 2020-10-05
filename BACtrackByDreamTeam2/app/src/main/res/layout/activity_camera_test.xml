@@ -145,11 +145,11 @@
             android:textSize="@dimen/caption_size_middle"
             android:layout_marginBottom="30px"/>
 
-        <ProgressBar
-            android:id="@+id/test_progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
+        <Button
+            android:id="@+id/test_send_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="送信" />
 
     </LinearLayout>
 

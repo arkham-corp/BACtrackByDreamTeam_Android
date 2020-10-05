@@ -5,7 +5,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -19,12 +22,15 @@ import android.hardware.camera2.CaptureRequest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.LinearLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 public class CameraTestActivity extends Activity
@@ -75,6 +81,107 @@ public class CameraTestActivity extends Activity
 
 			}
 		});
+
+		this.findViewById(R.id.test_send_button).setOnClickListener(btnSendClicked);
+	}
+
+	View.OnClickListener btnSendClicked = new View.OnClickListener()
+	{
+		@Override
+		public void onClick(View v)
+		{
+			SavePhoto();
+			exec_post();
+		}
+	};
+
+	private void SavePhoto()
+	{
+		try {
+			//カメラプレビューを中断させる
+			mCaptureSession.stopRepeating();
+			if (mTextureView.isAvailable()) {
+				//TextureViewに表示されている画像をBitmapで取得
+				Bitmap bmp = mTextureView.getBitmap();
+				bmp = Bitmap.createBitmap( bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mTextureView.getTransform( null ), true );
+
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+				String bitmapStr = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+
+				SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+				SharedPreferences.Editor editor = pref.edit();
+				editor.putString(getString(R.string.PREF_KEY_PHOTO), bitmapStr);
+				editor.apply();
+			}
+
+			// カメラプレビューを再開
+			//mCaptureSession.setRepeatingRequest(mPreviewRequest, null, null);
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	// POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
+	public void exec_post() {
+		// 非同期タスクを定義
+		HttpPostTask task = new HttpPostTask(this,
+				getString(R.string.HTTP_URL) + "/" + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
+
+				// タスク完了時に呼ばれるUIのハンドラ
+				new HttpPostHandler() {
+
+					@Override
+					public void onPostCompleted(String response) {
+						// 受信結果をUIに表示
+						if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+							//btnFinish.setVisibility(View.VISIBLE);
+						} else {
+							//errorSending();
+						}
+					}
+
+					@Override
+					public void onPostFailed(String response) {
+						//errorHttp(response);
+					}
+				});
+
+		SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+
+		String strCompany = "COM";
+		String strAddress = "静岡県 浜松市中区 新津町 600";
+		String strLat = "34.72072";
+		String strLong = "137.7419";
+		String strDriver = "1000";
+		String strCarNo = "1234";
+		String strAlcoholValue = "0";
+
+		// 画像取得
+		byte[] photoByte = null;
+		String strBitmap = pref.getString(getString(R.string.PREF_KEY_PHOTO), "");
+		if (!strBitmap.equals(""))
+		{
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			photoByte = Base64.decode(strBitmap, Base64.DEFAULT);
+		}
+
+		// パラメータセット
+		task.setHttp_multipart(true);
+		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
+		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), strDriver);
+		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), strCarNo);
+		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_NAME), strAddress);
+		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LAT), strLat);
+		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LONG), strLong);
+		task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
+		task.addPostParamJpeg(getString(R.string.HTTP_PARAM_PHOTO), photoByte);
+		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
+		task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");
+
+		// タスクを開始
+		task.execute();
 	}
 
 	private void openCamera() {
