@@ -654,6 +654,7 @@ public class InspectionActivity extends Activity
 				if (mTextureView.isAvailable()) {
 					//TextureViewに表示されている画像をBitmapで取得
 					Bitmap bmp = mTextureView.getBitmap();
+					bmp = Bitmap.createBitmap( bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mTextureView.getTransform( null ), true );
 
 					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 					bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
