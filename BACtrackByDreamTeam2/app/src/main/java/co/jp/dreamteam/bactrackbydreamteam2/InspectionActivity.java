@@ -714,13 +714,13 @@ public class InspectionActivity extends Activity
 		public void BACtrackBatteryLevel(int level) {
 			Log.d(TAG, "BatteryLevel: " + level);
 
-			if (level < 1)
+			if (level == 0)
 			{
 				setBatteryMessageRedColor2();
 				setBatteryMessage1("電池残量：少");
 				setBatteryMessage2("充電してください");
 			}
-			else if (level < 2)
+			else if (level < 3)
 			{
 				setBatteryMessageOrangeColor2();
 				setBatteryMessage1("電池残量：中");
