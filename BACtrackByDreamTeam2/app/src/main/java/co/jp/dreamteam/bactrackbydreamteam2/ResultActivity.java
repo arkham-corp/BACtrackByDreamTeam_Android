@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -200,7 +199,13 @@ public class ResultActivity extends Activity {
 
 				// ダイアログの設定
 				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-				alertDialog.setMessage(response);
+				if (response.startsWith("Hostname al-check.com not verified"))
+				{
+					alertDialog.setMessage("Https通信のHostnameが不正です");
+				}
+				else {
+					alertDialog.setMessage(response);
+				}
 
 				// OK(肯定的な)ボタンの設定
 				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener()
@@ -260,6 +265,7 @@ public class ResultActivity extends Activity {
 		}
 
 		// パラメータセット
+		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
 		task.setHttp_multipart(true);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), strDriver);

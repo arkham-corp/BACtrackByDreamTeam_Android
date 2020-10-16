@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-import java.util.HashMap;
-
 public class DriverActivity extends Activity
 {
 	BroadcastReceiver mReceiver;
@@ -112,7 +110,13 @@ public class DriverActivity extends Activity
 
 				// ダイアログの設定
 				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-				alertDialog.setMessage(response);
+				if (response.startsWith("Hostname al-check.com not verified"))
+				{
+					alertDialog.setMessage("Https通信のHostnameが不正です");
+				}
+				else {
+					alertDialog.setMessage(response);
+				}
 
 				// OK(肯定的な)ボタンの設定
 				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener()
@@ -170,6 +174,7 @@ public class DriverActivity extends Activity
 		);
 
 		// パラメータセット
+		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), editTextDriver.getText().toString());
 

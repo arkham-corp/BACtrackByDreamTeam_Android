@@ -36,7 +36,15 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		boolean httpTestFlg = false;
 		boolean cameraTestFlg = false;
+
+		if (httpTestFlg)
+		{
+			Intent intent = new Intent(getApplication(), CompanyActivity.class);
+			startActivity(intent);
+			return;
+		}
 
 		if (cameraTestFlg)
 		{
