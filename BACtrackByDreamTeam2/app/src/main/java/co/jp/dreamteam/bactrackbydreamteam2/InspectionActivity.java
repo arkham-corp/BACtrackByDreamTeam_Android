@@ -3,6 +3,7 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -89,6 +90,7 @@ public class InspectionActivity extends Activity
 	CaptureRequest.Builder mPreviewRequestBuilder = null;
 
 	final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+	final int MY_PERMISSIONS_REQUEST_BLUETOOTH = 2;
 
 	final String apiKey = "e10582efcaf64f7d90d947c2899b43";
 
@@ -97,6 +99,54 @@ public class InspectionActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_inspection);
+
+		// Bluetooth判定
+		// BluetoothAdapterのインスタンス取得
+		BluetoothAdapter mBtAdapter;
+		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		if (mBtAdapter == null) {
+
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+			// ダイアログの設定
+			alertDialog.setCancelable(false);
+			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+			alertDialog.setMessage("Bluetoothが使用できません");
+
+			// OK(肯定的な)ボタンの設定
+			alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// OKボタン押下時の処理
+					finish();
+				}
+			});
+
+			alertDialog.show();
+			return;
+		}
+		else
+		{
+			if (!mBtAdapter.isEnabled())
+			{
+				AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+				// ダイアログの設定
+				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+				alertDialog.setMessage("BluetoothをONにしてください");
+
+				// OK(肯定的な)ボタンの設定
+				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// OKボタン押下時の処理
+						finish();
+					}
+				});
+
+				alertDialog.show();
+				return;
+			}
+		}
 
 		layoutTextureViewParent = (LinearLayout) findViewById(R.id.layoutTextureViewParent);
 		mTextureView = (TextureView) findViewById(R.id.textureView);
@@ -124,7 +174,53 @@ public class InspectionActivity extends Activity
 		});
 	}
 
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case MY_PERMISSIONS_REQUEST_CAMERA: {
+				if (grantResults.length == 0)
+				{
+					return;
+				}
+				else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// ユーザーが許可したとき
+					// 許可が必要な機能を改めて実行する
+					openCamera();
+				} else {
+					// ユーザーが許可しなかったとき
+					// 許可されなかったため機能が実行できないことを表示する
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					// ダイアログの設定
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+					alertDialog.setMessage("カメラの使用が許可されていないため続行できません");
+
+					// OK(肯定的な)ボタンの設定
+					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// OKボタン押下時の処理
+							finish();
+						}
+					});
+
+					alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialogInterface) {
+							// OKボタン押下時の処理
+							finish();
+						}
+					});
+
+					alertDialog.show();
+				}
+			}
+		}
+	}
+
 	private void openCamera() {
+
 		//CameraManagerの取得
 		Context context = getApplicationContext();
 		CameraManager mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
@@ -156,16 +252,61 @@ public class InspectionActivity extends Activity
 			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
 			{
 				// permissionが許可されていません
-				if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-					// 許可ダイアログで今後表示しないにチェックされていない場合
+				if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA))
+				{
+					// 権限チェックした結果、持っていない場合はダイアログを出す
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がカメラの使用を求めています。\n" +
+							"アルコールチェック時に写真撮影を行い、撮影した画像は、サーバーに送信され、運行管理者が確認するために使用されます。");
+
+					alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							ActivityCompat.requestPermissions(InspectionActivity.this,
+									new String[]{Manifest.permission.CAMERA},
+									MY_PERMISSIONS_REQUEST_CAMERA);
+						}
+					});
+					alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialog) {
+							ActivityCompat.requestPermissions(InspectionActivity.this,
+									new String[]{Manifest.permission.CAMERA},
+									MY_PERMISSIONS_REQUEST_CAMERA);
+						}
+					});
+					alertDialog.create();
+					alertDialog.show();
 				}
+				else
+				{
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-				// permissionを許可してほしい理由の表示など
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がカメラの使用を求めています。\n" +
+							"アルコールチェック時に写真撮影を行い、撮影した画像は、サーバーに送信され、運行管理者が確認するために使用されます。");
 
-				// 許可ダイアログの表示
-				// MY_PERMISSIONS_REQUEST_READ_CONTACTSはアプリ内で独自定義したrequestCodeの値
-				requestPermissions(new String[]{Manifest.permission.CAMERA},
-						MY_PERMISSIONS_REQUEST_CAMERA);
+					alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							requestPermissions(new String[]{Manifest.permission.CAMERA},
+									MY_PERMISSIONS_REQUEST_CAMERA);
+						}
+					});
+					alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialog) {
+							requestPermissions(new String[]{Manifest.permission.CAMERA},
+									MY_PERMISSIONS_REQUEST_CAMERA);
+						}
+					});
+					alertDialog.create();
+					alertDialog.show();
+				}
 
 				return;
 			}
@@ -173,22 +314,6 @@ public class InspectionActivity extends Activity
 
 		} catch (CameraAccessException e) {
 			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-		switch (requestCode) {
-			case MY_PERMISSIONS_REQUEST_CAMERA: {
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// パーミッションが必要な処理
-					openCamera();
-				} else {
-					// パーミッションが得られなかった時
-					// 処理を中断する・エラーメッセージを出す・アプリケーションを終了する等
-					finish();
-				}
-			}
 		}
 	}
 

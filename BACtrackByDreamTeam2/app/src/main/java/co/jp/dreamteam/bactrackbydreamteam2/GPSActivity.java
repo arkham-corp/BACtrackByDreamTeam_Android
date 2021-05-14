@@ -83,24 +83,123 @@ public class GPSActivity extends Activity implements LocationListener {
 
 		this.findViewById(R.id.gps_btnDecision).setOnClickListener(btnDecisionClicked);
 
-		if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-			// permissionが許可されていません
-			if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-				// 許可ダイアログで今後表示しないにチェックされていない場合
-			}
-
-			// permissionを許可してほしい理由の表示など
-
-			// 許可ダイアログの表示
-			// MY_PERMISSIONS_REQUEST_READ_CONTACTSはアプリ内で独自定義したrequestCodeの値
-			requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-					MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-			return;
+		// 位置情報許可判定
+		if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+		{
+			GetLocation();
 		}
+		else
+		{
+			if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION))
+			{
+				// 権限チェックした結果、持っていない場合はダイアログを出す
+				AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-		GetLocation();
+				alertDialog.setCancelable(false);
+				alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+				alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版が位置情報の使用を求めています。\n" +
+						"アルコールマネージャーを利用し、アルコール測定をどこで行ったかを記録するために、位置情報を利用します。");
+
+				alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						ActivityCompat.requestPermissions(GPSActivity.this,
+								new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+					}
+				});
+
+				alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						ActivityCompat.requestPermissions(GPSActivity.this,
+								new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+					}
+				});
+
+				alertDialog.create();
+				alertDialog.show();
+
+				return;
+			}
+			else
+			{
+				// 直接許可を求めることができます。
+				AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+				alertDialog.setCancelable(false);
+				alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+				alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版が位置情報の使用を求めています。\n" +
+						"アルコールマネージャーを利用し、アルコール測定をどこで行ったかを記録するために、位置情報を利用します。");
+
+				alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+					}
+				});
+
+				alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+					}
+				});
+
+				alertDialog.create();
+				alertDialog.show();
+
+			}
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			// 先ほどの独自定義したrequestCodeの結果確認
+			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+				if (grantResults.length == 0)
+				{
+					return;
+				}
+				else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// ユーザーが許可したとき
+					// 許可が必要な機能を改めて実行する
+					GetLocation();
+				} else {
+					// ユーザーが許可しなかったとき
+					// 許可されなかったため機能が実行できないことを表示する
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					// ダイアログの設定
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+					alertDialog.setMessage("位置情報の使用が許可されていないため続行できません");
+
+					// OK(肯定的な)ボタンの設定
+					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// OKボタン押下時の処理
+							finish();
+						}
+					});
+
+					alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialogInterface) {
+							// OKボタン押下時の処理
+							finish();
+						}
+					});
+
+					alertDialog.show();
+				}
+			}
+		}
 	}
 
 	private void GetLocation() {
@@ -123,40 +222,6 @@ public class GPSActivity extends Activity implements LocationListener {
 					.setNegativeButton(getString(R.string.ALERT_BTN_NO), null)
 					.setCancelable(false)
 					.show();
-		}
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-		switch (requestCode) {
-			// 先ほどの独自定義したrequestCodeの結果確認
-			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// ユーザーが許可したとき
-					// 許可が必要な機能を改めて実行する
-					GetLocation();
-				} else {
-					// ユーザーが許可しなかったとき
-					// 許可されなかったため機能が実行できないことを表示する
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-					// ダイアログの設定
-					alertDialog.setCancelable(false);
-					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-					alertDialog.setMessage("位置情報が使用できません");
-
-					// OK(肯定的な)ボタンの設定
-					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							// OKボタン押下時の処理
-							finish();
-						}
-					});
-
-					alertDialog.show();
-				}
-				return;
-			}
 		}
 	}
 

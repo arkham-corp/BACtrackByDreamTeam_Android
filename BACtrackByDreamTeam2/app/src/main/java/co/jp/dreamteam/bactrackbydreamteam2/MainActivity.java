@@ -2,7 +2,6 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -69,51 +68,6 @@ public class MainActivity extends Activity
 
 		this.findViewById(R.id.main_btnDecision).setOnClickListener(btnDecisionClicked);
 
-		// Bluetooth判定
-		// BluetoothAdapterのインスタンス取得
-		BluetoothAdapter mBtAdapter;
-		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		if (mBtAdapter == null) {
-
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-			// ダイアログの設定
-			alertDialog.setCancelable(false);
-			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-			alertDialog.setMessage("Bluetoothが使用できません");
-
-			// OK(肯定的な)ボタンの設定
-			alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					// OKボタン押下時の処理
-					finish();
-				}
-			});
-
-			alertDialog.show();
-
-		} else
-		{
-			if (!mBtAdapter.isEnabled()) {
-				mBtAdapter.enable();
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-				// ダイアログの設定
-				alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
-				alertDialog.setMessage("BluetoothをONにしました");
-
-				// OK(肯定的な)ボタンの設定
-				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						// OKボタン押下時の処理
-					}
-				});
-
-				alertDialog.show();
-			}
-		}
-
 		// 利用規約確認
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
@@ -147,7 +101,6 @@ public class MainActivity extends Activity
 			// 表示
 			builder.create().show();
 		}
-
 	}
 
 	OnClickListener btnDecisionClicked = new OnClickListener()
