@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,18 +15,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ResultActivity extends Activity {
+import java.util.Locale;
 
-	final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1001;
+public class ResultActivity extends Activity {
 
 	public static final double ALCOHOL_REMOVAL_RATE = 0.015;
 
 	BroadcastReceiver mReceiver;
 
 	SharedPreferences pref;
-	SharedPreferences.Editor editor;
 
 	Button btnFinish;
+	TextView textViewSendingMessage;
 	TextView textViewMessage;
 	TextView textViewTitle;
 	TextView textViewResultValue;
@@ -41,7 +39,7 @@ public class ResultActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
 
-		// BroadcastRecieverを LocalBroadcastManagerを使って登録
+		// BroadcastReceiverを LocalBroadcastManagerを使って登録
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
 		mReceiver = new BroadcastReceiver() {
@@ -54,22 +52,23 @@ public class ResultActivity extends Activity {
 		};
 		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
-		this.textViewMessage = (TextView) this.findViewById(R.id.result_textViewResultMessage);
-		this.textViewTitle = (TextView) this.findViewById(R.id.result_textViewResultTitle);
-		this.textViewResultValue = (TextView) this.findViewById(R.id.result_textViewResultValue);
-		this.textViewResultRemainValue = (TextView) this.findViewById(R.id.result_textViewRemainValue);
-
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+
+		textViewSendingMessage = this.findViewById(R.id.result_textViewSendMessage);
+		textViewMessage = this.findViewById(R.id.result_textViewResultMessage);
+		textViewTitle = this.findViewById(R.id.result_textViewResultTitle);
+		textViewResultValue = this.findViewById(R.id.result_textViewResultValue);
+		textViewResultRemainValue = this.findViewById(R.id.result_textViewRemainValue);
 
 		// 測定値取得
 		String strMeasurement = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
-		double alcoholValue = Double.valueOf(strMeasurement);
-		double alcoholValueBreath = Double.valueOf(strMeasurement) * 5;
-		String strAlcoholValue = String.format("%.2f", alcoholValue);
-		String strAlcoholValueBreath = String.format("%.2f", alcoholValueBreath);
+		double alcoholValue = Double.parseDouble(strMeasurement);
+		double alcoholValueBreath = Double.parseDouble(strMeasurement) * 5;
+		String strAlcoholValue = String.format(Locale.JAPAN,"%.2f", alcoholValue);
+		String strAlcoholValueBreath = String.format(Locale.JAPAN,"%.2f", alcoholValueBreath);
 
 		// 異常判定
-		if (Double.valueOf(strAlcoholValue) != 0)
+		if (Double.parseDouble(strAlcoholValue) != 0)
 		{
 			textViewMessage.setText(getString(R.string.TEXT_RESULT_WARNING));
 			textViewMessage.setTextColor(Color.RED);
@@ -82,17 +81,17 @@ public class ResultActivity extends Activity {
 		{
 			// 呼気を画面に表示
 			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BREATH));
-			textViewResultValue.setText(strAlcoholValueBreath + "%");
+			textViewResultValue.setText(String.format("%s%%", strAlcoholValueBreath));
 		}
 		else
 		{
 			// 血中を画面に表示
 			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BLOOD));
-			textViewResultValue.setText(strAlcoholValue + "mg");
+			textViewResultValue.setText(String.format("%smg", strAlcoholValue));
 		}
 
 		// 計測結果から残留目安時間を表示
-		textViewResultRemainValue.setText(getRemainTime(alcoholValue) + " です。");
+		textViewResultRemainValue.setText(String.format("%s です。", getRemainTime(alcoholValue)));
 
 		// 終了ボタン
 		this.btnFinish = this.findViewById(R.id.result_btnFinish);
@@ -102,22 +101,19 @@ public class ResultActivity extends Activity {
 		exec_post();
 	}
 
-	View.OnClickListener btnFinishClicked = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			// LocalBroadcastManagerを使ってBroadcastを送信
-			Intent appFinishIntent = new Intent();
-			appFinishIntent.setAction(getString(R.string.BLOADCAST_FINISH));
-			LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(appFinishIntent);
-			finish();
-		}
+	View.OnClickListener btnFinishClicked = v -> {
+		// LocalBroadcastManagerを使ってBroadcastを送信
+		Intent appFinishIntent = new Intent();
+		appFinishIntent.setAction(getString(R.string.BLOADCAST_FINISH));
+		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(appFinishIntent);
+		finish();
 	};
 
 	/**
 	 * 計測値から残留時間を計算、アルコール消化時刻を返却
 	 *
-	 * @param alcoholValue
-	 * @return
+	 * @param alcoholValue 計測値
+	 * @return アルコール消化時刻
 	 */
 	private String getRemainTime(double alcoholValue) {
 
@@ -134,54 +130,48 @@ public class ResultActivity extends Activity {
 		int h_for = cal.get(java.util.Calendar.HOUR_OF_DAY);
 		int m_for = cal.get(java.util.Calendar.MINUTE);
 
-		String h_str = "00" + String.valueOf(h_for);
-		String m_str = "00" + String.valueOf(m_for);
-		String ret = h_str.substring(h_str.length() - 2) + ":" + m_str.substring(m_str.length() - 2);
+		String h_str = String.format(Locale.JAPAN,"%02d", h_for);
+		String m_str = String.format(Locale.JAPAN,"%02d", m_for);
 
-		return ret;
+		return h_str.substring(h_str.length() - 2) + ":" + m_str.substring(m_str.length() - 2);
 	}
 
 	/**
 	 * 送信エラー
 	 */
 	private void errorSending() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
+		runOnUiThread(() -> {
 
-				errorCount += 1;
+			errorCount += 1;
 
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResultActivity.this);
-				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResultActivity.this);
+			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
 
-				if (errorCount < 3) {
-					// ダイアログの設定
-					alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR));
+			if (errorCount < 3) {
+				// ダイアログの設定
+				alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR));
 
-					// OK(肯定的な)ボタンの設定
-					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							// OKボタン押下時の処理
-							exec_post();
-						}
-					});
-				}
-				else
-				{
-					// ダイアログの設定
-					alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR_LAST));
-
-					// OK(肯定的な)ボタンの設定
-					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							// OKボタン押下時の処理
-							btnFinish.setVisibility(View.VISIBLE);
-						}
-					});
-				}
-
-				alertDialog.show();
+				// OK(肯定的な)ボタンの設定
+				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+					// OKボタン押下時の処理
+					exec_post();
+				});
 			}
+			else
+			{
+				// ダイアログの設定
+				alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR_LAST));
+
+				// OK(肯定的な)ボタンの設定
+				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+					textViewSendingMessage.setText(getString(R.string.TEXT_SEND_FINISH_ERROR));
+					textViewSendingMessage.setTextColor(Color.RED);
+					// OKボタン押下時の処理
+					btnFinish.setVisibility(View.VISIBLE);
+				});
+			}
+
+			alertDialog.show();
 		});
 	}
 
@@ -190,34 +180,37 @@ public class ResultActivity extends Activity {
 	 */
 	private void errorHttp(final String response)
 	{
-		runOnUiThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResultActivity.this);
+		runOnUiThread(() -> {
+			errorCount += 1;
 
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResultActivity.this);
+			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+
+			if (errorCount < 3) {
 				// ダイアログの設定
-				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-				if (response.startsWith("Hostname al-check.com not verified"))
-				{
-					alertDialog.setMessage("Https通信のHostnameが不正です");
-				}
-				else {
-					alertDialog.setMessage(response);
-				}
+				alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR));
 
 				// OK(肯定的な)ボタンの設定
-				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int which)
-					{
-						// OKボタン押下時の処理
-					}
+				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+					// OKボタン押下時の処理
+					exec_post();
 				});
-
-				alertDialog.show();
 			}
+			else
+			{
+				// ダイアログの設定
+				alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR_LAST));
+
+				// OK(肯定的な)ボタンの設定
+				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+					textViewSendingMessage.setText(getString(R.string.TEXT_SEND_FINISH_ERROR));
+					textViewSendingMessage.setTextColor(Color.RED);
+					// OKボタン押下時の処理
+					btnFinish.setVisibility(View.VISIBLE);
+				});
+			}
+
+			alertDialog.show();
 		});
 	}
 
@@ -234,6 +227,8 @@ public class ResultActivity extends Activity {
 					public void onPostCompleted(String response) {
 						// 受信結果をUIに表示
 						if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+							textViewSendingMessage.setText(getString(R.string.TEXT_FINISH1));
+							textViewSendingMessage.setTextColor(Color.GREEN);
 							btnFinish.setVisibility(View.VISIBLE);
 						} else {
 							errorSending();
@@ -249,18 +244,20 @@ public class ResultActivity extends Activity {
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
 		String strCompany = pref.getString(getString(R.string.PREF_KEY_COMPANY), "");
+		String strInspectionTime = pref.getString(getString(R.string.PREF_KEY_INSPECTION_TIME), "");
 		String strAddress = pref.getString(getString(R.string.PREF_KEY_ADDRESS), "");
 		String strLat = pref.getString(getString(R.string.PREF_KEY_LAT), "");
 		String strLong = pref.getString(getString(R.string.PREF_KEY_LON), "");
 		String strDriver = pref.getString(getString(R.string.PREF_KEY_DRIVER), "");
 		String strCarNo = pref.getString(getString(R.string.PREF_KEY_CAR_NO), "");
 		String strAlcoholValue = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
+		String strBacTrackId = pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), "");
+
 		// 画像取得
 		byte[] photoByte = null;
 		String strBitmap = pref.getString(getString(R.string.PREF_KEY_PHOTO), "");
 		if (!strBitmap.equals(""))
 		{
-			BitmapFactory.Options options = new BitmapFactory.Options();
 			photoByte = Base64.decode(strBitmap, Base64.DEFAULT);
 		}
 
@@ -268,6 +265,7 @@ public class ResultActivity extends Activity {
 		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
 		task.setHttp_multipart(true);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
+		task.addPostParam(getString(R.string.HTTP_PARAM_INSPECTION_TIME), strInspectionTime);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), strDriver);
 		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), strCarNo);
 		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_NAME), strAddress);
@@ -275,6 +273,7 @@ public class ResultActivity extends Activity {
 		task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LONG), strLong);
 		task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
 		task.addPostParamJpeg(getString(R.string.HTTP_PARAM_PHOTO), photoByte);
+		task.addPostParam(getString(R.string.HTTP_PARAM_BACTRACK_ID), strBacTrackId);
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");
 

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -15,7 +14,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -38,10 +36,7 @@ public class GPSActivity extends Activity implements LocationListener {
 	LocationManager locationManagerGPS;
 	LocationManager locationManagerNET;
 	private TextView textViewAddress;
-	private Button btnDecesion;
-
-	private double dblLatitude = 0;
-	private double dblLongitude = 0;
+	private Button btnDecision;
 
 	final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1000;
 
@@ -50,7 +45,7 @@ public class GPSActivity extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gps);
 
-		// BroadcastRecieverを LocalBroadcastManagerを使って登録
+		// BroadcastReceiverを LocalBroadcastManagerを使って登録
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
 		mReceiver = new BroadcastReceiver() {
@@ -74,12 +69,12 @@ public class GPSActivity extends Activity implements LocationListener {
 		editor.commit();
 
 		// テキスト割当
-		textViewAddress = (TextView) findViewById(R.id.gps_textViewAddress);
+		textViewAddress = findViewById(R.id.gps_textViewAddress);
 
 		// テキスト初期化
 		textViewAddress.setText(R.string.TEXT_GPS_WAIT);
 
-		btnDecesion = (Button) findViewById(R.id.gps_btnDecision);
+		btnDecision = findViewById(R.id.gps_btnDecision);
 
 		this.findViewById(R.id.gps_btnDecision).setOnClickListener(btnDecisionClicked);
 
@@ -100,28 +95,17 @@ public class GPSActivity extends Activity implements LocationListener {
 				alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版が位置情報の使用を求めています。\n" +
 						"アルコールマネージャーを利用し、アルコール測定をどこで行ったかを記録するために、位置情報を利用します。");
 
-				alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						ActivityCompat.requestPermissions(GPSActivity.this,
-								new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-					}
-				});
+				alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(GPSActivity.this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION));
 
-				alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						ActivityCompat.requestPermissions(GPSActivity.this,
-								new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-					}
-				});
+				alertDialog.setOnDismissListener(dialog -> ActivityCompat.requestPermissions(GPSActivity.this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION));
 
 				alertDialog.create();
 				alertDialog.show();
 
-				return;
 			}
 			else
 			{
@@ -133,21 +117,11 @@ public class GPSActivity extends Activity implements LocationListener {
 				alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版が位置情報の使用を求めています。\n" +
 						"アルコールマネージャーを利用し、アルコール測定をどこで行ったかを記録するために、位置情報を利用します。");
 
-				alertDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-					}
-				});
+				alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION));
 
-				alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-								MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-					}
-				});
+				alertDialog.setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION));
 
 				alertDialog.create();
 				alertDialog.show();
@@ -157,46 +131,22 @@ public class GPSActivity extends Activity implements LocationListener {
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-		switch (requestCode) {
-			// 先ほどの独自定義したrequestCodeの結果確認
-			case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-				if (grantResults.length == 0)
-				{
-					return;
-				}
-				else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+	protected void onStart() {
+		super.onStart();
+		btnDecision.setEnabled(true);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		// 先ほどの独自定義したrequestCodeの結果確認
+		if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+			if (grantResults.length != 0) {
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					// ユーザーが許可したとき
 					// 許可が必要な機能を改めて実行する
 					GetLocation();
 				} else {
 					// ユーザーが許可しなかったとき
-					// 許可されなかったため機能が実行できないことを表示する
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-					// ダイアログの設定
-					alertDialog.setCancelable(false);
-					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-					alertDialog.setMessage("位置情報の使用が許可されていないため続行できません");
-
-					// OK(肯定的な)ボタンの設定
-					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// OKボタン押下時の処理
-							finish();
-						}
-					});
-
-					alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-						@Override
-						public void onDismiss(DialogInterface dialogInterface) {
-							// OKボタン押下時の処理
-							finish();
-						}
-					});
-
-					alertDialog.show();
 				}
 			}
 		}
@@ -213,12 +163,7 @@ public class GPSActivity extends Activity implements LocationListener {
 			new AlertDialog.Builder(this)
 					.setTitle(getString(R.string.ALERT_TITLE_QUESTION))
 					.setMessage(getString(R.string.TEXT_GPS_SETTING))
-					.setPositiveButton(getString(R.string.ALERT_BTN_YES), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							enableLocationSettings();
-						}
-					})
+					.setPositiveButton(getString(R.string.ALERT_BTN_YES), (dialog, which) -> enableLocationSettings())
 					.setNegativeButton(getString(R.string.ALERT_BTN_NO), null)
 					.setCancelable(false)
 					.show();
@@ -228,6 +173,7 @@ public class GPSActivity extends Activity implements LocationListener {
 	OnClickListener btnDecisionClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			btnDecision.setEnabled(false);
 			Intent intent = new Intent(getApplication(), CompanyActivity.class);
 			startActivity(intent);
 		}
@@ -237,7 +183,7 @@ public class GPSActivity extends Activity implements LocationListener {
 	protected void onResume() {
 		if (locationManagerGPS != null) {
 			if (locationManagerGPS.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
-				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+				if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
 					return;
 				}
@@ -272,13 +218,13 @@ public class GPSActivity extends Activity implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location)
 	{
-		dblLatitude = location.getLatitude();
-		dblLongitude = location.getLongitude();
+		double dblLatitude = location.getLatitude();
+		double dblLongitude = location.getLongitude();
 
 		// 緯度経度を住所に変換
 		String strAddress = getAddressFromPoint(dblLatitude, dblLongitude);
 
-		if (strAddress.equals(""))
+		if (strAddress == null || strAddress.equals(""))
 		{
 			return;
 		}
@@ -287,7 +233,7 @@ public class GPSActivity extends Activity implements LocationListener {
 		textViewAddress.setText(strAddress);
 
 		// 省略を決定ボタンに変更
-		btnDecesion.setText(R.string.BTN_DECISION);
+		btnDecision.setText(R.string.BTN_DECISION);
 
 		// 値保存
 		editor = pref.edit();
@@ -297,46 +243,18 @@ public class GPSActivity extends Activity implements LocationListener {
 		editor.commit();
 	}
 
-	@Override
-	public void onProviderDisabled(String provider)
-	{
-
-	}
-
-	@Override
-	public void onProviderEnabled(String provider)
-	{
-
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras)
-	{
-		switch (status)
-		{
-		case LocationProvider.AVAILABLE:
-
-			break;
-		case LocationProvider.OUT_OF_SERVICE:
-
-			break;
-		case LocationProvider.TEMPORARILY_UNAVAILABLE:
-
-			break;
-		}
-	}
-
 	private void enableLocationSettings()
 	{
+		btnDecision.setEnabled(false);
 		Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		startActivity(settingsIntent);
 	}
 
 	/**
 	 * 緯度経度を住所に変換
-	 * @param latitude
-	 * @param longitude
-	 * @return
+	 * @param latitude 緯度
+	 * @param longitude 経度
+	 * @return 住所
 	 */
 	private String getAddressFromPoint(double latitude, double longitude)
 	{
@@ -375,7 +293,7 @@ public class GPSActivity extends Activity implements LocationListener {
 						buf = buf.substring(buf.indexOf(" "));
 					}
 
-					sb.append(buf + " ");
+					sb.append(buf).append(" ");
 				}
 
 				addressValue = sb.toString();

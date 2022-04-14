@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class CarNoActivity extends Activity
@@ -23,6 +22,7 @@ public class CarNoActivity extends Activity
 
 	String company_code;
 	EditText editTextCarNo;
+	Button car_no_btnDecision;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -30,7 +30,7 @@ public class CarNoActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_car_no);
 		
-		// BroadcastRecieverを LocalBroadcastManagerを使って登録
+		// BroadcastReceiverを LocalBroadcastManagerを使って登録
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
         mReceiver = new BroadcastReceiver() {
@@ -44,9 +44,10 @@ public class CarNoActivity extends Activity
         };
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
-		this.editTextCarNo = (EditText) this.findViewById(R.id.car_no_editTextCarNo);
+		this.editTextCarNo = this.findViewById(R.id.car_no_editTextCarNo);
 
-		this.findViewById(R.id.car_no_btnDecision).setOnClickListener(btnDecisionClicked);
+		car_no_btnDecision = this.findViewById(R.id.car_no_btnDecision);
+		car_no_btnDecision.setOnClickListener(btnDecisionClicked);
 
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
@@ -55,42 +56,33 @@ public class CarNoActivity extends Activity
 		company_code = pref.getString(getString(R.string.PREF_KEY_COMPANY), "");
 	}
 
-	OnClickListener btnDecisionClicked = new OnClickListener()
-	{
-		@Override
-		public void onClick(View v)
-		{
-			exec_post();
-		}
-	};
+	OnClickListener btnDecisionClicked = v -> exec_post();
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		car_no_btnDecision.setEnabled(true);
+	}
 
 	/**
 	 * 車番エラー
 	 */
 	private void errorDriverNotFound()
 	{
-		runOnUiThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(CarNoActivity.this);
+		runOnUiThread(() -> {
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(CarNoActivity.this);
 
-				// ダイアログの設定
-				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-				alertDialog.setMessage(getString(R.string.TEXT_ERR_CAR_NO_NOT_FOUND));
+			// ダイアログの設定
+			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+			alertDialog.setMessage(getString(R.string.TEXT_ERR_CAR_NO_NOT_FOUND));
 
-				// OK(肯定的な)ボタンの設定
-				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int which)
-					{
-						// OKボタン押下時の処理
-					}
-				});
+			// OK(肯定的な)ボタンの設定
+			alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+				// OKボタン押下時の処理
+				car_no_btnDecision.setEnabled(true);
+			});
 
-				alertDialog.show();
-			}
+			alertDialog.show();
 		});
 	}
 
@@ -99,40 +91,34 @@ public class CarNoActivity extends Activity
 	 */
 	private void errorHttp(final String response)
 	{
-		runOnUiThread(new Runnable()
-		{
-			@Override
-			public void run()
+		runOnUiThread(() -> {
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(CarNoActivity.this);
+
+			// ダイアログの設定
+			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+			if (response.startsWith("Hostname al-check.com not verified"))
 			{
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(CarNoActivity.this);
-
-				// ダイアログの設定
-				alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-				if (response.startsWith("Hostname al-check.com not verified"))
-				{
-					alertDialog.setMessage("Https通信のHostnameが不正です");
-				}
-				else {
-					alertDialog.setMessage(response);
-				}
-
-				// OK(肯定的な)ボタンの設定
-				alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int which)
-					{
-						// OKボタン押下時の処理
-					}
-				});
-
-				alertDialog.show();
+				alertDialog.setMessage("Https通信のHostnameが不正です");
 			}
+			else {
+				alertDialog.setMessage(response);
+			}
+
+			// OK(肯定的な)ボタンの設定
+			alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+				// OKボタン押下時の処理
+				car_no_btnDecision.setEnabled(true);
+			});
+
+			alertDialog.show();
 		});
 	}
 
 	// POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
 	private void exec_post()
 	{
+		car_no_btnDecision.setEnabled(false);
+
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,

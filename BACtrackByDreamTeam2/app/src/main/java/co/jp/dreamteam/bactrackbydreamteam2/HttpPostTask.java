@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -26,11 +27,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -40,18 +38,15 @@ import javax.net.ssl.X509TrustManager;
  */
 public class HttpPostTask extends AsyncTask<Void, Void, Void>
 {
-
-    // 設定事項
-    private String request_encoding = "UTF-8";
-    private String response_encoding = "UTF-8";
-
     // 初期化事項
-    private Activity parent_activity = null;
-    private String post_url = null;
-    private Handler ui_handler = null;
-    private HashMap<String, String> post_headers = null;
-    private HashMap<String, String> post_params = null;
-    private HashMap<String, byte[]> post_params_jpeg = null;
+    private final Activity parent_activity;
+    private final String post_url;
+    private final Handler ui_handler;
+
+    // 送信パラメータは初期化せず，new後にsetさせる
+    private final HashMap<String, String> post_headers = new HashMap<>();
+    private final HashMap<String, String> post_params = new HashMap<>();
+    private final HashMap<String, byte[]> post_params_jpeg = new HashMap<>();
 
     // 処理中に使うメンバ
     private String http_err_msg = null;
@@ -61,19 +56,11 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
     // プロパティ
     private String verify_hostname = "";
 
-    public String getVerify_hostname() {
-        return verify_hostname;
-    }
-
     public void setVerify_hostname(String verify_hostname) {
         this.verify_hostname = verify_hostname;
     }
 
     private boolean http_multipart = false;
-
-    public boolean isHttp_multipart() {
-        return http_multipart;
-    }
 
     public void setHttp_multipart(boolean http_multipart) {
         this.http_multipart = http_multipart;
@@ -86,20 +73,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         this.parent_activity = parent_activity;
         this.post_url = post_url;
         this.ui_handler = ui_handler;
-
-        // 送信パラメータは初期化せず，new後にsetさせる
-        post_headers = new HashMap<String, String>();
-        post_params = new HashMap<String, String>();
-        post_params_jpeg = new HashMap<String, byte[]>();
     }
 
 	/* --------------------- POSTパラメータ --------------------- */
-
-    // 追加
-    public void addPostHeader(String key, String value)
-    {
-        post_headers.put(key, value);
-    }
 
     // 追加
     public void addPostParam(String post_name, String post_value)
@@ -147,20 +123,20 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         {
             con.setRequestProperty(key, post_headers.get(key));
         }
-        String param = "";
+        StringBuilder param = new StringBuilder();
         for (String key : post_params.keySet())
         {
-            if (param.equals(""))
+            if (param.toString().equals(""))
             {
-                param = key + "=" + post_params.get(key);
+                param = new StringBuilder(key + "=" + post_params.get(key));
             }
             else
             {
-                param = param + "&" + key + "=" + post_params.get(key);
+                param.append("&").append(key).append("=").append(post_params.get(key));
             }
         }
 
-        out.write(param);
+        out.write(param.toString());
         out.close();
     }
 
@@ -172,20 +148,20 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         {
             con.setRequestProperty(key, post_headers.get(key));
         }
-        String param = "";
+        StringBuilder param = new StringBuilder();
         for (String key : post_params.keySet())
         {
-            if (param.equals(""))
+            if (param.toString().equals(""))
             {
-                param = key + "=" + post_params.get(key);
+                param = new StringBuilder(key + "=" + post_params.get(key));
             }
             else
             {
-                param = param + "&" + key + "=" + post_params.get(key);
+                param.append("&").append(key).append("=").append(post_params.get(key));
             }
         }
 
-        out.write(param);
+        out.write(param.toString());
         out.close();
     }
 
@@ -194,7 +170,6 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         final String twoHyphens = "--";
         final String boundary =  "*****"+ UUID.randomUUID().toString()+"*****";
         final String lineEnd = "\r\n";
-        final int maxBufferSize = 1024*1024*3;
 
         DataOutputStream outputStream;
 
@@ -223,9 +198,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
 
             byte[] buffer = post_params_jpeg.get(key);
 
-            for(int i = 0; i < buffer.length; i++)
-            {
-                outputStream.write(buffer[i]);
+            assert buffer != null;
+            for (byte b : buffer) {
+                outputStream.write(b);
             }
 
             outputStream.writeBytes(lineEnd);
@@ -237,10 +212,10 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
             outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
             outputStream.writeBytes(lineEnd);
-            byte[] buffer = value.getBytes("UTF-8");
-            for(int i = 0; i < buffer.length; i++)
-            {
-                outputStream.write(buffer[i]);
+            assert value != null;
+            byte[] buffer = value.getBytes(StandardCharsets.UTF_8);
+            for (byte b : buffer) {
+                outputStream.write(b);
             }
             outputStream.writeBytes(lineEnd);
         }
@@ -255,7 +230,6 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         final String twoHyphens = "--";
         final String boundary =  "*****"+ UUID.randomUUID().toString()+"*****";
         final String lineEnd = "\r\n";
-        final int maxBufferSize = 1024*1024*3;
 
         DataOutputStream outputStream;
 
@@ -284,9 +258,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
 
             byte[] buffer = post_params_jpeg.get(key);
 
-            for(int i = 0; i < buffer.length; i++)
-            {
-                outputStream.write(buffer[i]);
+            assert buffer != null;
+            for (byte b : buffer) {
+                outputStream.write(b);
             }
 
             outputStream.writeBytes(lineEnd);
@@ -298,10 +272,10 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
             outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
             outputStream.writeBytes(lineEnd);
-            byte[] buffer = value.getBytes("UTF-8");
-            for(int i = 0; i < buffer.length; i++)
-            {
-                outputStream.write(buffer[i]);
+            assert value != null;
+            byte[] buffer = value.getBytes(StandardCharsets.UTF_8);
+            for (byte b : buffer) {
+                outputStream.write(b);
             }
             outputStream.writeBytes(lineEnd);
         }
@@ -314,7 +288,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
     private void doInBackgroundHttp()
     {
         HttpURLConnection con = null;
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         try {
 
@@ -347,7 +321,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
                 }
                 final InputStreamReader inReader = new InputStreamReader(in, encoding);
                 final BufferedReader bufReader = new BufferedReader(inReader);
-                String line = null;
+                String line;
                 // 1行ずつテキストを読み込む
                 while((line = bufReader.readLine()) != null) {
                     result.append(line);
@@ -372,11 +346,8 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
     }
 
     private static final Set<String> PINS = new HashSet<>(Arrays.asList(
-            new String[] {
-                    "46bb523de04ca6d5d05f560d6fe9b3af1e244d2acad6b42fb2fe523feb6ad108",
-                    "9ca59cb18adcfb2e48f2f2dfd55181ca36edf879dab2397ef61f2534a272b681"
-            }
-    ));
+            "46bb523de04ca6d5d05f560d6fe9b3af1e244d2acad6b42fb2fe523feb6ad108",
+            "9ca59cb18adcfb2e48f2f2dfd55181ca36edf879dab2397ef61f2534a272b681"));
 
     private String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -390,7 +361,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
     private void doInBackgroundHttps()
     {
         HttpsURLConnection con = null;
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         try {
 
@@ -399,29 +370,18 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             con = (HttpsURLConnection) url.openConnection();
 
             // 証明書に書かれているCommon NameとURLのホスト名が一致していることの検証
-            con.setHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession sslSession) {
-                    if (hostname.equals(verify_hostname))
-                    {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-            });
+            con.setHostnameVerifier((hostname, sslSession) -> hostname.equals(verify_hostname));
 
             // 証明書チェーンの検証
-            KeyManager[] keyManagers = null;
             TrustManager[] transManagers = { new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                public void checkClientTrusted(X509Certificate[] chain, String authType) {
                 }
 
                 public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                     // 公開鍵ピンニングを用いて検証する
                     for (X509Certificate cert : chain) {
                         PublicKey key = cert.getPublicKey();
-                        MessageDigest md = null;
+                        MessageDigest md;
                         try {
                             md = MessageDigest.getInstance("SHA-256");
                         } catch (NoSuchAlgorithmException e) {
@@ -443,7 +403,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
                 }
             } };
             SSLContext sslcontext = SSLContext.getInstance("SSL");
-            sslcontext.init(keyManagers, transManagers, new SecureRandom());
+            sslcontext.init(null, transManagers, new SecureRandom());
             con.setSSLSocketFactory(sslcontext.getSocketFactory());
 
             con.setDoOutput(true);
@@ -471,7 +431,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
                 }
                 final InputStreamReader inReader = new InputStreamReader(in, encoding);
                 final BufferedReader bufReader = new BufferedReader(inReader);
-                String line = null;
+                String line;
                 // 1行ずつテキストを読み込む
                 while((line = bufReader.readLine()) != null) {
                     result.append(line);

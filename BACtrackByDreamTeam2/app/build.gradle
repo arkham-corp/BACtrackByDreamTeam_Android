@@ -6,7 +6,7 @@ android {
             storeFile file('D:\\Users\\DreamTeam\\AlcoholChecker2\\Android\\BACtrackByDreamTeam.keystore')
             storePassword 'dreamteam'
             keyAlias 'bactrackbydreamteam'
-            keyPassword 'com'
+            keyPassword 'dreamteam'
         }
     }
     compileSdkVersion 31
