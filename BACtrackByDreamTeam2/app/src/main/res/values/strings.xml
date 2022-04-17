@@ -10,7 +10,7 @@
     <string name="VERIFY_HOSTNAME">al-check.com</string>
     <string name="HTTP_URL">https://al-check.com/AlcoholChecker2</string>
     <!-- <string name="HTTP_URL">http://128.0.3.32:8080/AlcoholChecker2/</string> -->
-    <string name="HTTP_COMPANY_CHECK">HttpCompanyMasterCheckServlet</string>
+    <string name="HTTP_COMPANY_CHECK">HttpGetAlcoholValueDivServlet</string>
     <string name="HTTP_DRIVER_CHECK">HttpDriverMasterCheckServlet</string>
     <string name="HTTP_CAR_NO_CHECK">HttpCarNoMasterCheckServlet</string>
     <string name="HTTP_WRITE_ALCOHOL_VALUE">"HttpWriteAlcoholResultServlet</string>
@@ -106,11 +106,12 @@
     <string name="TEXT_RESULT_TITLE">測定結果</string>
     <string name="TEXT_RESULT_TITLE_BLOOD">測定結果(血中)</string>
     <string name="TEXT_RESULT_TITLE_BREATH">測定結果(呼気)</string>
+    <string name="TEXT_RESULT_TITLE_BREATH_2">*呼気中*濃度表示*(呼気)</string>
     <string name="TEXT_RESULT_OK">【検査OK】\n本日も安全運転で\nお願いします</string>
     <string name="TEXT_RESULT_WARNING">【警告】\n現状態での運転禁止\n管理者へ報告する事</string>
     <string name="TEXT_SENDING">送信中</string>
     <string name="TEXT_SEND_ERROR">送信できませんでした\n再送信します</string>
-    <string name="TEXT_SEND_ERROR_LAST">送信できませんでした\n測定値は送信されません</string>
+    <string name="TEXT_SEND_ERROR_LAST">送信できませんでした。\nアプリを終了し初めからやりなおしてください。または管理者様へお知らせください。</string>
     <string name="TEXT_SEND_FINISH_ERROR">送信失敗</string>
     <string name="TEXT_FINISH1">送信完了</string>
     <string name="TEXT_FINISH2">お疲れさまでした</string>

@@ -83,6 +83,12 @@ public class ResultActivity extends Activity {
 			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BREATH));
 			textViewResultValue.setText(String.format("%s%%", strAlcoholValueBreath));
 		}
+		else if (strAlcoholValueDiv.equals("2"))
+		{
+			// 呼気を画面に表示
+			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BREATH_2));
+			textViewResultValue.setText(String.format("%s%%", strAlcoholValueBreath));
+		}
 		else
 		{
 			// 血中を画面に表示

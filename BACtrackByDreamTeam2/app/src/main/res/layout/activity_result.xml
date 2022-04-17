@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:text="@string/TEXT_RESULT_TITLE"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp"  />
+            android:textSize="24sp"  />
 
         <TextView
             android:id="@+id/result_textViewResultValue"
