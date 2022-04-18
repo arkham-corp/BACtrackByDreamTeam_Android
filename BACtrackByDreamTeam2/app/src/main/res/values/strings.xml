@@ -106,7 +106,7 @@
     <string name="TEXT_RESULT_TITLE">測定結果</string>
     <string name="TEXT_RESULT_TITLE_BLOOD">測定結果(血中)</string>
     <string name="TEXT_RESULT_TITLE_BREATH">測定結果(呼気)</string>
-    <string name="TEXT_RESULT_TITLE_BREATH_2">*呼気中*濃度表示*(呼気)</string>
+    <string name="TEXT_RESULT_TITLE_BREATH_2">呼気中濃度表示(呼気)</string>
     <string name="TEXT_RESULT_OK">【検査OK】\n本日も安全運転で\nお願いします</string>
     <string name="TEXT_RESULT_WARNING">【警告】\n現状態での運転禁止\n管理者へ報告する事</string>
     <string name="TEXT_SENDING">送信中</string>
