@@ -236,7 +236,13 @@ public class ResultActivity extends Activity {
 							textViewSendingMessage.setText(getString(R.string.TEXT_FINISH1));
 							textViewSendingMessage.setTextColor(Color.GREEN);
 							btnFinish.setVisibility(View.VISIBLE);
-						} else {
+						}
+						else if (response.startsWith(getString(R.string.HTTP_RESPONSE_KEY_NG))) {
+							textViewSendingMessage.setText(getString(R.string.TEXT_FINISH_DUPLICATE));
+							textViewSendingMessage.setTextColor(Color.RED);
+							btnFinish.setVisibility(View.VISIBLE);
+						}
+						else {
 							errorSending();
 						}
 					}
