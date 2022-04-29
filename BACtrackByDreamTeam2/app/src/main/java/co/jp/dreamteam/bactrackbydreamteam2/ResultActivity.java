@@ -81,19 +81,19 @@ public class ResultActivity extends Activity {
 		{
 			// 呼気を画面に表示
 			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BREATH));
-			textViewResultValue.setText(String.format("%s%%", strAlcoholValueBreath));
+			textViewResultValue.setText(String.format("%smg/L", strAlcoholValueBreath));
 		}
 		else if (strAlcoholValueDiv.equals("2"))
 		{
 			// 呼気を画面に表示
 			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BREATH_2));
-			textViewResultValue.setText(String.format("%s%%", strAlcoholValueBreath));
+			textViewResultValue.setText(String.format("%smg/L", strAlcoholValueBreath));
 		}
 		else
 		{
 			// 血中を画面に表示
 			textViewTitle.setText(getString(R.string.TEXT_RESULT_TITLE_BLOOD));
-			textViewResultValue.setText(String.format("%smg", strAlcoholValue));
+			textViewResultValue.setText(String.format("%s%%", strAlcoholValue));
 		}
 
 		// 計測結果から残留目安時間を表示

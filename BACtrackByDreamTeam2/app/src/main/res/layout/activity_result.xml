@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:text="@string/TEXT_DUMMY"
             android:textColor="@color/cornflowerBlue"
-            android:textSize="80sp" />
+            android:textSize="60sp" />
 
         <TextView
             android:id="@+id/result_textViewRemainHeader"
