@@ -15,22 +15,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * HTTP通信でPOSTリクエストを投げる処理を非同期で行うタスク。
@@ -345,19 +334,6 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         HttpPostTask.this.http_ret_msg = result.toString();
     }
 
-    private static final Set<String> PINS = new HashSet<>(Arrays.asList(
-            "46bb523de04ca6d5d05f560d6fe9b3af1e244d2acad6b42fb2fe523feb6ad108",
-            "9ca59cb18adcfb2e48f2f2dfd55181ca36edf879dab2397ef61f2534a272b681"));
-
-    private String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            String s = String.format("%02x", b);
-            sb.append(s);
-        }
-        return sb.toString();
-    }
-
     private void doInBackgroundHttps()
     {
         HttpsURLConnection con = null;
@@ -371,40 +347,6 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
 
             // 証明書に書かれているCommon NameとURLのホスト名が一致していることの検証
             con.setHostnameVerifier((hostname, sslSession) -> hostname.equals(verify_hostname));
-
-            // 証明書チェーンの検証
-            TrustManager[] transManagers = { new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain, String authType) {
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    // 公開鍵ピンニングを用いて検証する
-                    for (X509Certificate cert : chain) {
-                        PublicKey key = cert.getPublicKey();
-                        MessageDigest md;
-                        try {
-                            md = MessageDigest.getInstance("SHA-256");
-                        } catch (NoSuchAlgorithmException e) {
-                            //throw new DigestException("couldn't make digest of partial content");
-                            throw new CertificateException();
-                        }
-                        String keyHash = bytesToHex(md.digest(key.getEncoded()));
-
-                        // ピンニングしておいた公開鍵のハッシュ値と比較する
-                        if(!PINS.contains(keyHash))
-                        {
-                            throw new CertificateException();
-                        }
-                    }
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            } };
-            SSLContext sslcontext = SSLContext.getInstance("SSL");
-            sslcontext.init(null, transManagers, new SecureRandom());
-            con.setSSLSocketFactory(sslcontext.getSocketFactory());
 
             con.setDoOutput(true);
             con.setRequestMethod("POST");
