@@ -1,7 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -23,7 +22,9 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -84,16 +86,139 @@ public class InspectionActivity extends Activity {
 
 	final String apiKey = "e10582efcaf64f7d90d947c2899b43";
 
+	BluetoothAdapter mBtAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_inspection);
 
-		// Bluetooth判定
-		// BluetoothAdapterのインスタンス取得
-		BluetoothAdapter mBtAdapter;
-		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+		mTextureView = findViewById(R.id.textureView);
+		mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+			@Override
+			public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+				// 先ほどのカメラを開く部分をメソッド化した
+				openCamera();
+			}
 
+			@Override
+			public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+			}
+
+			@Override
+			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+				return true;
+			}
+
+			@Override
+			public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+			}
+		});
+
+		// BluetoothAdapterのインスタンス取得
+		mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+	}
+
+	private void checkBluetooth()
+	{
+		if(Build.VERSION.SDK_INT <= 30)
+		{
+			if (checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
+					checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+				// permissionが許可されていません
+				if (shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_CONNECT) &&
+						shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_SCAN)) {
+					// 権限チェックした結果、持っていない場合はダイアログを出す
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がBluetoothの使用を求めています。\n" +
+							"アルコールチェック機器に接続するために使用されます。");
+
+					alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.setOnDismissListener(dialog -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.create();
+					alertDialog.show();
+				} else {
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がBluetoothの使用を求めています。\n" +
+							"アルコールチェック機器に接続するために使用されます。");
+
+					alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.setOnDismissListener(dialog -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.create();
+					alertDialog.show();
+				}
+			}
+			else
+			{
+				finishBluetoothCheck();
+			}
+		}
+		else
+		{
+			if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
+					checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+				// permissionが許可されていません
+				if (shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_CONNECT) &&
+						shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_SCAN)) {
+					// 権限チェックした結果、持っていない場合はダイアログを出す
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がBluetoothの使用を求めています。\n" +
+							"アルコールチェック機器に接続するために使用されます。");
+
+					alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.setOnDismissListener(dialog -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.create();
+					alertDialog.show();
+				} else {
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_INFO));
+					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がBluetoothの使用を求めています。\n" +
+							"アルコールチェック機器に接続するために使用されます。\n" +
+							"設定画面より許可してください。");
+
+					alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN},
+							MY_PERMISSIONS_REQUEST_BLUETOOTH));
+					alertDialog.create();
+					alertDialog.show();
+				}
+			}
+			else
+			{
+				finishBluetoothCheck();
+			}
+		}
+	}
+
+	private void finishBluetoothCheck()
+	{
+		// Bluetooth判定
 		if (mBtAdapter == null) {
 
 			AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -130,37 +255,15 @@ public class InspectionActivity extends Activity {
 			}
 		}
 
-		mTextureView = findViewById(R.id.textureView);
-		mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-			@Override
-			public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-				// 先ほどのカメラを開く部分をメソッド化した
-				openCamera();
-			}
-
-			@Override
-			public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-			}
-
-			@Override
-			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-				return true;
-			}
-
-			@Override
-			public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-			}
-		});
+		// 処理開始
+		startMain();
 	}
+
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-		if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA)
-		{
-			if (grantResults.length != 0)
-			{
+		if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
+			if (grantResults.length != 0) {
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					// ユーザーが許可したとき
 					// 許可が必要な機能を改めて実行する
@@ -174,6 +277,37 @@ public class InspectionActivity extends Activity {
 					alertDialog.setCancelable(false);
 					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
 					alertDialog.setMessage("カメラの使用が許可されていないため続行できません");
+
+					// OK(肯定的な)ボタンの設定
+					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+						// OKボタン押下時の処理
+						finish();
+					});
+
+					alertDialog.setOnDismissListener(dialogInterface -> {
+						// OKボタン押下時の処理
+						finish();
+					});
+
+					alertDialog.show();
+				}
+			}
+		}
+		else if (requestCode == MY_PERMISSIONS_REQUEST_BLUETOOTH) {
+			if (grantResults.length != 0) {
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// ユーザーが許可したとき
+					// 許可が必要な機能を改めて実行する
+					finishBluetoothCheck();
+				} else {
+					// ユーザーが許可しなかったとき
+					// 許可されなかったため機能が実行できないことを表示する
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+					// ダイアログの設定
+					alertDialog.setCancelable(false);
+					alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+					alertDialog.setMessage("Bluetoothの使用が許可されていないため続行できません");
 
 					// OK(肯定的な)ボタンの設定
 					alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
@@ -249,9 +383,11 @@ public class InspectionActivity extends Activity {
 					alertDialog.setMessage("アルコールマネージャー業務用アプリ 写真撮影版がカメラの使用を求めています。\n" +
 							"アルコールチェック時に写真撮影を行い、撮影した画像は、サーバーに送信され、運行管理者が確認するために使用されます。");
 
-					alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> requestPermissions(new String[]{Manifest.permission.CAMERA},
+					alertDialog.setPositiveButton(android.R.string.ok, (dialog, which) -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.CAMERA},
 							MY_PERMISSIONS_REQUEST_CAMERA));
-					alertDialog.setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.CAMERA},
+					alertDialog.setOnDismissListener(dialog -> ActivityCompat.requestPermissions(InspectionActivity.this,
+							new String[]{Manifest.permission.CAMERA},
 							MY_PERMISSIONS_REQUEST_CAMERA));
 					alertDialog.create();
 					alertDialog.show();
@@ -271,7 +407,7 @@ public class InspectionActivity extends Activity {
 		public void onOpened(CameraDevice cameraDevice) {
 			mCameraDevice = cameraDevice;
 			createCameraPreviewSession();
-			startMain();
+			checkBluetooth();
 		}
 
 		@Override
@@ -498,27 +634,6 @@ public class InspectionActivity extends Activity {
 	}
 
 	/**
-	 * エラー
-	 */
-	private void showErrorAlertAndFinish(final String message) {
-		runOnUiThread(() -> {
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
-
-			// ダイアログの設定
-			alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-			alertDialog.setMessage(message);
-
-			// OK(肯定的な)ボタンの設定
-			alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-				// OKボタン押下時の処理
-				finish();
-			});
-
-			alertDialog.show();
-		});
-	}
-
-	/**
 	 * bactrackAPIのプログレス更新用
 	 */
 	private void setProgressValue(final int progressValue) {
@@ -534,11 +649,11 @@ public class InspectionActivity extends Activity {
 			disConnect();
 
 			Date dateObj = new Date();
-			SimpleDateFormat format = new SimpleDateFormat( "yyyy/MM/dd HH:mm:ss", Locale.JAPAN);
-			String inspectionTime = format.format( dateObj );
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPAN);
+			String inspectionTime = format.format(dateObj);
 
 			BigDecimal bi = new BigDecimal(String.valueOf(resultValue));
-			double value = bi.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+			double value = bi.setScale(3, RoundingMode.HALF_UP).doubleValue();
 
 			// 値保存
 			editor = pref.edit();
@@ -602,19 +717,41 @@ public class InspectionActivity extends Activity {
 			setStatus(R.string.TEXT_ERR_CONNECTION_TIMEOUT);
 		}
 
-		@SuppressLint("MissingPermission")
 		@Override
 		public void BACtrackFoundBreathalyzer(BACtrackAPI.BACtrackDevice bactrackDevice) {
 			String uuid = "";
-			if (bactrackDevice.device.getUuids() != null)
-			{
-				uuid = bactrackDevice.device.getUuids().toString();
 
-				SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-				SharedPreferences.Editor editor = pref.edit();
-				editor.putString(getString(R.string.PREF_KEY_BACTRACK_ID), uuid);
-				editor.apply();
+			if(Build.VERSION.SDK_INT > 30) {
+				if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+					uuid = "Not Permission";
+				} else {
+					if (bactrackDevice.device.getUuids() != null) {
+						for (ParcelUuid parcelUuid :bactrackDevice.device.getUuids())
+						{
+							uuid = parcelUuid.getUuid().toString();
+						}
+					} else {
+						uuid = "";
+					}
+				}
 			}
+			else
+			{
+				if (bactrackDevice.device.getUuids() != null) {
+					for (ParcelUuid parcelUuid :bactrackDevice.device.getUuids())
+					{
+						uuid = parcelUuid.getUuid().toString();
+					}
+				} else {
+					uuid = bactrackDevice.device.getAddress();
+				}
+			}
+
+			SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putString(getString(R.string.PREF_KEY_BACTRACK_ID), uuid);
+			editor.apply();
+
 			Log.d(TAG, "Found breathalyzer : " + uuid);
 		}
 

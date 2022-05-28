@@ -9,12 +9,12 @@ android {
             keyPassword 'dreamteam'
         }
     }
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "co.jp.dreamteam.bactrackbydreamteam2"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 4
         versionName "1.0.4"
 
@@ -24,6 +24,7 @@ android {
 
     buildTypes {
         release {
+            debuggable true //変更
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
