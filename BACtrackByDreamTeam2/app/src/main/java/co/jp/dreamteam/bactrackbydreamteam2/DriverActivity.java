@@ -126,7 +126,7 @@ public class DriverActivity extends Activity
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,
-				strHttpUrl + "/" + getString(R.string.HTTP_DRIVER_CHECK),
+				strHttpUrl + getString(R.string.HTTP_DRIVER_CHECK),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler()

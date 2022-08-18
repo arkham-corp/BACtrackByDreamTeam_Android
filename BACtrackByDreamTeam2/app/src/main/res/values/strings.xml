@@ -24,6 +24,7 @@
     <string name="HTTP_PARAM_PHOTO">Photo</string>
     <string name="HTTP_PARAM_INSPECTION_TIME">InspectionTime</string>
     <string name="HTTP_PARAM_BACTRACK_ID">BACtrackId</string>
+    <string name="HTTP_PARAM_DRIVING_DIV">DrivingDiv</string>
     <string name="HTTP_PARAM_APP_PROG">AppProg</string>
     <string name="HTTP_PARAM_APP_ID">AppId</string>
     <string name="PREF_GLOBAL">pref_global</string>

@@ -194,7 +194,7 @@ public class CompanyActivity extends Activity
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,
-				strHttpUrl + "/" + getString(R.string.HTTP_COMPANY_CHECK),
+				strHttpUrl + getString(R.string.HTTP_COMPANY_CHECK),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler()

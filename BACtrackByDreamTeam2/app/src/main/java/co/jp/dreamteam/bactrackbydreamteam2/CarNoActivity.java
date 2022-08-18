@@ -21,6 +21,7 @@ public class CarNoActivity extends Activity
 	SharedPreferences.Editor editor;
 
 	String company_code;
+	String driver_code;
 	EditText editTextCarNo;
 	Button car_no_btnDecision;
 
@@ -54,6 +55,7 @@ public class CarNoActivity extends Activity
 		editTextCarNo.setText(pref.getString(getString(R.string.PREF_KEY_CAR_NO), ""));
 
 		company_code = pref.getString(getString(R.string.PREF_KEY_COMPANY), "");
+		driver_code = pref.getString(getString(R.string.PREF_KEY_DRIVER), "");
 	}
 
 	OnClickListener btnDecisionClicked = v -> exec_post();
@@ -125,7 +127,7 @@ public class CarNoActivity extends Activity
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,
-				strHttpUrl + "/" + getString(R.string.HTTP_CAR_NO_CHECK),
+				strHttpUrl + getString(R.string.HTTP_CAR_NO_CHECK),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler()
@@ -163,6 +165,7 @@ public class CarNoActivity extends Activity
 		// パラメータセット
 		task.setVerify_hostname(strVerifyHostname);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
+		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), driver_code);
 		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), editTextCarNo.getText().toString());
 
 		// タスクを開始

@@ -227,7 +227,7 @@ public class ResultActivity extends Activity {
 		String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(this,
-				strHttpUrl + "/" + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
+				strHttpUrl + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler() {
@@ -267,6 +267,7 @@ public class ResultActivity extends Activity {
 		String strCarNo = pref.getString(getString(R.string.PREF_KEY_CAR_NO), "");
 		String strAlcoholValue = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
 		String strBacTrackId = pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), "");
+		String strDrivingDiv = "";
 
 		// 画像取得
 		byte[] photoByte = null;
@@ -289,6 +290,7 @@ public class ResultActivity extends Activity {
 		task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
 		task.addPostParamJpeg(getString(R.string.HTTP_PARAM_PHOTO), photoByte);
 		task.addPostParam(getString(R.string.HTTP_PARAM_BACTRACK_ID), strBacTrackId);
+		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVING_DIV), strDrivingDiv);
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");
 
