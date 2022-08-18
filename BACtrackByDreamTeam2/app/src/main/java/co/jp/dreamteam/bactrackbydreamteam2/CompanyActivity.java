@@ -13,6 +13,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class CompanyActivity extends Activity
 {
 	BroadcastReceiver mReceiver;
@@ -42,6 +48,15 @@ public class CompanyActivity extends Activity
 			}
         };
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
+
+		// 設定ファイル取得
+		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+
+		// 設定初期化
+		editor = pref.edit();
+		editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
+		editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+		editor.commit();
 
 		this.editTextCompany = this.findViewById(R.id.company_editTextCompany);
 
@@ -115,10 +130,71 @@ public class CompanyActivity extends Activity
 	private void exec_post()
 	{
 		company_btnDecision.setEnabled(false);
+
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,
-				getString(R.string.HTTP_URL) + "/" + getString(R.string.HTTP_COMPANY_CHECK),
+				"https://almanecloud.com/alcoholmanager/linkmanager/api/getApplicationApiUrl",
+
+				// タスク完了時に呼ばれるUIのハンドラ
+				new HttpPostHandler()
+				{
+
+					@Override
+					public void onPostCompleted(String response)
+					{
+						try {
+							JSONObject json = new JSONObject(response);
+
+							// 受信結果をUIに表示
+							if (json.getString("status").equals("true"))
+							{
+								// 値保存
+								String str_url = json.getString("data");
+								URL url = new URL(str_url);
+								String host_name = url.getHost();
+
+								editor = pref.edit();
+								editor.putString(getString(R.string.PREF_KEY_HTTP_URL), str_url);
+								editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), host_name);
+								editor.commit();
+
+								exec_post2();
+							}
+							else
+							{
+								errorCompanyNotFound();
+							}
+						} catch (JSONException | MalformedURLException e) {
+							errorHttp(response);
+						}
+					}
+
+					@Override
+					public void onPostFailed(String response)
+					{
+						errorHttp(response);
+					}
+				}
+		);
+
+		// パラメータセット
+		task.setVerify_hostname("almanecloud.com");
+		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), editTextCompany.getText().toString());
+
+		// タスクを開始
+		task.execute();
+	}
+
+	private void exec_post2()
+	{
+		// 接続先
+		String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+		String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+		// 非同期タスクを定義
+		HttpPostTask task = new HttpPostTask(
+				this,
+				strHttpUrl + "/" + getString(R.string.HTTP_COMPANY_CHECK),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler()
@@ -155,7 +231,7 @@ public class CompanyActivity extends Activity
 		);
 
 		// パラメータセット
-		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
+		task.setVerify_hostname(strVerifyHostname);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), editTextCompany.getText().toString());
 
 		// タスクを開始

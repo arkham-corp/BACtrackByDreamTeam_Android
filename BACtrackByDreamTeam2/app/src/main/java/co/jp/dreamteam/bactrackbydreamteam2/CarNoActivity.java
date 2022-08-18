@@ -119,10 +119,13 @@ public class CarNoActivity extends Activity
 	{
 		car_no_btnDecision.setEnabled(false);
 
+		// 接続先
+		String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+		String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,
-				getString(R.string.HTTP_URL) + "/" + getString(R.string.HTTP_CAR_NO_CHECK),
+				strHttpUrl + "/" + getString(R.string.HTTP_CAR_NO_CHECK),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler()
@@ -158,7 +161,7 @@ public class CarNoActivity extends Activity
 		);
 
 		// パラメータセット
-		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
+		task.setVerify_hostname(strVerifyHostname);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
 		task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), editTextCarNo.getText().toString());
 

@@ -222,9 +222,12 @@ public class ResultActivity extends Activity {
 
 	// POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
 	public void exec_post() {
+		// 接続先
+		String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+		String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(this,
-				getString(R.string.HTTP_URL) + "/" + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
+				strHttpUrl + "/" + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler() {
@@ -274,7 +277,7 @@ public class ResultActivity extends Activity {
 		}
 
 		// パラメータセット
-		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
+		task.setVerify_hostname(strVerifyHostname);
 		task.setHttp_multipart(true);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
 		task.addPostParam(getString(R.string.HTTP_PARAM_INSPECTION_TIME), strInspectionTime);

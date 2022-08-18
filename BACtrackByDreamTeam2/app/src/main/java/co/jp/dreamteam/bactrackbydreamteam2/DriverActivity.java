@@ -120,10 +120,13 @@ public class DriverActivity extends Activity
 	{
 		driver_btnDecision.setEnabled(false);
 
+		// 接続先
+		String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+		String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
 		// 非同期タスクを定義
 		HttpPostTask task = new HttpPostTask(
 				this,
-				getString(R.string.HTTP_URL) + "/" + getString(R.string.HTTP_DRIVER_CHECK),
+				strHttpUrl + "/" + getString(R.string.HTTP_DRIVER_CHECK),
 
 				// タスク完了時に呼ばれるUIのハンドラ
 				new HttpPostHandler()
@@ -159,7 +162,7 @@ public class DriverActivity extends Activity
 		);
 
 		// パラメータセット
-		task.setVerify_hostname(getString(R.string.VERIFY_HOSTNAME));
+		task.setVerify_hostname(strVerifyHostname);
 		task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), editTextDriver.getText().toString());
 
