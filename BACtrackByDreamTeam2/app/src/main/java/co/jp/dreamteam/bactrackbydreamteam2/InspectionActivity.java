@@ -792,7 +792,7 @@ public class InspectionActivity extends Activity {
 					//TextureViewに表示されている画像をBitmapで取得
 					Bitmap bmp = mTextureView.getBitmap();
 					bmp = Bitmap.createBitmap( bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mTextureView.getTransform( null ), true );
-
+					bmp = resize(bmp, 320, 320);
 					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 					bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 					String bitmapStr = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
@@ -809,6 +809,31 @@ public class InspectionActivity extends Activity {
 			} catch(Exception e){
 				e.printStackTrace();
 			}
+		}
+
+		private Bitmap resize(Bitmap image, int maxWidth, int maxHeight)
+		{
+			if (maxHeight > 0 && maxWidth > 0) {
+				int width = image.getWidth();
+				int height = image.getHeight();
+				if (width >= maxWidth || height >= maxHeight)
+				{
+					float widthRate = (float) maxWidth / (float) width;
+					float heightRate = (float) maxHeight / (float) height;
+
+					int finalWidth = width;
+					int finalHeight = height;
+					if (widthRate > heightRate) {
+						finalWidth = (int) ((float) width * heightRate);
+						finalHeight = (int) ((float) height * heightRate);
+					} else {
+						finalWidth = (int) ((float) width * widthRate);
+						finalHeight = (int) ((float) height * widthRate);
+					}
+					image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+				}
+			}
+			return image;
 		}
 
 		@Override
