@@ -24,7 +24,6 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -719,40 +718,7 @@ public class InspectionActivity extends Activity {
 
 		@Override
 		public void BACtrackFoundBreathalyzer(BACtrackAPI.BACtrackDevice bactrackDevice) {
-			String uuid = "";
-
-			if(Build.VERSION.SDK_INT > 30) {
-				if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-					uuid = "Not Permission";
-				} else {
-					if (bactrackDevice.device.getUuids() != null) {
-						for (ParcelUuid parcelUuid :bactrackDevice.device.getUuids())
-						{
-							uuid = parcelUuid.getUuid().toString();
-						}
-					} else {
-						uuid = "";
-					}
-				}
-			}
-			else
-			{
-				if (bactrackDevice.device.getUuids() != null) {
-					for (ParcelUuid parcelUuid :bactrackDevice.device.getUuids())
-					{
-						uuid = parcelUuid.getUuid().toString();
-					}
-				} else {
-					uuid = bactrackDevice.device.getAddress();
-				}
-			}
-
-			SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-			SharedPreferences.Editor editor = pref.edit();
-			editor.putString(getString(R.string.PREF_KEY_BACTRACK_ID), uuid);
-			editor.apply();
-
-			Log.d(TAG, "Found breathalyzer : " + uuid);
+			Log.d(TAG, "BACtrackFoundBreathalyzer");
 		}
 
 		@Override
@@ -858,7 +824,10 @@ public class InspectionActivity extends Activity {
 
 		@Override
 		public void BACtrackSerial(String serialHex) {
-
+			SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putString(getString(R.string.PREF_KEY_BACTRACK_ID), serialHex);
+			editor.apply();
 		}
 
 		@Override
