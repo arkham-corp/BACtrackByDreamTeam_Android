@@ -34,6 +34,7 @@
     <string name="PREF_KEY_FIRST_CONNECTION">PREF_KEY_FIRST_CONNECTION</string>
     <string name="PREF_KEY_COMPANY">PREF_KEY_COMPANY</string>
     <string name="PREF_KEY_ALCOHOL_VALUE_DIV">PREF_KEY_ALCOHOL_VALUE_DIV</string>
+    <string name="PREF_KEY_DRIVING_DIV">PREF_KEY_DRIVING_DIV</string>
     <string name="PREF_KEY_DRIVER">PREF_KEY_DRIVER</string>
     <string name="PREF_KEY_CAR_NO">PREF_KEY_CAR_NO</string>
     <string name="PREF_KEY_ADDRESS">PREF_KEY_ADDRESS</string>
@@ -62,6 +63,8 @@
     <string name="TEXT_COLON">：</string>
     <string name="TEXT_DUMMY"> </string>
     <string name="TEXT_COMPANY">会社コード</string>
+    <string name="TEXT_DRIVING_DIV_0">乗務前</string>
+    <string name="TEXT_DRIVING_DIV_1">乗務後</string>
     <string name="TEXT_DRIVER">運転者</string>
     <string name="TEXT_CAR_NO">車番</string>
     <string name="TEXT_ADDRESS">住所</string>
@@ -134,6 +137,7 @@
     <string name="US_TEXT_ERR_BT_NOT_ENABLED">Error: Bluetooth is not enabled.</string>
     <string name="US_TEXT_ERR_BLE_NOT_SUPPORTED">Error: BLE is not supported on this device.</string>
     <string name="US_TEXT_ERR_BLOW_ERROR">Error: Blow process failed.</string>
+    <string name="title_activity_driving_div">DrivingDivActivity</string>
     <string name="title_activity_driver">DriverActivity</string>
     <string name="title_activity_car_no">CarNoActivity</string>
     <string name="title_activity_inspection">InspectionActivity</string>

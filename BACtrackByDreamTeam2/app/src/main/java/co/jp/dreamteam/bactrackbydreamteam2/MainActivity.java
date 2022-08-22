@@ -140,7 +140,7 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             main_btnDecision.setEnabled(false);
-            Intent intent = new Intent(getApplication(), GPSActivity.class);
+            Intent intent = new Intent(getApplication(), DrivingDivActivity.class);
             startActivity(intent);
         }
     };

@@ -267,7 +267,7 @@ public class ResultActivity extends Activity {
 		String strCarNo = pref.getString(getString(R.string.PREF_KEY_CAR_NO), "");
 		String strAlcoholValue = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
 		String strBacTrackId = pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), "");
-		String strDrivingDiv = "";
+		String strDrivingDiv = pref.getString(getString(R.string.PREF_KEY_DRIVING_DIV), "");
 
 		// 画像取得
 		byte[] photoByte = null;

@@ -37,6 +37,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".DrivingDivActivity"
+            android:label="@string/title_activity_driving_div"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".DriverActivity"
             android:label="@string/title_activity_driver"
             android:screenOrientation="portrait"/>
