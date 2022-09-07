@@ -29,6 +29,7 @@ public class ResultActivity extends Activity {
 	TextView textViewSendingMessage;
 	TextView textViewMessage;
 	TextView textViewTitle;
+	TextView textViewDrivingDiv;
 	TextView textViewResultValue;
 	TextView textViewResultRemainValue;
 
@@ -57,6 +58,7 @@ public class ResultActivity extends Activity {
 		textViewSendingMessage = this.findViewById(R.id.result_textViewSendMessage);
 		textViewMessage = this.findViewById(R.id.result_textViewResultMessage);
 		textViewTitle = this.findViewById(R.id.result_textViewResultTitle);
+		textViewDrivingDiv = this.findViewById(R.id.result_textViewDrivingDiv);
 		textViewResultValue = this.findViewById(R.id.result_textViewResultValue);
 		textViewResultRemainValue = this.findViewById(R.id.result_textViewRemainValue);
 
@@ -72,6 +74,18 @@ public class ResultActivity extends Activity {
 		{
 			textViewMessage.setText(getString(R.string.TEXT_RESULT_WARNING));
 			textViewMessage.setTextColor(Color.RED);
+		}
+
+		// 乗務区分取得
+		String strDrivingDiv = pref.getString(getString(R.string.PREF_KEY_DRIVING_DIV), "");
+
+		if (strDrivingDiv.equals("1"))
+		{
+			textViewDrivingDiv.setText(getString(R.string.TEXT_DRIVING_DIV_1));
+		}
+		else
+		{
+			textViewDrivingDiv.setText(getString(R.string.TEXT_DRIVING_DIV_0));
 		}
 
 		// 表示区分取得

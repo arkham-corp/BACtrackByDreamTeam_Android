@@ -63,6 +63,7 @@
     <string name="TEXT_COLON">：</string>
     <string name="TEXT_DUMMY"> </string>
     <string name="TEXT_COMPANY">会社コード</string>
+    <string name="TEXT_DRIVING_DIV">乗務区分</string>
     <string name="TEXT_DRIVING_DIV_0">乗務前</string>
     <string name="TEXT_DRIVING_DIV_1">乗務後</string>
     <string name="TEXT_DRIVER">運転者</string>
