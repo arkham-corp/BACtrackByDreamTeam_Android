@@ -644,6 +644,13 @@ public class InspectionActivity extends Activity {
 	 */
 	private void moveResult(final float resultValue) {
 		runOnUiThread(() -> {
+
+			// シリアル取得
+			mAPI.getSerialNumber();
+
+			// 使用回数取得
+			mAPI.getUseCount();
+
 			// 切断
 			disConnect();
 
@@ -832,8 +839,10 @@ public class InspectionActivity extends Activity {
 
 		@Override
 		public void BACtrackUseCount(int useCount) {
-			Log.d(TAG, "UseCount: " + useCount);
-			//setStatus(getString(R.string.TEXT_USE_COUNT) + " " + useCount);
+			SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putString(getString(R.string.PREF_KEY_BACTRACK_USE_COUNT), String.valueOf(useCount));
+			editor.apply();
 		}
 
 		@Override

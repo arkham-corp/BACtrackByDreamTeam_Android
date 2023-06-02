@@ -281,6 +281,7 @@ public class ResultActivity extends Activity {
 		String strCarNo = pref.getString(getString(R.string.PREF_KEY_CAR_NO), "");
 		String strAlcoholValue = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
 		String strBacTrackId = pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), "");
+		String strUseCount = pref.getString(getString(R.string.PREF_KEY_BACTRACK_USE_COUNT), "");
 		String strDrivingDiv = pref.getString(getString(R.string.PREF_KEY_DRIVING_DIV), "");
 
 		// 画像取得
@@ -304,6 +305,7 @@ public class ResultActivity extends Activity {
 		task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
 		task.addPostParamJpeg(getString(R.string.HTTP_PARAM_PHOTO), photoByte);
 		task.addPostParam(getString(R.string.HTTP_PARAM_BACTRACK_ID), strBacTrackId);
+		task.addPostParam(getString(R.string.HTTP_PARAM_BACTRACK_USE_COUNT), strUseCount);
 		task.addPostParam(getString(R.string.HTTP_PARAM_DRIVING_DIV), strDrivingDiv);
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
 		task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");

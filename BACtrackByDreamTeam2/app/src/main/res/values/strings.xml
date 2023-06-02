@@ -24,6 +24,7 @@
     <string name="HTTP_PARAM_PHOTO">Photo</string>
     <string name="HTTP_PARAM_INSPECTION_TIME">InspectionTime</string>
     <string name="HTTP_PARAM_BACTRACK_ID">BACtrackId</string>
+    <string name="HTTP_PARAM_BACTRACK_USE_COUNT">UseCount</string>
     <string name="HTTP_PARAM_DRIVING_DIV">DrivingDiv</string>
     <string name="HTTP_PARAM_APP_PROG">AppProg</string>
     <string name="HTTP_PARAM_APP_ID">AppId</string>
@@ -44,6 +45,7 @@
     <string name="PREF_KEY_PHOTO">PREF_KEY_PHOTO</string>
     <string name="PREF_KEY_INSPECTION_TIME">PREF_KEY_INSPECTION_TIME</string>
     <string name="PREF_KEY_BACTRACK_ID">PREF_KEY_BACTRACK_ID</string>
+    <string name="PREF_KEY_BACTRACK_USE_COUNT">PREF_KEY_BACTRACK_USE_COUNT</string>
     <string name="ALERT_TITLE_INFO">情報</string>
     <string name="ALERT_TITLE_QUESTION">質問</string>
     <string name="ALERT_TITLE_WARNING">警告</string>

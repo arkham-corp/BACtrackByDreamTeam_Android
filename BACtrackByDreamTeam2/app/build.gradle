@@ -21,8 +21,8 @@ android {
         applicationId "co.jp.dreamteam.bactrackbydreamteam2"
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 5
-        versionName "1.0.5"
+        versionCode 6
+        versionName "1.0.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
