@@ -3,13 +3,10 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -39,19 +36,6 @@ public class ResultActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
-
-		// BroadcastReceiverを LocalBroadcastManagerを使って登録
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-		mReceiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
@@ -122,11 +106,10 @@ public class ResultActivity extends Activity {
 	}
 
 	View.OnClickListener btnFinishClicked = v -> {
-		// LocalBroadcastManagerを使ってBroadcastを送信
-		Intent appFinishIntent = new Intent();
-		appFinishIntent.setAction(getString(R.string.BLOADCAST_FINISH));
-		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(appFinishIntent);
-		finish();
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		moveTaskToBack(true);
 	};
 
 	/**

@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -16,12 +14,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,19 +42,6 @@ public class GPSActivity extends Activity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gps);
-
-		// BroadcastReceiverを LocalBroadcastManagerを使って登録
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-		mReceiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
 		// 設定ファイル取得
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);

@@ -3,13 +3,10 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,28 +40,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+
         // 更新確認
         UpdateCheck();
-
-        // BroadcastReceiverを LocalBroadcastManagerを使って登録
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-        mReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-                finish();
-            }
-        };
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
         main_btnDecision = this.findViewById(R.id.main_btnDecision);
         main_btnDecision.setOnClickListener(btnDecisionClicked);
 
         // 利用規約確認
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-
         String agreement = pref.getString(getString(R.string.PREF_KEY_AGREEMENT), "");
 
         if (agreement.equals("")) {

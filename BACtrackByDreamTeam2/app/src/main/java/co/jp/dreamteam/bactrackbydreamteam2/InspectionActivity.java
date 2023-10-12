@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,9 +23,6 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,6 +30,9 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -95,23 +94,23 @@ public class InspectionActivity extends Activity {
 		mTextureView = findViewById(R.id.textureView);
 		mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 			@Override
-			public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+			public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
 				// 先ほどのカメラを開く部分をメソッド化した
 				openCamera();
 			}
 
 			@Override
-			public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+			public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
 
 			}
 
 			@Override
-			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+			public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
 				return true;
 			}
 
 			@Override
-			public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+			public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
 
 			}
 		});
@@ -260,7 +259,7 @@ public class InspectionActivity extends Activity {
 
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
 			if (grantResults.length != 0) {
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -394,6 +393,7 @@ public class InspectionActivity extends Activity {
 
 				return;
 			}
+			assert mCameraId != null;
 			mCameraManager.openCamera(mCameraId, mStateCallback, null);
 
 		} catch (CameraAccessException e) {
@@ -403,7 +403,7 @@ public class InspectionActivity extends Activity {
 
 	private final CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
 		@Override
-		public void onOpened(CameraDevice cameraDevice) {
+		public void onOpened(@NonNull CameraDevice cameraDevice) {
 			mCameraDevice = cameraDevice;
 			createCameraPreviewSession();
 			checkBluetooth();
@@ -466,6 +466,7 @@ public class InspectionActivity extends Activity {
 
 			//バッファのサイズをプレビューサイズに設定(画面サイズ等適当な値を入れる)
 			//ここではQVGA
+			assert texture != null;
 			texture.setDefaultBufferSize(320, 240);
 
 			Surface surface = new Surface(texture);
@@ -503,18 +504,6 @@ public class InspectionActivity extends Activity {
 	}
 
 	private void startMain() {
-		// BroadcastReceiverを LocalBroadcastManagerを使って登録
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-		mReceiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
 		// 設定情報表示
 		pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);

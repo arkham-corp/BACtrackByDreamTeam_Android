@@ -2,12 +2,9 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,21 +25,6 @@ public class DrivingDivActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_driving_div);
-
-		// BroadcastReceiverを LocalBroadcastManagerを使って登録
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-		mReceiver = new BroadcastReceiver()
-		{
-
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
 		driving_div_btnDecision = this.findViewById(R.id.driving_div_btnDecision);
 		driving_div_btnDecision.setOnClickListener(btnDecisionClicked);

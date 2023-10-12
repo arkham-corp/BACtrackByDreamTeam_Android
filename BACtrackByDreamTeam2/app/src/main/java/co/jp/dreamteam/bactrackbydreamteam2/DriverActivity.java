@@ -3,12 +3,9 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,21 +26,6 @@ public class DriverActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_driver);
-
-		// BroadcastReceiverを LocalBroadcastManagerを使って登録
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(getString(R.string.BLOADCAST_FINISH));
-		mReceiver = new BroadcastReceiver()
-		{
-
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
 
 		this.editTextDriver = this.findViewById(R.id.driver_editTextDriver);
 
