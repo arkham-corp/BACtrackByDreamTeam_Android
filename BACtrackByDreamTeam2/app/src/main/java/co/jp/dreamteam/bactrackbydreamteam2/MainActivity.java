@@ -2,7 +2,6 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -24,8 +23,6 @@ public class MainActivity extends Activity {
 
     final int REQUEST_CODE_START_UPDATE_FLOW = 1;
     private static final String TAG = "MainActivity";
-
-    BroadcastReceiver mReceiver;
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -109,7 +106,7 @@ public class MainActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_START_UPDATE_FLOW) {
             if (resultCode != RESULT_OK) {
-                Log.d(TAG, "Update flow failed!");
+                Log.d(TAG, getString(R.string.UPDATE_FILED));
             }
         }
     }
@@ -124,7 +121,7 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             main_btnDecision.setEnabled(false);
-            Intent intent = new Intent(getApplication(), DrivingDivActivity.class);
+            Intent intent = new Intent(getApplication(), CompanyActivity.class);
             startActivity(intent);
         }
     };

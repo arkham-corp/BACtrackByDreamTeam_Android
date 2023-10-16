@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
     <!-- API Level 30未満では古いPermissionを使用する -->
-    <uses-permission android:name="android.permission.BLUETOOTH"
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
-    <!-- API Level 31以降で必要なPermission -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" /> <!-- API Level 31以降で必要なPermission -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
 
     <application
@@ -27,9 +27,18 @@
         android:theme="@android:style/Theme.Black.NoTitleBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ReminderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SendListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DrivingReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,13 +46,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MenuActivity"
+            android:label="@string/title_activity_menu"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".DrivingDivActivity"
             android:label="@string/title_activity_driving_div"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DriverActivity"
             android:label="@string/title_activity_driver"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CarNoActivity"
             android:label="@string/title_activity_car_no"

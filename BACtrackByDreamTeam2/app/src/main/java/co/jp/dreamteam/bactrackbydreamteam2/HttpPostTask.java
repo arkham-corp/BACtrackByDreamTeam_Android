@@ -23,10 +23,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * HTTP通信でPOSTリクエストを投げる処理を非同期で行うタスク。
- *
  */
-public class HttpPostTask extends AsyncTask<Void, Void, Void>
-{
+public class HttpPostTask extends AsyncTask<Void, Void, Void> {
     // 初期化事項
     private final Activity parent_activity;
     private final String post_url;
@@ -56,71 +54,58 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
     }
 
     // 生成時
-    public HttpPostTask(Activity parent_activity, String post_url, Handler ui_handler)
-    {
+    public HttpPostTask(Activity parent_activity, String post_url, Handler ui_handler) {
         // 初期化
         this.parent_activity = parent_activity;
         this.post_url = post_url;
         this.ui_handler = ui_handler;
     }
 
-	/* --------------------- POSTパラメータ --------------------- */
+    /* --------------------- POSTパラメータ --------------------- */
 
     // 追加
-    public void addPostParam(String post_name, String post_value)
-    {
+    public void addPostParam(String post_name, String post_value) {
         post_params.put(post_name, post_value);
     }
 
     // 追加
-    public void addPostParamJpeg(String post_name, byte[] post_value)
-    {
+    public void addPostParamJpeg(String post_name, byte[] post_value) {
         post_params_jpeg.put(post_name, post_value);
     }
 
-	/* --------------------- 処理本体 --------------------- */
+    /* --------------------- 処理本体 --------------------- */
 
     // タスク開始時
-    protected void onPreExecute()
-    {
+    protected void onPreExecute() {
         // ダイアログを表示
         dialog = new ProgressDialog(parent_activity);
         dialog.setMessage("通信中・・・");
+        dialog.setCancelable(false);
         dialog.show();
     }
 
     // メイン処理
-    protected Void doInBackground(Void... unused)
-    {
-        if (post_url.startsWith("https"))
-        {
+    protected Void doInBackground(Void... unused) {
+        if (post_url.startsWith("https")) {
             doInBackgroundHttps();
-        }
-        else
-        {
+        } else {
             doInBackgroundHttp();
         }
 
         return null;
     }
 
-    private void WriteOutputStream(HttpURLConnection con) throws Exception
-    {
+    private void WriteOutputStream(HttpURLConnection con) throws Exception {
         OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 
-        for (String key : post_headers.keySet())
-        {
+        for (String key : post_headers.keySet()) {
             con.setRequestProperty(key, post_headers.get(key));
         }
         StringBuilder param = new StringBuilder();
-        for (String key : post_params.keySet())
-        {
-            if (param.toString().equals(""))
-            {
+        for (String key : post_params.keySet()) {
+            if (param.toString().equals("")) {
                 param = new StringBuilder(key + "=" + post_params.get(key));
-            }
-            else
-            {
+            } else {
                 param.append("&").append(key).append("=").append(post_params.get(key));
             }
         }
@@ -129,23 +114,17 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         out.close();
     }
 
-    private void WriteOutputStream(HttpsURLConnection con) throws Exception
-    {
+    private void WriteOutputStream(HttpsURLConnection con) throws Exception {
         OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
 
-        for (String key : post_headers.keySet())
-        {
+        for (String key : post_headers.keySet()) {
             con.setRequestProperty(key, post_headers.get(key));
         }
         StringBuilder param = new StringBuilder();
-        for (String key : post_params.keySet())
-        {
-            if (param.toString().equals(""))
-            {
+        for (String key : post_params.keySet()) {
+            if (param.toString().equals("")) {
                 param = new StringBuilder(key + "=" + post_params.get(key));
-            }
-            else
-            {
+            } else {
                 param.append("&").append(key).append("=").append(post_params.get(key));
             }
         }
@@ -154,10 +133,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         out.close();
     }
 
-    private void WriteOutputStreamMultipart(HttpURLConnection con) throws Exception
-    {
+    private void WriteOutputStreamMultipart(HttpURLConnection con) throws Exception {
         final String twoHyphens = "--";
-        final String boundary =  "*****"+ UUID.randomUUID().toString()+"*****";
+        final String boundary = "*****" + UUID.randomUUID().toString() + "*****";
         final String lineEnd = "\r\n";
 
         DataOutputStream outputStream;
@@ -167,20 +145,18 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         con.setUseCaches(false);
 
         con.setRequestProperty("Connection", "Keep-Alive");
-        con.setRequestProperty("Content-Type", "multipart/form-data; boundary="+boundary);
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
-        for (String key : post_headers.keySet())
-        {
+        for (String key : post_headers.keySet()) {
             con.setRequestProperty(key, post_headers.get(key));
         }
 
         outputStream = new DataOutputStream(con.getOutputStream());
 
-        for (String key : post_params_jpeg.keySet())
-        {
+        for (String key : post_params_jpeg.keySet()) {
             String fileName = key + ".jpg";
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName +"\"" + lineEnd);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName + "\"" + lineEnd);
             outputStream.writeBytes("Content-Type: application/octet-stream" + lineEnd);
             outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
             outputStream.writeBytes(lineEnd);
@@ -195,8 +171,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             outputStream.writeBytes(lineEnd);
         }
 
-        for (String key : post_params.keySet())
-        {
+        for (String key : post_params.keySet()) {
             String value = post_params.get(key);
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
             outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
@@ -214,10 +189,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         outputStream.close();
     }
 
-    private void WriteOutputStreamMultipart(HttpsURLConnection con) throws Exception
-    {
+    private void WriteOutputStreamMultipart(HttpsURLConnection con) throws Exception {
         final String twoHyphens = "--";
-        final String boundary =  "*****"+ UUID.randomUUID().toString()+"*****";
+        final String boundary = "*****" + UUID.randomUUID().toString() + "*****";
         final String lineEnd = "\r\n";
 
         DataOutputStream outputStream;
@@ -227,20 +201,18 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         con.setUseCaches(false);
 
         con.setRequestProperty("Connection", "Keep-Alive");
-        con.setRequestProperty("Content-Type", "multipart/form-data; boundary="+boundary);
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
-        for (String key : post_headers.keySet())
-        {
+        for (String key : post_headers.keySet()) {
             con.setRequestProperty(key, post_headers.get(key));
         }
 
         outputStream = new DataOutputStream(con.getOutputStream());
 
-        for (String key : post_params_jpeg.keySet())
-        {
+        for (String key : post_params_jpeg.keySet()) {
             String fileName = key + ".jpg";
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName +"\"" + lineEnd);
+            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName + "\"" + lineEnd);
             outputStream.writeBytes("Content-Type: application/octet-stream" + lineEnd);
             outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
             outputStream.writeBytes(lineEnd);
@@ -255,8 +227,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             outputStream.writeBytes(lineEnd);
         }
 
-        for (String key : post_params.keySet())
-        {
+        for (String key : post_params.keySet()) {
             String value = post_params.get(key);
             outputStream.writeBytes(twoHyphens + boundary + lineEnd);
             outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
@@ -274,8 +245,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         outputStream.close();
     }
 
-    private void doInBackgroundHttp()
-    {
+    private void doInBackgroundHttp() {
         HttpURLConnection con = null;
         StringBuilder result = new StringBuilder();
 
@@ -288,12 +258,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             con.setDoOutput(true);
             con.setRequestMethod("POST");
             con.setReadTimeout(5000);
-            if (http_multipart)
-            {
+            if (http_multipart) {
                 WriteOutputStreamMultipart(con);
-            }
-            else
-            {
+            } else {
                 WriteOutputStream(con);
             }
             con.connect();
@@ -305,24 +272,24 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
                 // テキストを取得する
                 final InputStream in = con.getInputStream();
                 String encoding = con.getContentEncoding();
-                if(null == encoding){
+                if (null == encoding) {
                     encoding = "UTF-8";
                 }
                 final InputStreamReader inReader = new InputStreamReader(in, encoding);
                 final BufferedReader bufReader = new BufferedReader(inReader);
                 String line;
                 // 1行ずつテキストを読み込む
-                while((line = bufReader.readLine()) != null) {
+                while ((line = bufReader.readLine()) != null) {
                     result.append(line);
                 }
                 bufReader.close();
                 inReader.close();
                 in.close();
-            }else{
+            } else {
                 System.out.println(status);
             }
 
-        }catch (Exception e1) {
+        } catch (Exception e1) {
             HttpPostTask.this.http_err_msg = e1.getMessage();
         } finally {
             if (con != null) {
@@ -334,8 +301,7 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
         HttpPostTask.this.http_ret_msg = result.toString();
     }
 
-    private void doInBackgroundHttps()
-    {
+    private void doInBackgroundHttps() {
         HttpsURLConnection con = null;
         StringBuilder result = new StringBuilder();
 
@@ -351,12 +317,9 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
             con.setDoOutput(true);
             con.setRequestMethod("POST");
             con.setReadTimeout(5000);
-            if (http_multipart)
-            {
+            if (http_multipart) {
                 WriteOutputStreamMultipart(con);
-            }
-            else
-            {
+            } else {
                 WriteOutputStream(con);
             }
             con.connect();
@@ -368,35 +331,30 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
                 // テキストを取得する
                 final InputStream in = con.getInputStream();
                 String encoding = con.getContentEncoding();
-                if(null == encoding){
+                if (null == encoding) {
                     encoding = "UTF-8";
                 }
                 final InputStreamReader inReader = new InputStreamReader(in, encoding);
                 final BufferedReader bufReader = new BufferedReader(inReader);
                 String line;
                 // 1行ずつテキストを読み込む
-                while((line = bufReader.readLine()) != null) {
+                while ((line = bufReader.readLine()) != null) {
                     result.append(line);
                 }
                 bufReader.close();
                 inReader.close();
                 in.close();
-            }else{
+            } else {
                 System.out.println(status);
             }
 
-        }
-        catch (CertificateException e) {
+        } catch (CertificateException e) {
             HttpPostTask.this.http_err_msg = "証明書の検証に失敗しました";
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String message = e.getMessage();
-            if (message == null)
-            {
+            if (message == null) {
                 HttpPostTask.this.http_err_msg = "SSL通信エラー";
-            }
-            else
-            {
+            } else {
                 HttpPostTask.this.http_err_msg = message;
             }
         } finally {
@@ -410,22 +368,18 @@ public class HttpPostTask extends AsyncTask<Void, Void, Void>
     }
 
     // タスク終了時
-    protected void onPostExecute(Void unused)
-    {
+    protected void onPostExecute(Void unused) {
         // ダイアログを消す
         dialog.dismiss();
 
         // 受信結果をUIに渡すためにまとめる
         Message message = new Message();
         Bundle bundle = new Bundle();
-        if (http_err_msg != null)
-        {
+        if (http_err_msg != null) {
             // エラー発生時
             bundle.putBoolean("http_post_success", false);
             bundle.putString("http_response", http_err_msg);
-        }
-        else
-        {
+        } else {
             // 通信成功時
             bundle.putBoolean("http_post_success", true);
             bundle.putString("http_response", http_ret_msg);

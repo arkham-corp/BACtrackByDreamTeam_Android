@@ -5,24 +5,18 @@ import android.os.Message;
 
 /**
  * HTTP通信のPOSTタスク完了時に，通信の成否に応じて，受信した通信内容をUI上で取り扱うための抽象クラス。
- *
  */
-public abstract class HttpPostHandler extends Handler
-{
+public abstract class HttpPostHandler extends Handler {
 
     // このメソッドは隠ぺいし，Messageなどの低レベルオブジェクトを
     // 直接扱わないでもよいようにさせる
-    public void handleMessage(Message msg)
-    {
+    public void handleMessage(Message msg) {
         boolean isPostSuccess = msg.getData().getBoolean("http_post_success");
         String http_response = msg.getData().get("http_response").toString();
 
-        if (isPostSuccess)
-        {
+        if (isPostSuccess) {
             onPostCompleted(http_response);
-        }
-        else
-        {
+        } else {
             onPostFailed(http_response);
         }
     }
