@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".DrivingReportDetailActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/driving_report_recyclerView"
+        android:id="@+id/driving_report_detail_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/driving_report_btnAdd"
+        app:layout_constraintBottom_toTopOf="@id/driving_report_detail_btnAdd"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/driving_report_btnAdd"
+        android:id="@+id/driving_report_detail_btnAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/BTN_ADD"
+        android:text="@string/BTN_INSERT"
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 

@@ -21,20 +21,12 @@
         android:required="false" />
 
     <application
+        android:name=".MainApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Black.NoTitleBar"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".ReminderActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SendListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DrivingReportActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -47,35 +39,63 @@
         </activity>
         <activity
             android:name=".MenuActivity"
-            android:label="@string/title_activity_menu"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DrivingReportActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DrivingReportEditActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DrivingReportDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DrivingReportDetailEditActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DrivingReportDestinationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SendListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ReminderActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".DrivingDivActivity"
-            android:label="@string/title_activity_driving_div"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".DriverActivity"
-            android:label="@string/title_activity_driver"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CarNoActivity"
-            android:label="@string/title_activity_car_no"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".InspectionActivity"
-            android:label="@string/title_activity_inspection"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".GPSActivity"
-            android:label="@string/title_activity_gps"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ResultActivity"
-            android:label="@string/title_activity_result"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CompanyActivity"
-            android:label="@string/title_activity_company"
+            android:exported="false"
             android:screenOrientation="portrait" />
     </application>
 

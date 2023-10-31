@@ -1,53 +1,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
+
     <Button
         android:id="@+id/menu_btnInspection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/BTN_MENU_INSPECTION"
-        android:textSize="50sp"  />
+        android:textSize="50sp" />
+
     <Space
         android:id="@+id/menu_spaceDrivingReport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
+
     <Button
         android:id="@+id/menu_btnDrivingReport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/BTN_MENU_DRIVING_REPORT"
-        android:textSize="50sp"  />
+        android:textSize="50sp" />
+
     <Space
         android:id="@+id/menu_spaceSendList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
+
     <Button
         android:id="@+id/menu_btnSendList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/BTN_MENU_SEND_LIST"
-        android:textSize="50sp"  />
+        android:textSize="50sp" />
+
     <Space
         android:id="@+id/menu_spaceReminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
+
     <Button
         android:id="@+id/menu_btnReminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/BTN_MENU_REMINDER"
-        android:textSize="50sp"  />
+        android:textSize="50sp" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 </LinearLayout>
