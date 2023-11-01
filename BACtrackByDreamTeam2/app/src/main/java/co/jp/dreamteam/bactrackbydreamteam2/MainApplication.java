@@ -15,14 +15,14 @@ public class MainApplication extends Application {
         super.onCreate();
         Realm.init(this); // Initialize Realm
 
-        String test_flg = getString(R.string.TEST_FLG);
+        String create_test_data_flg = getString(R.string.CREATE_TEST_DATA_FLG);
 
-        if (test_flg.equals("1")) {
+        if (create_test_data_flg.equals("1")) {
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.deleteAll();
 
-            CreateDummyData(realm);
+            //CreateDummyData(realm);
 
             realm.commitTransaction();
         }

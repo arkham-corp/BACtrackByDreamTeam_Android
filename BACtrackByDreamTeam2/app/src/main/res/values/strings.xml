@@ -6,11 +6,13 @@
     <string name="app_name2">マネージャー2</string>
     <string name="action_settings">Settings</string>
     <string name="UPDATE_FILED">アップデートに失敗しました</string>
-    <string name="TEST_FLG">1</string>
+    <string name="TEST_FLG">2</string>
+    <string name="CREATE_TEST_DATA_FLG">1</string>
     <string name="HTTP_HOST_NAME">almanecloud.com</string>
     <string name="HTTP_GET_API_URL">/alcoholmanager/linkmanager/api/getApplicationApiUrl</string>
     <string name="HTTP_GET_MENU_CONTROL">/alcoholmanager/linkmanager/api/getApplicationMenuControl</string>
-    <string name="HTTP_TEST_HOST_NAME">10.0.2.2:83</string>
+    <string name="HTTP_TEST_HOST_NAME1">10.0.2.2:83</string>
+    <string name="HTTP_TEST_HOST_NAME2">128.0.3.32</string>
     <string name="HTTP_COMPANY_CHECK">HttpGetAlcoholValueDivServlet</string>
     <string name="HTTP_DRIVER_CHECK">HttpDriverMasterCheckServlet</string>
     <string name="HTTP_CAR_NO_CHECK">HttpCarNoMasterCheckServlet</string>

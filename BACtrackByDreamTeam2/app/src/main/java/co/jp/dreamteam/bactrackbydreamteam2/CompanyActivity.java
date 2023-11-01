@@ -1,5 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -109,15 +110,18 @@ public class CompanyActivity extends Activity {
         String http_url = "";
 
         if (test_flg.equals("1")) {
-            host_name = getString(R.string.HTTP_TEST_HOST_NAME);
-            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME) + getString(R.string.HTTP_GET_API_URL);
+            host_name = getString(R.string.HTTP_TEST_HOST_NAME1);
+            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME1) + getString(R.string.HTTP_GET_API_URL);
+        } else if (test_flg.equals("2")) {
+            host_name = getString(R.string.HTTP_TEST_HOST_NAME2);
+            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME2) + "/com" + getString(R.string.HTTP_GET_API_URL);
         } else {
             host_name = getString(R.string.HTTP_HOST_NAME);
             http_url = "https://" + getString(R.string.HTTP_HOST_NAME) + getString(R.string.HTTP_GET_API_URL);
         }
 
         // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
+        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
                 this,
                 http_url,
 
@@ -171,7 +175,7 @@ public class CompanyActivity extends Activity {
         String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
         String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
         // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
+        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
                 this,
                 strHttpUrl + getString(R.string.HTTP_COMPANY_CHECK),
 
@@ -216,15 +220,18 @@ public class CompanyActivity extends Activity {
         String http_url = "";
 
         if (test_flg.equals("1")) {
-            host_name = getString(R.string.HTTP_TEST_HOST_NAME);
-            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME) + getString(R.string.HTTP_GET_MENU_CONTROL);
+            host_name = getString(R.string.HTTP_TEST_HOST_NAME1);
+            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME1) + getString(R.string.HTTP_GET_MENU_CONTROL);
+        } else if (test_flg.equals("2")) {
+            host_name = getString(R.string.HTTP_TEST_HOST_NAME2);
+            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME2) + "/com" + getString(R.string.HTTP_GET_API_URL);
         } else {
             host_name = getString(R.string.HTTP_HOST_NAME);
             http_url = "https://" + getString(R.string.HTTP_HOST_NAME) + getString(R.string.HTTP_GET_MENU_CONTROL);
         }
 
         // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
+        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
                 this,
                 http_url,
 
