@@ -6,8 +6,8 @@
     <string name="app_name2">マネージャー2</string>
     <string name="action_settings">Settings</string>
     <string name="UPDATE_FILED">アップデートに失敗しました</string>
-    <string name="TEST_FLG">2</string>
-    <string name="CREATE_TEST_DATA_FLG">1</string>
+    <string name="TEST_FLG">0</string>
+    <string name="CREATE_TEST_DATA_FLG">0</string>
     <string name="HTTP_HOST_NAME">almanecloud.com</string>
     <string name="HTTP_GET_API_URL">/alcoholmanager/linkmanager/api/getApplicationApiUrl</string>
     <string name="HTTP_GET_MENU_CONTROL">/alcoholmanager/linkmanager/api/getApplicationMenuControl</string>
@@ -166,6 +166,15 @@
     <string name="TEXT_FINISH2">お疲れさまでした</string>
     <string name="TEXT_QUESTION_DELETE">削除しますか？</string>
     <string name="TEXT_QUESTION_SEND">送信しますか？</string>
+    <string name="TEXT_ERROR_DRIVER_CODE">運転者を入力してください</string>
+    <string name="TEXT_ERROR_CAR_NUMBER">車番を入力してください</string>
+    <string name="TEXT_ERROR_START_YMD">運転開始日付を入力してください</string>
+    <string name="TEXT_ERROR_START_HM">運転開始時刻を入力してください</string>
+    <string name="TEXT_ERROR_END_YMD">運転終了日付を入力してください</string>
+    <string name="TEXT_ERROR_END_HM">運転終了時刻を入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_DESTINATION">行先を入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_START_HM">発時刻を入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_END_HM">着時刻を入力してください</string>
     <string name="US_TEXT_DISCONNECTED">Disconnected</string>
     <string name="US_TEXT_CONNECTING">Connecting</string>
     <string name="US_TEXT_DISCOVERING_SERVICES">Discovering services</string>

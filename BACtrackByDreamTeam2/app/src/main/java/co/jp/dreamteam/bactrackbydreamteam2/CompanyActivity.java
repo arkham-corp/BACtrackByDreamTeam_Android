@@ -224,7 +224,7 @@ public class CompanyActivity extends Activity {
             http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME1) + getString(R.string.HTTP_GET_MENU_CONTROL);
         } else if (test_flg.equals("2")) {
             host_name = getString(R.string.HTTP_TEST_HOST_NAME2);
-            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME2) + "/com" + getString(R.string.HTTP_GET_API_URL);
+            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME2) + "/com" + getString(R.string.HTTP_GET_MENU_CONTROL);
         } else {
             host_name = getString(R.string.HTTP_HOST_NAME);
             http_url = "https://" + getString(R.string.HTTP_HOST_NAME) + getString(R.string.HTTP_GET_MENU_CONTROL);

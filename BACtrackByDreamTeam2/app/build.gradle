@@ -20,9 +20,9 @@ android {
     defaultConfig {
         applicationId "co.jp.dreamteam.bactrackbydreamteam2"
         minSdkVersion 23
-        targetSdk 33
-        versionCode 7
-        versionName "1.0.7"
+        targetSdk 34
+        versionCode 8
+        versionName "2.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release

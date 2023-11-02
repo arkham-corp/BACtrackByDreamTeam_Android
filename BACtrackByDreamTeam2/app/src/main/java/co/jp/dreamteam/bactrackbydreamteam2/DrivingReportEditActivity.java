@@ -134,6 +134,17 @@ public class DrivingReportEditActivity extends FragmentActivity {
         RealmLocalDataDrivingReport drivingReport = readRecord();
 
         if (drivingReport == null) {
+            // ピッカーイベントセット
+            driving_report_edit_txtDrivingStartYmd.setOnClickListener(txtDrivingStartYmdClicked);
+            driving_report_edit_txtDrivingStartHm.setOnClickListener(txtDrivingStartHmClicked);
+            driving_report_edit_txtDrivingEndYmd.setOnClickListener(txtDrivingEndYmdClicked);
+            driving_report_edit_txtDrivingEndHm.setOnClickListener(txtDrivingEndHmClicked);
+            // クリアボタンイベント
+            driving_report_edit_btnDrivingStartYmd.setOnClickListener(btnDrivingStartYmdClearClicked);
+            driving_report_edit_btnDrivingStartHm.setOnClickListener(btnDrivingStartHmClearClicked);
+            driving_report_edit_btnDrivingEndYmd.setOnClickListener(btnDrivingEndYmdClearClicked);
+            driving_report_edit_btnDrivingEndHm.setOnClickListener(btnDrivingEndHmClearClicked);
+
             driving_report_edit_btnDelete.setEnabled(false);
             driving_report_edit_btnSend.setEnabled(false);
         } else {
@@ -571,7 +582,55 @@ public class DrivingReportEditActivity extends FragmentActivity {
         alertDialog.show();
     };
 
+    private boolean CheckData()
+    {
+        String errorMessage = "";
+
+        if (String.valueOf(driving_report_edit_txtDriverCode.getText()).equals(""))
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DRIVER_CODE);
+        }
+        else if (String.valueOf(driving_report_edit_txtCarNumber.getText()).equals(""))
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_CAR_NUMBER);
+        }
+        else if (String.valueOf(driving_report_edit_txtDrivingStartYmd.getText()).equals(""))
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_START_YMD);
+        }
+        else if (String.valueOf(driving_report_edit_txtDrivingStartHm.getText()).equals(""))
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_START_HM);
+        }
+
+        if (!errorMessage.equals("")) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DrivingReportEditActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+
+            // ダイアログの設定
+            alertDialog.setMessage(errorMessage);
+
+            // OK(肯定的な)ボタンの設定
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                // OKボタン押下時の処理
+            });
+
+            alertDialog.show();
+
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     private boolean SaveData() {
+
+        if (!CheckData())
+        {
+            return  false;
+        }
+
         realm.beginTransaction();
         RealmLocalDataDrivingReport drivingReport = readRecord();
 

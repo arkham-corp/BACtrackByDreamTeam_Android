@@ -10,6 +10,10 @@ import android.widget.Button;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -35,7 +39,24 @@ public class DrivingReportActivity extends Activity {
 
         realm = Realm.getDefaultInstance();
 
+        // 一覧取得
         RealmResults<RealmLocalDataDrivingReport> drivingReportList = readAll();
+
+        // 過去データ削除
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.JAPAN);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE,-7); // 7日減算
+        String deleteDate = sdf.format(cal.getTime());
+
+        realm.beginTransaction();
+        for (RealmLocalDataDrivingReport drivingReport:drivingReportList) {
+            String start_ymd = drivingReport.getDriving_start_ymd();
+            if (start_ymd.compareTo(deleteDate) <= 0)
+            {
+                drivingReport.deleteFromRealm();
+            }
+        }
+        realm.commitTransaction();
 
         DrivingReportAdapter adapter = new DrivingReportAdapter(this, drivingReportList
                 , item -> {
@@ -63,7 +84,7 @@ public class DrivingReportActivity extends Activity {
         realm.close();
     }
 
-    public RealmResults<RealmLocalDataDrivingReport> readAll() {
+    private RealmResults<RealmLocalDataDrivingReport> readAll() {
         return realm.where(RealmLocalDataDrivingReport.class).findAll()
                 .sort("driving_start_ymd", Sort.DESCENDING)
                 .sort("driving_end_ymd", Sort.DESCENDING);

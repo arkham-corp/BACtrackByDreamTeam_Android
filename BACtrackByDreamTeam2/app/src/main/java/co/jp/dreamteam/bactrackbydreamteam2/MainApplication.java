@@ -22,7 +22,7 @@ public class MainApplication extends Application {
             realm.beginTransaction();
             realm.deleteAll();
 
-            //CreateDummyData(realm);
+            CreateDummyData(realm);
 
             realm.commitTransaction();
         }
@@ -31,7 +31,7 @@ public class MainApplication extends Application {
     private void CreateDummyData(Realm realm) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.JAPAN);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
 
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, i * -1);
@@ -51,8 +51,10 @@ public class MainApplication extends Application {
             drivingReport.setCar_number("1234");
             drivingReport.setDriving_start_ymd(sdf.format(targetDate));
             drivingReport.setDriving_start_hm("0830");
+            drivingReport.setDriving_start_km(10000D);
             drivingReport.setDriving_end_ymd(sdf.format(targetDate));
             drivingReport.setDriving_end_hm("1730");
+            drivingReport.setDriving_end_km(10500D);
             if (i == 0 || i == 1) {
                 drivingReport.setSendFlg("0");
             } else {
@@ -74,8 +76,23 @@ public class MainApplication extends Application {
                 RealmLocalDataDrivingReportDetail drivingReportDetail = realm.createObject(RealmLocalDataDrivingReportDetail.class, nextId);
                 drivingReportDetail.setDriving_report_id(driving_report_id);
                 drivingReportDetail.setDestination("行先" + (j + 1));
+                if (j == 0) {
+                    drivingReportDetail.setDriving_start_hm("0900");
+                    drivingReportDetail.setDriving_end_hm("1200");
+                    drivingReportDetail.setDriving_start_km(10000D);
+                    drivingReportDetail.setDriving_end_km(10100D);
+                } else if (j == 1) {
+                    drivingReportDetail.setDriving_start_hm("1200");
+                    drivingReportDetail.setDriving_end_hm("1500");
+                    drivingReportDetail.setDriving_start_km(10100D);
+                    drivingReportDetail.setDriving_end_km(10300D);
+                } else if (j == 2) {
+                    drivingReportDetail.setDriving_start_hm("1500");
+                    drivingReportDetail.setDriving_end_hm("1700");
+                    drivingReportDetail.setDriving_start_km(10300D);
+                    drivingReportDetail.setDriving_end_km(10500D);
+                }
             }
-
         }
 
         // 行先

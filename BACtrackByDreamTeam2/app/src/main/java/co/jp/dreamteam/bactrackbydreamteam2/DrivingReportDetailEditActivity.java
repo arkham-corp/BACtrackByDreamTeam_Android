@@ -276,7 +276,47 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         alertDialog.show();
     };
 
+    private boolean CheckData()
+    {
+        String errorMessage = "";
+
+        if (String.valueOf(driving_report_detail_edit_txtDestination.getText()).equals(""))
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_DESTINATION);
+        }
+        else if (String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText()).equals(""))
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_START_HM);
+        }
+
+        if (!errorMessage.equals("")) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DrivingReportDetailEditActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+
+            // ダイアログの設定
+            alertDialog.setMessage(errorMessage);
+
+            // OK(肯定的な)ボタンの設定
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                // OKボタン押下時の処理
+            });
+
+            alertDialog.show();
+
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     private boolean SaveData() {
+
+        if (!CheckData())
+        {
+            return  false;
+        }
+
         realm.beginTransaction();
         RealmLocalDataDrivingReportDetail drivingReportDetail = readRecord();
 
