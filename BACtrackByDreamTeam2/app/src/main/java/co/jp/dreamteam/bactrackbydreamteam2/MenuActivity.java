@@ -29,7 +29,7 @@ public class MenuActivity extends Activity {
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
         // ボタン有効確認
-        String app_roll_call_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿ROLL_CALL_ENABLED), "0");
+        String app_roll_call_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), "0");
         String app_send_list_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), "0");
         String app_reminder_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿REMINDER_ENABLED), "0");
 

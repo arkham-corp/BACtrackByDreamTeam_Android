@@ -249,23 +249,23 @@ public class CompanyActivity extends Activity {
                                 String data_list = json.getString("data");
                                 String[] values = data_list.split(",");
 
-                                String app_roll_call_enabled = "0";
+                                String app_driving_report_enabled = "0";
                                 String app_send_list_enabled = "0";
                                 String app_reminder_enabled = "0";
 
                                 if (values.length == 3) {
-                                    app_roll_call_enabled = values[0].trim(); // 1つ目の値
+                                    app_driving_report_enabled = values[0].trim(); // 1つ目の値
                                     app_send_list_enabled = values[1].trim(); // 2つ目の値
                                     app_reminder_enabled = values[2].trim(); // 3つ目の値
                                 }
 
                                 editor = pref.edit();
-                                editor.putString(getString(R.string.PREF_KEY_MENU＿ROLL_CALL_ENABLED), app_roll_call_enabled);
+                                editor.putString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), app_driving_report_enabled);
                                 editor.putString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), app_send_list_enabled);
                                 editor.putString(getString(R.string.PREF_KEY_MENU＿REMINDER_ENABLED), app_reminder_enabled);
                                 editor.commit();
 
-                                if (app_roll_call_enabled.equals("1") ||
+                                if (app_driving_report_enabled.equals("1") ||
                                         app_send_list_enabled.equals("1") ||
                                         app_reminder_enabled.equals("1")
                                 ) {
