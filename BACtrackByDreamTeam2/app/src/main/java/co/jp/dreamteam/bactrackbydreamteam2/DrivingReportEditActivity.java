@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -146,7 +148,6 @@ public class DrivingReportEditActivity extends FragmentActivity {
             driving_report_edit_btnDrivingEndHm.setOnClickListener(btnDrivingEndHmClearClicked);
 
             driving_report_edit_btnDelete.setEnabled(false);
-            driving_report_edit_btnSend.setEnabled(false);
         } else {
             // 値セット
             driving_report_edit_txtDriverCode.setText(drivingReport.getDriver_code());
@@ -192,10 +193,10 @@ public class DrivingReportEditActivity extends FragmentActivity {
                 SetReadOnly(driving_report_edit_txtAbnormalReport);
                 SetReadOnly(driving_report_edit_txtInstruction);
 
-                driving_report_edit_btnDrivingStartYmd.setVisibility(View.GONE);
-                driving_report_edit_btnDrivingStartHm.setVisibility(View.GONE);
-                driving_report_edit_btnDrivingEndYmd.setVisibility(View.GONE);
-                driving_report_edit_btnDrivingEndHm.setVisibility(View.GONE);
+                driving_report_edit_btnDrivingStartYmd.setEnabled(false);
+                driving_report_edit_btnDrivingStartHm.setEnabled(false);
+                driving_report_edit_btnDrivingEndYmd.setEnabled(false);
+                driving_report_edit_btnDrivingEndHm.setEnabled(false);
 
                 driving_report_edit_btnSave.setEnabled(false);
                 driving_report_edit_btnSend.setEnabled(false);
@@ -328,8 +329,20 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
     View.OnClickListener btnDetailClicked = v -> {
 
-        if (!SaveData()) {
-            return;
+        RealmLocalDataDrivingReport drivingReport = readRecord();
+        if (drivingReport == null)
+        {
+            if (!SaveData()) {
+                return;
+            }
+        }
+        else
+        {
+            if (!drivingReport.getSendFlg().equals("1")) {
+                if (!SaveData()) {
+                    return;
+                }
+            }
         }
 
         Intent intent = new Intent(getApplication(), DrivingReportDetailActivity.class);
@@ -582,6 +595,52 @@ public class DrivingReportEditActivity extends FragmentActivity {
         alertDialog.show();
     };
 
+    private int getByteCount(String str) {
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+        // 文字列をUTF-8でエンコードしてバイト数を取得
+        try {
+            byte[] utf8Bytes = str.getBytes("UTF-8");
+            return utf8Bytes.length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    private boolean isValidDate(String inputDate) {
+        // 日付として有効かどうか確認するためにパースを試みる
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.JAPAN);
+            sdf.parse(inputDate);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isValidTime(String inputTime) {
+        // 日付として有効かどうか確認するためにパースを試みる
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.JAPAN);
+            sdf.parse(inputTime);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isNumeric(String inputValue) {
+        // 日付として有効かどうか確認するためにパースを試みる
+        try {
+            Integer.parseInt(inputValue);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean CheckData()
     {
         String errorMessage = "";
@@ -601,6 +660,92 @@ public class DrivingReportEditActivity extends FragmentActivity {
         else if (String.valueOf(driving_report_edit_txtDrivingStartHm.getText()).equals(""))
         {
             errorMessage = getString(R.string.TEXT_ERROR_START_HM);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtDriverCode.getText())) > 50)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DRIVER_CODE_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtCarNumber.getText())) > 50)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_CAR_NUMBER_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtRefuelingStatus.getText())) > 100)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_REFUELINGSTATUS_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtAbnormalReport.getText())) > 255)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_ABNORMALREPORT_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtInstruction.getText())) > 255)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_INSTRUCTION_MAX_LENGTH);
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_edit_txtDrivingStartYmd.getText()).equals(""))
+            {
+                if (!isValidDate(String.valueOf(driving_report_edit_txtDrivingStartYmd.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_START_YMD_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_edit_txtDrivingStartHm.getText()).equals(""))
+            {
+                if (!isValidTime(String.valueOf(driving_report_edit_txtDrivingStartHm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_START_HM_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_edit_txtDrivingEndYmd.getText()).equals(""))
+            {
+                if (!isValidDate(String.valueOf(driving_report_edit_txtDrivingEndYmd.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_END_YMD_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_edit_txtDrivingEndHm.getText()).equals(""))
+            {
+                if (!isValidTime(String.valueOf(driving_report_edit_txtDrivingEndHm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_END_HM_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_edit_txtDrivingStartKm.getText()).equals(""))
+            {
+                if (!isNumeric(String.valueOf(driving_report_edit_txtDrivingStartKm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_START_KM_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_edit_txtDrivingEndKm.getText()).equals(""))
+            {
+                if (!isNumeric(String.valueOf(driving_report_edit_txtDrivingEndKm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_END_KM_INVALID);
+                }
+            }
         }
 
         if (!errorMessage.equals("")) {
@@ -673,6 +818,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
         drivingReport.setRefueling_status(String.valueOf(driving_report_edit_txtRefuelingStatus.getText()));
         drivingReport.setAbnormal_report(String.valueOf(driving_report_edit_txtAbnormalReport.getText()));
         drivingReport.setInstruction(String.valueOf(driving_report_edit_txtInstruction.getText()));
+        drivingReport.setSendFlg("0");
 
         realm.insertOrUpdate(drivingReport);
 
@@ -683,6 +829,12 @@ public class DrivingReportEditActivity extends FragmentActivity {
     private boolean DeleteData() {
         realm.beginTransaction();
         RealmLocalDataDrivingReport drivingReport = readRecord();
+
+        RealmResults<RealmLocalDataDrivingReportDetail> list = realm.where(RealmLocalDataDrivingReportDetail.class)
+                .equalTo("driving_report_id", drivingReport.getId())
+                .findAll();
+        list.deleteAllFromRealm();
+
         drivingReport.deleteFromRealm();
         realm.commitTransaction();
         return true;

@@ -37,7 +37,7 @@ public class DrivingReportDetailActivity extends Activity {
         RealmLocalDataDrivingReport drivingReport = readRecordHeader();
 
         if (String.valueOf(drivingReport.getSendFlg()).equals("1")) {
-            driving_report_detail_btnAdd.setVisibility(View.GONE);
+            driving_report_detail_btnAdd.setEnabled(false);
         }
 
         RealmResults<RealmLocalDataDrivingReportDetail> drivingReportDetailList = readAll();

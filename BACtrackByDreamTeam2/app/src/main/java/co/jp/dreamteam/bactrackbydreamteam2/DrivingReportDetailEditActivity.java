@@ -17,6 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -107,12 +109,12 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             SetReadOnly(driving_report_detail_edit_txtCargoStatus);
             SetReadOnly(driving_report_detail_edit_txtNote);
 
-            driving_report_detail_edit_btnDestinationSelect.setVisibility(View.GONE);
-            driving_report_detail_edit_btnDrivingStartHm.setVisibility(View.GONE);
-            driving_report_detail_edit_btnDrivingEndHm.setVisibility(View.GONE);
+            driving_report_detail_edit_btnDestinationSelect.setEnabled(false);
+            driving_report_detail_edit_btnDrivingStartHm.setEnabled(false);
+            driving_report_detail_edit_btnDrivingEndHm.setEnabled(false);
 
-            driving_report_detail_edit_btnSave.setVisibility(View.GONE);
-            driving_report_detail_edit_btnDelete.setVisibility(View.GONE);
+            driving_report_detail_edit_btnSave.setEnabled(false);
+            driving_report_detail_edit_btnDelete.setEnabled(false);
         } else {
             driving_report_detail_edit_btnDestinationSelect.setOnClickListener(btnDestinationSelectClearClicked);
             driving_report_detail_edit_txtDrivingStartHm.setOnClickListener(txtDrivingStartHmClicked);
@@ -276,6 +278,41 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         alertDialog.show();
     };
 
+    private int getByteCount(String str) {
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+        // 文字列をUTF-8でエンコードしてバイト数を取得
+        try {
+            byte[] utf8Bytes = str.getBytes("UTF-8");
+            return utf8Bytes.length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    private boolean isValidTime(String inputTime) {
+        // 日付として有効かどうか確認するためにパースを試みる
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.JAPAN);
+            sdf.parse(inputTime);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isNumeric(String inputValue) {
+        // 日付として有効かどうか確認するためにパースを試みる
+        try {
+            Integer.parseInt(inputValue);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean CheckData()
     {
         String errorMessage = "";
@@ -284,9 +321,65 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         {
             errorMessage = getString(R.string.TEXT_ERROR_DETAIL_DESTINATION);
         }
-        else if (String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText()).equals(""))
+        else if (getByteCount(String.valueOf(driving_report_detail_edit_txtDestination.getText())) > 100)
         {
-            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_START_HM);
+            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_DESTINATION_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_detail_edit_txtCargoWeight.getText())) > 100)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_CARGO_WEIGHT_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_detail_edit_txtCargoStatus.getText())) > 100)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_CARGO_STATUS_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_detail_edit_txtNote.getText())) > 100)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_DETAIL_NOTE_LENGTH);
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText()).equals(""))
+            {
+                if (!isValidTime(String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_DETAIL_START_HM_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_detail_edit_txtDrivingEndHm.getText()).equals(""))
+            {
+                if (!isValidTime(String.valueOf(driving_report_detail_edit_txtDrivingEndHm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_DETAIL_END_HM_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_detail_edit_txtDrivingStartKm.getText()).equals(""))
+            {
+                if (!isNumeric(String.valueOf(driving_report_detail_edit_txtDrivingStartKm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_DETAIL_START_KM_INVALID);
+                }
+            }
+        }
+
+        if (!errorMessage.equals(""))
+        {
+            if (!String.valueOf(driving_report_detail_edit_txtDrivingEndKm.getText()).equals(""))
+            {
+                if (!isNumeric(String.valueOf(driving_report_detail_edit_txtDrivingEndKm.getText())))
+                {
+                    errorMessage = getString(R.string.TEXT_ERROR_DETAIL_END_KM_INVALID);
+                }
+            }
         }
 
         if (!errorMessage.equals("")) {

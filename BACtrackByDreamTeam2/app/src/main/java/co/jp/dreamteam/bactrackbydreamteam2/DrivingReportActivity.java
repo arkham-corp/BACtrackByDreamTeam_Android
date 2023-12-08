@@ -50,10 +50,11 @@ public class DrivingReportActivity extends Activity {
 
         realm.beginTransaction();
         for (RealmLocalDataDrivingReport drivingReport:drivingReportList) {
-            String start_ymd = drivingReport.getDriving_start_ymd();
-            if (start_ymd.compareTo(deleteDate) <= 0)
-            {
-                drivingReport.deleteFromRealm();
+            if (drivingReport.getSendFlg().equals("1")) {
+                String start_ymd = drivingReport.getDriving_start_ymd();
+                if (start_ymd.compareTo(deleteDate) <= 0) {
+                    drivingReport.deleteFromRealm();
+                }
             }
         }
         realm.commitTransaction();

@@ -50,22 +50,22 @@ public class MenuActivity extends Activity {
         if (app_roll_call_enabled.equals("1")) {
             menu_btnDrivingReport.setOnClickListener(btnDrivingReportClicked);
         } else {
-            menu_spaceDrivingReport.setVisibility(View.GONE);
-            menu_btnDrivingReport.setVisibility(View.GONE);
+            menu_spaceDrivingReport.setVisibility(View.INVISIBLE);
+            menu_btnDrivingReport.setVisibility(View.INVISIBLE);
         }
 
         if (app_send_list_enabled.equals("1")) {
             menu_btnSendList.setOnClickListener(btnSendListClicked);
         } else {
-            menu_spaceSendList.setVisibility(View.GONE);
-            menu_btnSendList.setVisibility(View.GONE);
+            menu_spaceSendList.setVisibility(View.INVISIBLE);
+            menu_btnSendList.setVisibility(View.INVISIBLE);
         }
 
         if (app_reminder_enabled.equals("1")) {
             menu_btnReminder.setOnClickListener(btnReminderClicked);
         } else {
-            menu_spaceReminder.setVisibility(View.GONE);
-            menu_btnReminder.setVisibility(View.GONE);
+            menu_spaceReminder.setVisibility(View.INVISIBLE);
+            menu_btnReminder.setVisibility(View.INVISIBLE);
         }
     }
 
