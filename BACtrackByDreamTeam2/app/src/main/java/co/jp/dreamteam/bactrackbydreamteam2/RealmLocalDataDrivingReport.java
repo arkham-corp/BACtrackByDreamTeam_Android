@@ -6,6 +6,7 @@ import io.realm.annotations.PrimaryKey;
 public class RealmLocalDataDrivingReport extends RealmObject {
     @PrimaryKey
     private Integer id;
+    private String company_code = "";
     private String driver_code = "";
     private String car_number = "";
     private String driving_start_ymd = "";
@@ -17,6 +18,12 @@ public class RealmLocalDataDrivingReport extends RealmObject {
     private String refueling_status = "";
     private String abnormal_report = "";
     private String instruction = "";
+    private String free_fld1 = "";
+    private String free_fld2 = "";
+    private String free_fld3 = "";
+    private String free_title1 = "";
+    private String free_title2 = "";
+    private String free_title3 = "";
     private String send_flg = "";
 
     public Integer getId() {
@@ -25,6 +32,14 @@ public class RealmLocalDataDrivingReport extends RealmObject {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCompany_code() {
+        return company_code;
+    }
+
+    public void setCompany_code(String company_code) {
+        this.company_code = company_code;
     }
 
     public String getDriver_code() {
@@ -113,6 +128,54 @@ public class RealmLocalDataDrivingReport extends RealmObject {
 
     public void setInstruction(String instruction) {
         this.instruction = instruction;
+    }
+
+    public String getFree_fld1() {
+        return free_fld1;
+    }
+
+    public void setFree_fld1(String free_fld1) {
+        this.free_fld1 = free_fld1;
+    }
+
+    public String getFree_fld2() {
+        return free_fld2;
+    }
+
+    public void setFree_fld2(String free_fld2) {
+        this.free_fld2 = free_fld2;
+    }
+
+    public String getFree_fld3() {
+        return free_fld3;
+    }
+
+    public void setFree_fld3(String free_fld3) {
+        this.free_fld3 = free_fld3;
+    }
+
+    public String getFree_title1() {
+        return free_title1;
+    }
+
+    public void setFree_title1(String free_title1) {
+        this.free_title1 = free_title1;
+    }
+
+    public String getFree_title2() {
+        return free_title2;
+    }
+
+    public void setFree_title2(String free_title2) {
+        this.free_title2 = free_title2;
+    }
+
+    public String getFree_title3() {
+        return free_title3;
+    }
+
+    public void setFree_title3(String free_title3) {
+        this.free_title3 = free_title3;
     }
 
     public String getSendFlg() {

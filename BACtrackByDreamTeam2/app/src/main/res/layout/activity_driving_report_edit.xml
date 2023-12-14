@@ -335,6 +335,69 @@
                     android:textSize="30sp"
                     tools:ignore="SpeakableTextPresentCheck" />
 
+                <TextView
+                    android:id="@+id/driving_report_edit_lblFreeTitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtInstruction"
+                    android:text='                                         '
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtFreeFld1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblFreeTitle1"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblFreeTitle1"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblFreeTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtFreeFld1"
+                    android:text='                                         '
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtFreeFld2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblFreeTitle2"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblFreeTitle2"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblFreeTitle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtFreeFld2"
+                    android:text='                                         '
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtFreeFld3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblFreeTitle3"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblFreeTitle3"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>

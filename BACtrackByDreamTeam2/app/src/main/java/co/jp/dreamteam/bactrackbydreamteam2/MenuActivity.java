@@ -1,12 +1,17 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Space;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MenuActivity extends Activity {
 
@@ -90,9 +95,9 @@ public class MenuActivity extends Activity {
     View.OnClickListener btnDrivingReportClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            menu_btnDrivingReport.setEnabled(false);
-            Intent intent = new Intent(getApplication(), DrivingReportActivity.class);
-            startActivity(intent);
+//23231211
+            exec_post25();
+//20231211
         }
     };
 
@@ -113,4 +118,118 @@ public class MenuActivity extends Activity {
             startActivity(intent);
         }
     };
+//20231211
+    /**
+     * HTTPコネクションエラー
+     */
+    private void errorHttp(final String response) {
+        runOnUiThread(() -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MenuActivity.this);
+
+            // ダイアログの設定
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+            if (response.startsWith("Hostname al-check.com not verified")) {
+                alertDialog.setMessage("Https通信のHostnameが不正です");
+            } else {
+                if(response.equals("")) {
+                    alertDialog.setMessage("[httpGetFreeTitleServlet]が応答しませんでした。");
+                } else {
+                    alertDialog.setMessage(response);
+                }
+            }
+
+            // OK(肯定的な)ボタンの設定
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                // OKボタン押下時の処理
+                menu_btnDrivingReport.setEnabled(false);
+            });
+
+            alertDialog.show();
+        });
+    }
+    /**
+     * 会社エラー
+     */
+    private void errorCompanyNotFound() {
+        runOnUiThread(() -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MenuActivity.this);
+
+            // ダイアログの設定
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+            alertDialog.setMessage(getString(R.string.TEXT_ERR_COMPANY_NOT_FOUND));
+
+            // OK(肯定的な)ボタンの設定
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                // OKボタン押下時の処理
+                menu_btnDrivingReport.setEnabled(false);
+            });
+
+            alertDialog.show();
+        });
+    }
+
+    private void exec_post25() {
+
+        // 接続先
+        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+        // 非同期タスクを定義
+        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
+                this,
+                strHttpUrl + getString(R.string.HTTP_GET_FREE_TITLE),
+
+                // タスク完了時に呼ばれるUIのハンドラ
+                new HttpPostHandler() {
+
+                    @Override
+                    public void onPostCompleted(String response) {
+                        try {
+                            JSONObject json = new JSONObject(response);
+
+                            // 受信結果をUIに表示
+                            if (json.getString("status").equals("true")) {
+                                // 値保存
+                                String data_list = json.getString("data");
+                                String[] values = data_list.split(",");
+
+                                String title1 = "";
+                                String title2 = "";
+                                String title3 = "";
+
+                                if (values.length == 3) {
+                                    title1 = values[0].trim(); // 1つ目の値
+                                    title2 = values[1].trim(); // 2つ目の値
+                                    title3 = values[2].trim(); // 3つ目の値
+                                }
+
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString(getString(R.string.PREF_KEY_FREE_TITLE1), title1);
+                                editor.putString(getString(R.string.PREF_KEY_FREE_TITLE2), title2);
+                                editor.putString(getString(R.string.PREF_KEY_FREE_TITLE3), title3);
+                                editor.commit();
+
+                                menu_btnDrivingReport.setEnabled(false);
+                                Intent intent = new Intent(getApplication(), DrivingReportActivity.class);
+                                startActivity(intent);
+
+                            } else {
+                                errorCompanyNotFound();
+                            }
+                        } catch (JSONException e) {
+                            errorHttp(response);
+                        }
+                    }
+
+                    @Override
+                    public void onPostFailed(String response) {
+                        errorHttp(response);
+                    }
+                }
+        );
+
+
+        // タスクを開始
+        task.execute();
+    }
+//20231211
 }

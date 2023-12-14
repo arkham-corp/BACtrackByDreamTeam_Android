@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -51,6 +52,14 @@ public class DrivingReportEditActivity extends FragmentActivity {
     EditText driving_report_edit_txtAbnormalReport;
     EditText driving_report_edit_txtInstruction;
 
+//20231211
+    TextView driving_report_edit_lblFreeTitle1;
+    TextView driving_report_edit_lblFreeTitle2;
+    TextView driving_report_edit_lblFreeTitle3;
+    EditText driving_report_edit_txtFreeFld1;
+    EditText driving_report_edit_txtFreeFld2;
+    EditText driving_report_edit_txtFreeFld3;
+//20231211
     ImageButton driving_report_edit_btnDrivingStartYmd;
     ImageButton driving_report_edit_btnDrivingStartHm;
     ImageButton driving_report_edit_btnDrivingEndYmd;
@@ -106,7 +115,19 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
         // 連絡事項
         driving_report_edit_txtInstruction = this.findViewById(R.id.driving_report_edit_txtInstruction);
+//20231211
+        driving_report_edit_lblFreeTitle1 = this.findViewById(R.id.driving_report_edit_lblFreeTitle1);
 
+        driving_report_edit_lblFreeTitle2 = this.findViewById(R.id.driving_report_edit_lblFreeTitle2);
+
+        driving_report_edit_lblFreeTitle3 = this.findViewById(R.id.driving_report_edit_lblFreeTitle3);
+
+        driving_report_edit_txtFreeFld1 = this.findViewById(R.id.driving_report_edit_txtFreeFld1);
+
+        driving_report_edit_txtFreeFld2 = this.findViewById(R.id.driving_report_edit_txtFreeFld2);
+
+        driving_report_edit_txtFreeFld3 = this.findViewById(R.id.driving_report_edit_txtFreeFld3);
+//20231211
         // クリアボタン
         driving_report_edit_btnDrivingStartYmd = this.findViewById(R.id.driving_report_edit_btnDrivingStartYmd);
 
@@ -136,6 +157,15 @@ public class DrivingReportEditActivity extends FragmentActivity {
         RealmLocalDataDrivingReport drivingReport = readRecord();
 
         if (drivingReport == null) {
+//20231211
+            // 設定ファイル取得
+            pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+            driving_report_edit_txtDriverCode.setText(pref.getString(getString(R.string.PREF_KEY_DRIVER), ""));
+            driving_report_edit_txtCarNumber.setText(pref.getString(getString(R.string.PREF_KEY_CAR_NO), ""));
+            driving_report_edit_lblFreeTitle1.setText(pref.getString(getString(R.string.PREF_KEY_FREE_TITLE1), ""));
+            driving_report_edit_lblFreeTitle2.setText(pref.getString(getString(R.string.PREF_KEY_FREE_TITLE2), ""));
+            driving_report_edit_lblFreeTitle3.setText(pref.getString(getString(R.string.PREF_KEY_FREE_TITLE3), ""));
+//20231211
             // ピッカーイベントセット
             driving_report_edit_txtDrivingStartYmd.setOnClickListener(txtDrivingStartYmdClicked);
             driving_report_edit_txtDrivingStartHm.setOnClickListener(txtDrivingStartHmClicked);
@@ -179,7 +209,14 @@ public class DrivingReportEditActivity extends FragmentActivity {
             driving_report_edit_txtRefuelingStatus.setText(drivingReport.getRefueling_status());
             driving_report_edit_txtAbnormalReport.setText(drivingReport.getAbnormal_report());
             driving_report_edit_txtInstruction.setText(drivingReport.getInstruction());
-
+//20231211
+            driving_report_edit_lblFreeTitle1.setText(drivingReport.getFree_title1());
+            driving_report_edit_lblFreeTitle2.setText(drivingReport.getFree_title2());
+            driving_report_edit_lblFreeTitle3.setText(drivingReport.getFree_title3());
+            driving_report_edit_txtFreeFld1.setText(drivingReport.getFree_fld1());
+            driving_report_edit_txtFreeFld2.setText(drivingReport.getFree_fld2());
+            driving_report_edit_txtFreeFld3.setText(drivingReport.getFree_fld3());
+//23231211
             if (String.valueOf(drivingReport.getSendFlg()).equals("1")) {
                 SetReadOnly(driving_report_edit_txtDriverCode);
                 SetReadOnly(driving_report_edit_txtCarNumber);
@@ -192,7 +229,11 @@ public class DrivingReportEditActivity extends FragmentActivity {
                 SetReadOnly(driving_report_edit_txtRefuelingStatus);
                 SetReadOnly(driving_report_edit_txtAbnormalReport);
                 SetReadOnly(driving_report_edit_txtInstruction);
-
+//20231211
+                SetReadOnly(driving_report_edit_txtFreeFld1);
+                SetReadOnly(driving_report_edit_txtFreeFld2);
+                SetReadOnly(driving_report_edit_txtFreeFld3);
+//20231211
                 driving_report_edit_btnDrivingStartYmd.setEnabled(false);
                 driving_report_edit_btnDrivingStartHm.setEnabled(false);
                 driving_report_edit_btnDrivingEndYmd.setEnabled(false);
@@ -200,6 +241,9 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
                 driving_report_edit_btnSave.setEnabled(false);
                 driving_report_edit_btnSend.setEnabled(false);
+//20231211
+                driving_report_edit_btnDelete.setEnabled(false);
+//20231211
             } else {
                 // ピッカーイベントセット
                 driving_report_edit_txtDrivingStartYmd.setOnClickListener(txtDrivingStartYmdClicked);
@@ -213,6 +257,20 @@ public class DrivingReportEditActivity extends FragmentActivity {
                 driving_report_edit_btnDrivingEndHm.setOnClickListener(btnDrivingEndHmClearClicked);
             }
         }
+//20231211
+        if(driving_report_edit_lblFreeTitle1.getText().equals("")) {
+            driving_report_edit_lblFreeTitle1.setVisibility(View.GONE);
+            driving_report_edit_txtFreeFld1.setVisibility(View.GONE);
+        }
+        if(driving_report_edit_lblFreeTitle2.getText().equals("")) {
+            driving_report_edit_lblFreeTitle2.setVisibility(View.GONE);
+            driving_report_edit_txtFreeFld2.setVisibility(View.GONE);
+        }
+        if(driving_report_edit_lblFreeTitle3.getText().equals("")) {
+            driving_report_edit_lblFreeTitle3.setVisibility(View.GONE);
+            driving_report_edit_txtFreeFld3.setVisibility(View.GONE);
+        }
+//20231211
     }
 
     private void SetReadOnly(EditText control) {
@@ -260,7 +318,9 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
     public void showTimePickerDialogStartHm(View v, String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
-            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%2d", minute);
+//20231211
+            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
+//20231211
             driving_report_edit_txtDrivingStartHm.setText(hm);
         };
         TimePickerFragment newFragment = new TimePickerFragment(listener);
@@ -268,6 +328,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
         args.putString("default", defaultValue);
         newFragment.setArguments(args);
         newFragment.show(getSupportFragmentManager(), tag);
+
     }
 
     public void showDatePickerDialogEndYmd(View v, String tag, String defaultValue) {
@@ -286,7 +347,9 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
     public void showTimePickerDialogEndHm(View v, String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
-            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%2d", minute);
+//20231211
+            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
+//20231211
             driving_report_edit_txtDrivingEndHm.setText(hm);
         };
         DialogFragment newFragment = new TimePickerFragment(listener);
@@ -523,55 +586,66 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
         RealmLocalDataDrivingReport drivingReport = readRecord();
 
-        JSONObject jsonData = new JSONObject();
+        if(drivingReport != null) {
+            JSONObject jsonData = new JSONObject();
 
-        try {
-            // ヘッダをJSONに変換
-            JSONObject headerJson = new JSONObject();
-            headerJson.put("id", drivingReport.getId());
-            headerJson.put("driver_code", drivingReport.getDriver_code());
-            headerJson.put("car_number", drivingReport.getCar_number());
-            headerJson.put("driving_start_ymd", drivingReport.getDriving_start_ymd());
-            headerJson.put("driving_start_hm", drivingReport.getDriving_start_hm());
-            headerJson.put("driving_end_ymd", drivingReport.getDriving_end_ymd());
-            headerJson.put("driving_end_hm", drivingReport.getDriving_end_hm());
-            headerJson.put("driving_start_km", drivingReport.getDriving_start_km());
-            headerJson.put("driving_end_km", drivingReport.getDriving_end_km());
-            headerJson.put("refueling_status", drivingReport.getRefueling_status());
-            headerJson.put("abnormal_report", drivingReport.getAbnormal_report());
-            headerJson.put("instruction", drivingReport.getInstruction());
-            headerJson.put("send_flg", drivingReport.getSendFlg());
+            try {
+                // ヘッダをJSONに変換
+                JSONObject headerJson = new JSONObject();
+                headerJson.put("id", drivingReport.getId());
+                headerJson.put("driver_code", drivingReport.getDriver_code());
+                headerJson.put("car_number", drivingReport.getCar_number());
+                headerJson.put("driving_start_ymd", drivingReport.getDriving_start_ymd());
+                headerJson.put("driving_start_hm", drivingReport.getDriving_start_hm());
+                headerJson.put("driving_end_ymd", drivingReport.getDriving_end_ymd());
+                headerJson.put("driving_end_hm", drivingReport.getDriving_end_hm());
+                headerJson.put("driving_start_km", drivingReport.getDriving_start_km());
+                headerJson.put("driving_end_km", drivingReport.getDriving_end_km());
+                headerJson.put("refueling_status", drivingReport.getRefueling_status());
+                headerJson.put("abnormal_report", drivingReport.getAbnormal_report());
+                headerJson.put("instruction", drivingReport.getInstruction());
 
-            RealmResults<RealmLocalDataDrivingReportDetail> drivingReportDetailList = readDetail(drivingReport.getId());
+//20231211
+                headerJson.put("free_title1", drivingReport.getFree_title1());
+                headerJson.put("free_fld1", drivingReport.getFree_fld1());
+                headerJson.put("free_title2", drivingReport.getFree_title2());
+                headerJson.put("free_fld2", drivingReport.getFree_fld2());
+                headerJson.put("free_title3", drivingReport.getFree_title3());
+                headerJson.put("free_fld3", drivingReport.getFree_fld3());
+//20231211
+                headerJson.put("send_flg", drivingReport.getSendFlg());
 
-            // 明細をJSONに変換
-            JSONArray detailsJsonArray = new JSONArray();
-            for (RealmLocalDataDrivingReportDetail detail : drivingReportDetailList) {
-                JSONObject detailJson = new JSONObject();
-                detailJson.put("id", detail.getId());
-                detailJson.put("driving_report_id", detail.getDriving_report_id());
-                detailJson.put("destination", detail.getDestination());
-                detailJson.put("driving_start_hm", detail.getDriving_start_hm());
-                detailJson.put("driving_start_km", detail.getDriving_start_km());
-                detailJson.put("driving_end_hm", detail.getDriving_end_hm());
-                detailJson.put("driving_end_km", detail.getDriving_end_km());
-                detailJson.put("cargo_weight", detail.getCargo_weight());
-                detailJson.put("cargo_status", detail.getCargo_status());
-                detailJson.put("note", detail.getNote());
-                detailsJsonArray.put(detailJson);
+                RealmResults<RealmLocalDataDrivingReportDetail> drivingReportDetailList = readDetail(drivingReport.getId());
+
+                // 明細をJSONに変換
+                JSONArray detailsJsonArray = new JSONArray();
+                for (RealmLocalDataDrivingReportDetail detail : drivingReportDetailList) {
+                    JSONObject detailJson = new JSONObject();
+                    detailJson.put("id", detail.getId());
+                    detailJson.put("driving_report_id", detail.getDriving_report_id());
+                    detailJson.put("destination", detail.getDestination());
+                    detailJson.put("driving_start_hm", detail.getDriving_start_hm());
+                    detailJson.put("driving_start_km", detail.getDriving_start_km());
+                    detailJson.put("driving_end_hm", detail.getDriving_end_hm());
+                    detailJson.put("driving_end_km", detail.getDriving_end_km());
+                    detailJson.put("cargo_weight", detail.getCargo_weight());
+                    detailJson.put("cargo_status", detail.getCargo_status());
+                    detailJson.put("note", detail.getNote());
+                    detailsJsonArray.put(detailJson);
+                }
+
+                headerJson.put("detail", detailsJsonArray);
+
+                jsonData.put("0", headerJson);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
 
-            headerJson.put("detail", detailsJsonArray);
+            task.addPostParam(getString(R.string.HTTP_PARAM_JSON_DATA), jsonData.toString());
 
-            jsonData.put("0", headerJson);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+            // タスクを開始
+            task.execute();
         }
-
-        task.addPostParam(getString(R.string.HTTP_PARAM_JSON_DATA), jsonData.toString());
-
-        // タスクを開始
-        task.execute();
     }
 
     View.OnClickListener btnDeleteClicked = v -> {
@@ -681,8 +755,29 @@ public class DrivingReportEditActivity extends FragmentActivity {
         {
             errorMessage = getString(R.string.TEXT_ERROR_INSTRUCTION_MAX_LENGTH);
         }
-
-        if (!errorMessage.equals(""))
+//23231211
+        else if (getByteCount(String.valueOf(driving_report_edit_txtFreeFld1.getText())) > 255)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_FREETEXT1_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtFreeFld2.getText())) > 255)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_FREETEXT2_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtFreeFld3.getText())) > 255)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_FREETEXT3_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtDrivingStartKm.getText())) > 8)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_START_KM_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_edit_txtDrivingEndKm.getText())) > 8)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_END_KM_MAX_LENGTH);
+        }
+//20231211
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_edit_txtDrivingStartYmd.getText()).equals(""))
             {
@@ -693,7 +788,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_edit_txtDrivingStartHm.getText()).equals(""))
             {
@@ -704,7 +799,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_edit_txtDrivingEndYmd.getText()).equals(""))
             {
@@ -715,7 +810,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_edit_txtDrivingEndHm.getText()).equals(""))
             {
@@ -726,7 +821,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_edit_txtDrivingStartKm.getText()).equals(""))
             {
@@ -737,7 +832,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_edit_txtDrivingEndKm.getText()).equals(""))
             {
@@ -747,6 +842,52 @@ public class DrivingReportEditActivity extends FragmentActivity {
                 }
             }
         }
+
+//20231211
+        String st = String.valueOf(driving_report_edit_txtDrivingStartYmd.getText());
+        String ed = String.valueOf(driving_report_edit_txtDrivingEndYmd.getText());
+        if(!st.equals("") && !ed.equals("")) {
+            st = st.replace(" ","0");
+            st = st.replace("/","");
+            ed = ed.replace(" ","0");
+            ed = ed.replace("/","");
+            if (errorMessage.equals("")) {
+                if (Integer.parseInt(ed) < Integer.parseInt(st)) {
+                    errorMessage = getString(R.string.TEXT_ERROR_YMD_INVALID);
+                }
+            }
+        }
+
+        if (errorMessage.equals(""))
+        {
+            if(!st.equals("") && !ed.equals("")) {
+                if (Integer.parseInt(ed) == Integer.parseInt(st)) {
+                    st = String.valueOf(driving_report_edit_txtDrivingStartHm.getText());
+                    ed = String.valueOf(driving_report_edit_txtDrivingEndHm.getText());
+                    if(!st.equals("") && !ed.equals("")) {
+                        st = st.replace(" ", "0");
+                        st = st.replace(":", "");
+                        ed = ed.replace(" ", "0");
+                        ed = ed.replace(":", "");
+                        if (Integer.parseInt(ed) < Integer.parseInt(st)) {
+                            errorMessage = getString(R.string.TEXT_ERROR_HM_INVALID);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (errorMessage.equals(""))
+        {
+            st = String.valueOf(driving_report_edit_txtDrivingStartKm.getText());
+            ed = String.valueOf(driving_report_edit_txtDrivingEndKm.getText());
+            if(!st.equals("") && !ed.equals("")) {
+                if (Integer.parseInt(ed) < Integer.parseInt(st)) {
+                    errorMessage = getString(R.string.TEXT_ERROR_KM_INVALID);
+                }
+            }
+        }
+//20231211
 
         if (!errorMessage.equals("")) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(DrivingReportEditActivity.this);
@@ -788,11 +929,18 @@ public class DrivingReportEditActivity extends FragmentActivity {
             if (maxId != null) {
                 nextId = maxId.intValue() + 1;
             }
-            int driving_report_id = nextId;
+//20231211
+            driving_report_id = nextId;
+//20231211
             drivingReport = realm.createObject(RealmLocalDataDrivingReport.class, driving_report_id);
+
         }
 
         // 値セット
+//20231211
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        drivingReport.setCompany_code(pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
+//20231211
         drivingReport.setDriver_code(String.valueOf(driving_report_edit_txtDriverCode.getText()));
         drivingReport.setCar_number(String.valueOf(driving_report_edit_txtCarNumber.getText()));
         String strDrivingStartYmd = String.valueOf(driving_report_edit_txtDrivingStartYmd.getText()).replaceAll("/", "");
@@ -819,6 +967,14 @@ public class DrivingReportEditActivity extends FragmentActivity {
         drivingReport.setAbnormal_report(String.valueOf(driving_report_edit_txtAbnormalReport.getText()));
         drivingReport.setInstruction(String.valueOf(driving_report_edit_txtInstruction.getText()));
         drivingReport.setSendFlg("0");
+//20231211
+        drivingReport.setFree_title1(String.valueOf(driving_report_edit_lblFreeTitle1.getText()));
+        drivingReport.setFree_title2(String.valueOf(driving_report_edit_lblFreeTitle2.getText()));
+        drivingReport.setFree_title3(String.valueOf(driving_report_edit_lblFreeTitle3.getText()));
+        drivingReport.setFree_fld1(String.valueOf(driving_report_edit_txtFreeFld1.getText()));
+        drivingReport.setFree_fld2(String.valueOf(driving_report_edit_txtFreeFld2.getText()));
+        drivingReport.setFree_fld3(String.valueOf(driving_report_edit_txtFreeFld3.getText()));
+//20231211
 
         realm.insertOrUpdate(drivingReport);
 

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,8 @@ import java.util.Locale;
 import io.realm.Realm;
 
 public class DrivingReportDetailEditActivity extends FragmentActivity {
+
+    private SharedPreferences pref;
 
     public static final String EXTRA_MESSAGE = "co.jp.dreamteam.bactrackbydreamteam2.MESSAGE";
     private Realm realm;
@@ -98,37 +101,54 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         driving_report_detail_edit_btnDelete.setOnClickListener(btnDeleteClicked);
 
         RealmLocalDataDrivingReport drivingReport = readRecordHeader();
-
-        if (String.valueOf(drivingReport.getSendFlg()).equals("1")) {
-            SetReadOnly(driving_report_detail_edit_txtDestination);
-            SetReadOnly(driving_report_detail_edit_txtDrivingStartHm);
-            SetReadOnly(driving_report_detail_edit_txtDrivingStartKm);
-            SetReadOnly(driving_report_detail_edit_txtDrivingEndHm);
-            SetReadOnly(driving_report_detail_edit_txtDrivingEndKm);
-            SetReadOnly(driving_report_detail_edit_txtCargoWeight);
-            SetReadOnly(driving_report_detail_edit_txtCargoStatus);
-            SetReadOnly(driving_report_detail_edit_txtNote);
-
-            driving_report_detail_edit_btnDestinationSelect.setEnabled(false);
-            driving_report_detail_edit_btnDrivingStartHm.setEnabled(false);
-            driving_report_detail_edit_btnDrivingEndHm.setEnabled(false);
-
-            driving_report_detail_edit_btnSave.setEnabled(false);
+//20231211
+        if(drivingReport == null) {
+            driving_report_detail_edit_btnDestinationSelect.setEnabled(true);
+            driving_report_detail_edit_btnDrivingStartHm.setEnabled(true);
+            driving_report_detail_edit_btnDrivingEndHm.setEnabled(true);
+            driving_report_detail_edit_btnSave.setEnabled(true);
             driving_report_detail_edit_btnDelete.setEnabled(false);
-        } else {
             driving_report_detail_edit_btnDestinationSelect.setOnClickListener(btnDestinationSelectClearClicked);
             driving_report_detail_edit_txtDrivingStartHm.setOnClickListener(txtDrivingStartHmClicked);
             driving_report_detail_edit_btnDrivingStartHm.setOnClickListener(btnDrivingStartHmClearClicked);
             driving_report_detail_edit_txtDrivingEndHm.setOnClickListener(txtDrivingEndHmClicked);
             driving_report_detail_edit_btnDrivingEndHm.setOnClickListener(btnDrivingEndHmClearClicked);
-        }
+//23231211
+        } else {
+            if (String.valueOf(drivingReport.getSendFlg()).equals("1")) {
+                SetReadOnly(driving_report_detail_edit_txtDestination);
+                SetReadOnly(driving_report_detail_edit_txtDrivingStartHm);
+                SetReadOnly(driving_report_detail_edit_txtDrivingStartKm);
+                SetReadOnly(driving_report_detail_edit_txtDrivingEndHm);
+                SetReadOnly(driving_report_detail_edit_txtDrivingEndKm);
+                SetReadOnly(driving_report_detail_edit_txtCargoWeight);
+                SetReadOnly(driving_report_detail_edit_txtCargoStatus);
+                SetReadOnly(driving_report_detail_edit_txtNote);
 
+                driving_report_detail_edit_btnDestinationSelect.setEnabled(false);
+                driving_report_detail_edit_btnDrivingStartHm.setEnabled(false);
+                driving_report_detail_edit_btnDrivingEndHm.setEnabled(false);
+
+                driving_report_detail_edit_btnSave.setEnabled(false);
+//20231211
+                driving_report_detail_edit_btnDelete.setEnabled(false);
+//20231211
+            } else {
+                driving_report_detail_edit_btnDestinationSelect.setOnClickListener(btnDestinationSelectClearClicked);
+                driving_report_detail_edit_txtDrivingStartHm.setOnClickListener(txtDrivingStartHmClicked);
+                driving_report_detail_edit_btnDrivingStartHm.setOnClickListener(btnDrivingStartHmClearClicked);
+                driving_report_detail_edit_txtDrivingEndHm.setOnClickListener(txtDrivingEndHmClicked);
+                driving_report_detail_edit_btnDrivingEndHm.setOnClickListener(btnDrivingEndHmClearClicked);
+            }
+        }
         // 値取得
         RealmLocalDataDrivingReportDetail drivingReportDetail = readRecord();
 
+//20231211
         if (drivingReportDetail == null) {
             driving_report_detail_edit_btnDelete.setEnabled(false);
         } else {
+//23231211
             // 値セット
             driving_report_detail_edit_txtDestination.setText(drivingReportDetail.getDestination());
             if (!drivingReportDetail.getDriving_start_hm().equals("")) {
@@ -197,7 +217,9 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
 
     public void showTimePickerDialogStartHm(View v, String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
-            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%2d", minute);
+//23231211
+            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
+//23231211
             driving_report_detail_edit_txtDrivingStartHm.setText(hm);
         };
         TimePickerFragment newFragment = new TimePickerFragment(listener);
@@ -209,7 +231,9 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
 
     public void showTimePickerDialogEndHm(View v, String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
-            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%2d", minute);
+//20231211
+            String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
+//20231211
             driving_report_detail_edit_txtDrivingEndHm.setText(hm);
         };
         DialogFragment newFragment = new TimePickerFragment(listener);
@@ -337,8 +361,17 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         {
             errorMessage = getString(R.string.TEXT_ERROR_DETAIL_NOTE_LENGTH);
         }
-
-        if (!errorMessage.equals(""))
+//20231211
+        else if (getByteCount(String.valueOf(driving_report_detail_edit_txtDrivingStartKm.getText())) > 8)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_START_KM_MAX_LENGTH);
+        }
+        else if (getByteCount(String.valueOf(driving_report_detail_edit_txtDrivingEndKm.getText())) > 8)
+        {
+            errorMessage = getString(R.string.TEXT_ERROR_END_KM_MAX_LENGTH);
+        }
+//20231211
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText()).equals(""))
             {
@@ -349,7 +382,7 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_detail_edit_txtDrivingEndHm.getText()).equals(""))
             {
@@ -360,7 +393,7 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_detail_edit_txtDrivingStartKm.getText()).equals(""))
             {
@@ -371,7 +404,7 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             }
         }
 
-        if (!errorMessage.equals(""))
+        if (errorMessage.equals(""))
         {
             if (!String.valueOf(driving_report_detail_edit_txtDrivingEndKm.getText()).equals(""))
             {
@@ -381,6 +414,35 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
                 }
             }
         }
+
+//20231211
+/*
+        if (errorMessage.equals(""))
+        {
+            String st = String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText());
+            String ed = String.valueOf(driving_report_detail_edit_txtDrivingEndHm.getText());
+            if(!st.equals("") && !ed.equals("")) {
+                st = st.replace(" ","0");
+                st = st.replace(":","");
+                ed = ed.replace(" ","0");
+                ed = ed.replace(":","");
+                if (Integer.parseInt(ed) < Integer.parseInt(st)) {
+                    errorMessage = getString(R.string.TEXT_ERROR_HM_INVALID);
+                }
+            }
+        }
+*/
+        if (errorMessage.equals(""))
+        {
+            String st = String.valueOf(driving_report_detail_edit_txtDrivingStartKm.getText());
+            String ed = String.valueOf(driving_report_detail_edit_txtDrivingEndKm.getText());
+            if(!st.equals("") && !ed.equals("")) {
+                if (Integer.parseInt(ed) < Integer.parseInt(st)) {
+                    errorMessage = getString(R.string.TEXT_ERROR_KM_INVALID);
+                }
+            }
+        }
+//20231211
 
         if (!errorMessage.equals("")) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(DrivingReportDetailEditActivity.this);
@@ -468,6 +530,10 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             int id = nextId;
             RealmLocalDataDrivingReportDestination drivingReportDestination = realm.createObject(RealmLocalDataDrivingReportDestination.class, id);
             drivingReportDestination.setDestination(String.valueOf(driving_report_detail_edit_txtDestination.getText()));
+//20231211
+            pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+            drivingReportDestination.setCompany_code(pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
+//23231211
             realm.insert(drivingReportDestination);
         }
 

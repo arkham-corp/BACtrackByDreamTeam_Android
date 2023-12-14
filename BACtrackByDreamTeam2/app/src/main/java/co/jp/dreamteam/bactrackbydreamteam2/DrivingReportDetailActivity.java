@@ -36,11 +36,17 @@ public class DrivingReportDetailActivity extends Activity {
 
         RealmLocalDataDrivingReport drivingReport = readRecordHeader();
 
-        if (String.valueOf(drivingReport.getSendFlg()).equals("1")) {
-            driving_report_detail_btnAdd.setEnabled(false);
+        if(drivingReport==null) {
+            driving_report_detail_btnAdd.setEnabled(true);
+        } else {
+            if (String.valueOf(drivingReport.getSendFlg()).equals("1")) {
+                driving_report_detail_btnAdd.setEnabled(false);
+            }
         }
 
-        RealmResults<RealmLocalDataDrivingReportDetail> drivingReportDetailList = readAll();
+        RealmResults<RealmLocalDataDrivingReportDetail> drivingReportDetailList = readAll()
+                .sort("driving_start_hm", Sort.ASCENDING)
+                .sort("destination", Sort.ASCENDING);
 
         DrivingReportDetailAdapter adapter = new DrivingReportDetailAdapter(this, drivingReportDetailList
                 , item -> {

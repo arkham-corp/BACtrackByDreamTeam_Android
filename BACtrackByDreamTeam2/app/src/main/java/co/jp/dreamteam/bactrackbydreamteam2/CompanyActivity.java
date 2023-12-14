@@ -191,7 +191,6 @@ public class CompanyActivity extends Activity {
                             editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), response);
                             editor.putString(getString(R.string.PREF_KEY_COMPANY), editTextCompany.getText().toString());
                             editor.commit();
-
                             exec_post3();
                         } else {
                             errorCompanyNotFound();
@@ -277,6 +276,7 @@ public class CompanyActivity extends Activity {
                                     Intent intent = new Intent(getApplication(), GPSActivity.class);
                                     startActivity(intent);
                                 }
+
                             } else {
                                 errorCompanyNotFound();
                             }
@@ -299,4 +299,5 @@ public class CompanyActivity extends Activity {
         // タスクを開始
         task.execute();
     }
+
 }

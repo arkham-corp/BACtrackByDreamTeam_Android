@@ -3,6 +3,7 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,7 +16,10 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
+
 public class DrivingReportDestinationActivity extends Activity {
+
+    private SharedPreferences pref;
 
     private Realm realm;
 
@@ -30,7 +34,15 @@ public class DrivingReportDestinationActivity extends Activity {
 
         realm = Realm.getDefaultInstance();
 
-        RealmResults<RealmLocalDataDrivingReportDestination> drivingReportDestinationList = readAll();
+//20231211
+//        RealmResults<RealmLocalDataDrivingReportDestination> drivingReportDestinationList = readAll();
+        // 一覧取得
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        RealmResults<RealmLocalDataDrivingReportDestination> drivingReportDestinationList = realm.where(RealmLocalDataDrivingReportDestination.class)
+                .equalTo("company_code", pref.getString(getString(R.string.PREF_KEY_COMPANY), ""))
+                .findAll()
+                .sort("destination", Sort.ASCENDING);
+//20231211
 
         DrivingReportDestinationAdapter.OnItemClickListener onItemClickListener = new DrivingReportDestinationAdapter.OnItemClickListener() {
             @Override

@@ -7,6 +7,7 @@ public class RealmLocalDataDrivingReportDestination extends RealmObject {
     @PrimaryKey
     private Integer id;
     private String destination = "";
+    private String company_code = "";
 
     public Integer getId() {
         return id;
@@ -23,4 +24,12 @@ public class RealmLocalDataDrivingReportDestination extends RealmObject {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
+    public String getCompany_code() {
+        return company_code;
+    }
+
+    public void setCompany_code(String company_code) { this.company_code = company_code;
+    }
+
 }

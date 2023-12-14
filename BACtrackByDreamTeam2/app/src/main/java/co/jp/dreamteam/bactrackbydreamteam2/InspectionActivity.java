@@ -728,6 +728,14 @@ public class InspectionActivity extends Activity {
         public void BACtrackBlow(float v) {
             SavePhoto();
             setStatus(R.string.TEXT_KEEP_BLOWING);
+//20231211
+            int i = (int)(v * 10);
+            if (progress_max == -1) {
+                progress_max = i;
+                progressBar.setMax(progress_max - 1);
+            }
+            setProgressValue(progress_max - i);
+//20231211
         }
 
         private void SavePhoto() {

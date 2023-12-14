@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Locale;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends Activity {
 
     public static final double ALCOHOL_REMOVAL_RATE = 0.015;
 

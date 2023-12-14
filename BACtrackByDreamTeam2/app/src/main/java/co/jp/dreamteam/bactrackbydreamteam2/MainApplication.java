@@ -47,6 +47,7 @@ public class MainApplication extends Application {
             }
             int driving_report_id = nextId;
             RealmLocalDataDrivingReport drivingReport = realm.createObject(RealmLocalDataDrivingReport.class, driving_report_id);
+            drivingReport.setCompany_code("developer");
             drivingReport.setDriver_code("100");
             drivingReport.setCar_number("1234");
             drivingReport.setDriving_start_ymd(sdf.format(targetDate));
@@ -98,14 +99,17 @@ public class MainApplication extends Application {
         // 行先
         RealmLocalDataDrivingReportDestination drivingReportDestination1 = realm.createObject(RealmLocalDataDrivingReportDestination.class, 1);
         drivingReportDestination1.setDestination("A");
+        drivingReportDestination1.setCompany_code("developer");
         realm.insert(drivingReportDestination1);
 
         RealmLocalDataDrivingReportDestination drivingReportDestination2 = realm.createObject(RealmLocalDataDrivingReportDestination.class, 2);
         drivingReportDestination2.setDestination("B");
+        drivingReportDestination2.setCompany_code("developer");
         realm.insert(drivingReportDestination2);
 
         RealmLocalDataDrivingReportDestination drivingReportDestination3 = realm.createObject(RealmLocalDataDrivingReportDestination.class, 3);
         drivingReportDestination3.setDestination("C");
+        drivingReportDestination3.setCompany_code("developer");
         realm.insert(drivingReportDestination3);
     }
 
