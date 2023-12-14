@@ -12,6 +12,7 @@ import android.widget.Space;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.net.URL;
 
 public class MenuActivity extends Activity {
 
@@ -173,6 +174,7 @@ public class MenuActivity extends Activity {
         // 接続先
         String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
         String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+
         // 非同期タスクを定義
         @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
                 this,
@@ -227,6 +229,10 @@ public class MenuActivity extends Activity {
                 }
         );
 
+        // パラメータセット
+        task.setVerify_hostname(strVerifyHostname);
+        String company_code = pref.getString(getString(R.string.PREF_KEY_COMPANY), "");
+        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
 
         // タスクを開始
         task.execute();
