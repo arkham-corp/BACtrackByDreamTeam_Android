@@ -1,0 +1,32 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_camera_test.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_car_no.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_company.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_driver.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_driving.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_driving_div.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_gps.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_inspection.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_main.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/activity_result.xml" value="0.3171875" />
+        <entry key="..\:/Users/DreamTeam/AlcoholChecker2/Android/BACtrackByDreamTeam2/app/src/main/res/layout/dialog_areement.xml" value="0.1838768115942029" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.08861144945188794" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

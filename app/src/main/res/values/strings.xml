@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">アルコールマネージャー2</string>
+    <string name="app_name1">アルコール</string>
+    <string name="app_name2">マネージャー2</string>
+    <string name="action_settings">Settings</string>
+    <string name="UPDATE_FILED">アップデートに失敗しました</string>
+    <string name="TEST_FLG">0</string>
+    <string name="CREATE_TEST_DATA_FLG">0</string>
+    <string name="HTTP_HOST_NAME">almanecloud.com</string>
+    <string name="HTTP_GET_API_URL">/alcoholmanager/linkmanager/api/getApplicationApiUrl</string>
+    <string name="HTTP_GET_MENU_CONTROL">/alcoholmanager/linkmanager/api/getApplicationMenuControl</string>
+    <string name="HTTP_TEST_HOST_NAME1">10.0.2.2:83</string>
+    <string name="HTTP_TEST_HOST_NAME2">128.0.3.32</string>
+    <string name="HTTP_COMPANY_CHECK">HttpGetAlcoholValueDivServlet</string>
+    <string name="HTTP_DRIVER_CHECK">HttpDriverMasterCheckServlet</string>
+    <string name="HTTP_CAR_NO_CHECK">HttpCarNoMasterCheckServlet</string>
+    <string name="HTTP_WRITE_ALCOHOL_VALUE">"HttpWriteAlcoholResultServlet</string>
+    <string name="HTTP_WRITE_DRIVING_REPORT">"HttpWriteDrivingReport</string>
+    <string name="HTTP_GET_FREE_TITLE">HttpGetFreeTitleServlet</string>
+    <string name="HTTP_RESPONSE_OK">OK</string>
+    <string name="HTTP_RESPONSE_KEY_NG">KEY_NG</string>
+    <string name="HTTP_HEADER_PARAM_KEY_AUTH">Authorization</string>
+    <string name="HTTP_PARAM_JSON_DATA">jsonData</string>
+    <string name="HTTP_PARAM_COMPANY_CODE">CompanyCode</string>
+    <string name="HTTP_PARAM_DRIVER_CODE">DriverCode</string>
+    <string name="HTTP_PARAM_CAR_NO">CarNo</string>
+    <string name="HTTP_PARAM_LOCATION_NAME">LocationName</string>
+    <string name="HTTP_PARAM_LOCATION_LAT">LocationLat</string>
+    <string name="HTTP_PARAM_LOCATION_LONG">LocationLong</string>
+    <string name="HTTP_PARAM_ALCOHOL_VALUE">AlcoholValue</string>
+    <string name="HTTP_PARAM_PHOTO">Photo</string>
+    <string name="HTTP_PARAM_INSPECTION_TIME">InspectionTime</string>
+    <string name="HTTP_PARAM_BACTRACK_ID">BACtrackId</string>
+    <string name="HTTP_PARAM_BACTRACK_USE_COUNT">UseCount</string>
+    <string name="HTTP_PARAM_DRIVING_DIV">DrivingDiv</string>
+    <string name="HTTP_PARAM_APP_PROG">AppProg</string>
+    <string name="HTTP_PARAM_APP_ID">AppId</string>
+    <string name="PREF_GLOBAL">pref_global</string>
+    <string name="PREF_KEY_FINISH">PREF_KEY_FINISH</string>
+    <string name="PREF_KEY_HTTP_URL">PREF_KEY_HTTP_URL</string>
+    <string name="PREF_KEY_VERIFY_HOSTNAME">PREF_KEY_VERIFY_HOSTNAME</string>
+    <string name="PREF_KEY_MENU_DRIVING_REPORT_ENABLED">PREF_KEY_MENU_DRIVING_REPORT_ENABLED</string>
+    <string name="PREF_KEY_MENU_SEND_LIST_ENABLED">PREF_KEY_MENU_SEND_LIST_ENABLED</string>
+    <string name="PREF_KEY_MENU_REMINDER_ENABLED">PREF_KEY_MENU_REMINDER_ENABLED</string>
+    <string name="PREF_KEY_AGREEMENT">PREF_KEY_AGREEMENT</string>
+    <string name="PREF_KEY_FIRST_CONNECTION">PREF_KEY_FIRST_CONNECTION</string>
+    <string name="PREF_KEY_COMPANY">PREF_KEY_COMPANY</string>
+    <string name="PREF_KEY_ALCOHOL_VALUE_DIV">PREF_KEY_ALCOHOL_VALUE_DIV</string>
+    <string name="PREF_KEY_DRIVING_DIV">PREF_KEY_DRIVING_DIV</string>
+    <string name="PREF_KEY_DRIVER">PREF_KEY_DRIVER</string>
+    <string name="PREF_KEY_CAR_NO">PREF_KEY_CAR_NO</string>
+    <string name="PREF_KEY_ADDRESS">PREF_KEY_ADDRESS</string>
+    <string name="PREF_KEY_LAT">PREF_KEY_LAT</string>
+    <string name="PREF_KEY_LON">PREF_KEY_LON</string>
+    <string name="PREF_KEY_MEASUREMENT">PREF_KEY_MEASUREMENT</string>
+    <string name="PREF_KEY_PHOTO">PREF_KEY_PHOTO</string>
+    <string name="PREF_KEY_INSPECTION_TIME">PREF_KEY_INSPECTION_TIME</string>
+    <string name="PREF_KEY_BACTRACK_ID">PREF_KEY_BACTRACK_ID</string>
+    <string name="PREF_KEY_BACTRACK_USE_COUNT">PREF_KEY_BACTRACK_USE_COUNT</string>
+    <string name="PREF_KEY_FREE_TITLE1">PREF_KEY_FREE_TITLE1</string>
+    <string name="PREF_KEY_FREE_TITLE2">PREF_KEY_FREE_TITLE2</string>
+    <string name="PREF_KEY_FREE_TITLE3">PREF_KEY_FREE_TITLE3</string>
+    <string name="PREF_KEY_INSPECTION_YMD">PREF_KEY_INSPECTION_YMD</string>
+    <string name="PREF_KEY_INSPECTION_HM">PREF_KEY_INSPECTION_HM</string>
+    <string name="PREF_KEY_ALCOHOL_VALUE">PREF_KEY_ALCOHOL_VALUE</string>
+    <string name="PREF_KEY_SEND_FLG">PREF_KEY_SEND_FLG</string>
+    <string name="PREF_KEY_STATUS">PREF_KEY_STATUS</string>
+    <string name="ALERT_TITLE_INFO">情報</string>
+    <string name="ALERT_TITLE_QUESTION">質問</string>
+    <string name="ALERT_TITLE_WARNING">警告</string>
+    <string name="ALERT_TITLE_ERROR">エラー</string>
+    <string name="ALERT_TITLE_SESSION_ERROR">サーバー接続エラー</string>
+    <string name="ALERT_TITLE_INTERNET_ERROR">インターネットに接続していません</string>
+    <string name="ALERT_TITLE_CONFIRM">確認</string>
+    <string name="ALERT_BTN_YES">はい</string>
+    <string name="ALERT_BTN_NO">いいえ</string>
+    <string name="ALERT_BTN_OK">OK</string>
+    <string name="ALERT_BTN_CANCEL">キャンセル</string>
+    <string name="ALERT_CONTINUE_MESSAGE">通信できませんが、測定を実施しますか？</string>
+    <string name="BTN_ADD">新規入力</string>
+    <string name="BTN_INSERT">追加</string>
+    <string name="BTN_BULK_SEND">一括送信</string>
+    <string name="BTN_SAVE">保存</string>
+    <string name="BTN_START">開始</string>
+    <string name="BTN_DECISION">決定</string>
+    <string name="BTN_AGREEMENT">利用規約</string>
+    <string name="TEXT_AGREE">同意する</string>
+    <string name="TEXT_NOT_AGREE">同意しない</string>
+    <string name="BTN_MENU_INSPECTION">測定</string>
+    <string name="BTN_MENU_DRIVING_REPORT">運転日報</string>
+    <string name="BTN_MENU_SEND_LIST">送信一覧</string>
+    <string name="BTN_MENU_REMINDER">リマインダー</string>
+    <string name="BTN_GPS_CUT">位置情報省略</string>
+    <string name="BTN_SEND">送信</string>
+    <string name="BTN_FINISH">終了</string>
+    <string name="BTN_DETAIL">明細</string>
+    <string name="BTN_DELETE">削除</string>
+    <string name="BTN_SELECT">選択</string>
+    <string name="TEXT_COLON">：</string>
+    <string name="TEXT_DUMMY"> </string>
+    <string name="TEXT_COMPANY">会社コード</string>
+    <string name="TEXT_DRIVING_DIV">乗務区分</string>
+    <string name="TEXT_DRIVING_DIV_0">乗務前</string>
+    <string name="TEXT_DRIVING_DIV_1">乗務後</string>
+    <string name="TEXT_DRIVER">運転者</string>
+    <string name="TEXT_CAR_NO">車番</string>
+    <string name="TEXT_ADDRESS">住所</string>
+    <string name="TEXT_DRIVING_START_YMD">運転開始日付</string>
+    <string name="TEXT_DRIVING_START_HM">運転開始時刻</string>
+    <string name="TEXT_DRIVING_END_YMD">運転終了日付</string>
+    <string name="TEXT_DRIVING_END_HM">運転終了時刻</string>
+    <string name="TEXT_DRIVING_START_KM">乗務開始メーター</string>
+    <string name="TEXT_DRIVING_END_KM">乗務終了メーター</string>
+    <string name="TEXT_REFUELING_STATUS">給油状況</string>
+    <string name="TEXT_ABNORMAL_REPORT">異常報告</string>
+    <string name="TEXT_INSTRUCTION">連絡事項</string>
+    <string name="TEXT_DESTINATION">行先</string>
+    <string name="TEXT_DRIVING_START_HM_SHORT">発時刻</string>
+    <string name="TEXT_DRIVING_START_KM_SHORT">発メーター</string>
+    <string name="TEXT_DRIVING_END_HM_SHORT">着時刻</string>
+    <string name="TEXT_DRIVING_END_KM_SHORT">着メーター</string>
+    <string name="TEXT_CARGO_WEIGHT">重量/個数</string>
+    <string name="TEXT_CARGO_STATUS">積載状況</string>
+    <string name="TEXT_NOTE">備考</string>
+    <string name="TEXT_INSPECTION_YMD">測定日</string>
+    <string name="TEXT_INSPECTION_HM">測定時</string>
+    <string name="TEXT_LOCATION_NAME">測定場所</string>
+    <string name="TEXT_ALCOHOL_VALUE">測定値</string>
+    <string name="TEXT_BACKTRACK_ID">測定機器ID</string>
+    <string name="TEXT_USE_NUMBER">使用回数</string>
+    <string name="TEXT_SEND_FLG">送信フラグ</string>
+    <string name="TEXT_DISCONNECTED">切断</string>
+    <string name="TEXT_CONNECTING">接続中</string>
+    <string name="TEXT_DISCOVERING_SERVICES">サービスのスキャン</string>
+    <string name="TEXT_CONNECTED">接続完了!</string>
+    <string name="TEXT_FIRMWARE_VERSION">ファームウェアのバージョン: </string>
+    <string name="TEXT_USE_COUNT">使用数: </string>
+    <string name="TEXT_BATTERY_VOLTAGE">バッテリー電圧: </string>
+    <string name="TEXT_TRANSMIT_POWER">電源供給: </string>
+    <string name="TEXT_COUNTDOWN">カウントダウン: </string>
+    <string name="TEXT_BLOW_NOW">息を吐いてください!</string>
+    <string name="TEXT_KEEP_BLOWING">息を吐き続けてください</string>
+    <string name="TEXT_ANALYZING">解析中</string>
+    <string name="TEXT_ERR_COMPANY_NOT_FOUND">会社は登録されていません</string>
+    <string name="TEXT_ERR_DRIVER_NOT_FOUND">運転者は見つかりませんでした</string>
+    <string name="TEXT_ERR_CAR_NO_NOT_FOUND">車番は見つかりませんでした</string>
+    <string name="TEXT_ERR_CONNECTION_FILED">サーバーに接続できませんでした</string>
+    <string name="TEXT_ERR_NO_BREATHALYZERS_FOUND">アルコールマネージャが検出できません</string>
+    <string name="TEXT_ERR_BT_NOT_ENABLED">Bluetoothが無効です</string>
+    <string name="TEXT_ERR_BLE_NOT_SUPPORTED">Bluetoothをサポートしていません</string>
+    <string name="TEXT_ERR_LOCATION_NOT_ENABLED">位置情報が無効です</string>
+    <string name="TEXT_ERR_BLOW_ERROR">息の検出に失敗しました</string>
+    <string name="TEXT_ERR_START_COUNTDOWN">準備処理に失敗しました</string>
+    <string name="TEXT_ERR_CONNECTION_TIMEOUT">接続タイムアウト</string>
+    <string name="TEXT_ERR_EXCEPTION">例外エラー</string>
+    <string name="TEXT_STATUS">状態</string>
+    <string name="TEXT_GPS_SETTING">GPSを有効にしてください</string>
+    <string name="TEXT_GPS_WAIT">現在地　未取得</string>
+    <string name="TEXT_GPS_ENABLE">GPS有効</string>
+    <string name="TEXT_GPS_DISENABLE">GPS無効</string>
+    <string name="TEXT_GPS_NETWORK_ENABLE">ネットワークロケーション有効</string>
+    <string name="TEXT_GPS_NETWORK_DISENABLE">ネットワークロケーション無効</string>
+    <string name="TEXT_GPS_AVAILABLE">を使用できるようになりました</string>
+    <string name="TEXT_GPS_OUT_OF_SERVICE">を使用できなくなりました</string>
+    <string name="TEXT_BLUETOOTH_DISENABLE">Bluetoothが使用できません</string>
+    <string name="TEXT_BLUETOOTH_SETTING">BluetoothをONにしてください</string>
+    <string name="TEXT_BLUETOOTH_PERMISSION">Bluetoothの権限がありません</string>
+    <string name="TEXT_MEAS_DISCONNECT">切断されました</string>
+    <string name="TEXT_MEAS_PREPARATION">準備中</string>
+    <string name="TEXT_MEAS_PREPARATION_CAPT">準備が完了したら、\n息を吐いてください。</string>
+    <string name="TEXT_RESULT_TITLE">測定結果</string>
+    <string name="TEXT_RESULT_TITLE_BLOOD">測定結果(血中)</string>
+    <string name="TEXT_RESULT_TITLE_BREATH">測定結果(呼気)</string>
+    <string name="TEXT_RESULT_TITLE_BREATH_2">呼気中濃度表示(呼気)</string>
+    <string name="TEXT_RESULT_OK">【検査OK】\n本日も安全運転で\nお願いします</string>
+    <string name="TEXT_RESULT_WARNING">【警告】\n現状態での運転禁止\n管理者へ報告する事</string>
+    <string name="TEXT_SENDING">送信中</string>
+    <string name="TEXT_SEND_ERROR">送信できませんでした\n再送信します</string>
+    <string name="TEXT_SEND_ERROR_LAST">送信できませんでした。\n通信できる環境下で実行してください。</string>
+    <string name="TEXT_SEND_ERROR_NORESULT">送信できませんでした\n送信するデータが見つかりませんでした</string>
+    <string name="TEXT_SEND_FINISH_ERROR">送信失敗</string>
+    <string name="TEXT_FINISH1">送信完了</string>
+    <string name="TEXT_FINISH_DUPLICATE">送信済みです</string>
+    <string name="TEXT_FINISH2">お疲れさまでした</string>
+    <string name="TEXT_QUESTION_DELETE">削除しますか？</string>
+    <string name="TEXT_QUESTION_SEND">送信しますか？</string>
+    <string name="TEXT_SEND_FLG_0">未送信</string>
+    <string name="TEXT_SEND_FLG_1">送信NG</string>
+    <string name="TEXT_SEND_FLG_2">送信済</string>
+    <string name="TEXT_ERROR_DRIVER_CODE">運転者を入力してください</string>
+    <string name="TEXT_ERROR_DRIVER_CODE_MAX_LENGTH">運転者が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_CAR_NUMBER">車番を入力してください</string>
+    <string name="TEXT_ERROR_CAR_NUMBER_MAX_LENGTH">車番が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_START_YMD">運転開始日付を入力してください</string>
+    <string name="TEXT_ERROR_START_YMD_INVALID">運転開始日付が正しくありません</string>
+    <string name="TEXT_ERROR_START_HM">運転開始時刻を入力してください</string>
+    <string name="TEXT_ERROR_START_HM_INVALID">運転開始時刻が正しくありません</string>
+    <string name="TEXT_ERROR_END_YMD">運転終了日付を入力してください</string>
+    <string name="TEXT_ERROR_END_YMD_INVALID">運転終了日付が正しくありません</string>
+    <string name="TEXT_ERROR_END_HM">運転終了時刻を入力してください</string>
+    <string name="TEXT_ERROR_END_HM_INVALID">運転終了時刻が正しくありません</string>
+    <string name="TEXT_ERROR_START_KM_INVALID">乗務開始メーターは数値入力してください</string>
+    <string name="TEXT_ERROR_END_KM_INVALID">乗務終了メーターは数値入力してください</string>
+    <string name="TEXT_ERROR_REFUELINGSTATUS_MAX_LENGTH">給油状況が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_ABNORMALREPORT_MAX_LENGTH">異常報告が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_INSTRUCTION_MAX_LENGTH">連絡事項が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_FREETEXT1_MAX_LENGTH">設定入力項目1が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_FREETEXT2_MAX_LENGTH">設定入力項目2が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_FREETEXT3_MAX_LENGTH">設定入力項目3が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_START_KM_MAX_LENGTH">乗務開始メーターが最大桁数を超えています</string>
+    <string name="TEXT_ERROR_END_KM_MAX_LENGTH">乗務終了メーターが最大桁数を超えています</string>
+    <string name="TEXT_ERROR_YMD_INVALID">運転終了日付が運転開始日付より前です</string>
+    <string name="TEXT_ERROR_HM_INVALID">乗務終了時刻が乗務開始時刻より前です</string>
+    <string name="TEXT_ERROR_KM_INVALID">乗務開始メーターが乗務終了メーターより大きいです</string>
+    <string name="TEXT_ERROR_DETAIL_DESTINATION">行先を入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_DESTINATION_MAX_LENGTH">行先が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_DETAIL_START_HM">発時刻を入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_START_HM_INVALID">発時刻が正しくありません</string>
+    <string name="TEXT_ERROR_DETAIL_END_HM">着時刻を入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_END_HM_INVALID">着時刻が正しくありません</string>
+    <string name="TEXT_ERROR_DETAIL_CARGO_WEIGHT_LENGTH">重量/個数が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_DETAIL_CARGO_STATUS_LENGTH">積載状況が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_DETAIL_NOTE_LENGTH">備考が最大桁数を超えています</string>
+    <string name="TEXT_ERROR_DETAIL_START_KM_INVALID">発メーターは数値入力してください</string>
+    <string name="TEXT_ERROR_DETAIL_END_KM_INVALID">着メーターは数値入力してください</string>
+    <string name="US_TEXT_DISCONNECTED">Disconnected</string>
+    <string name="US_TEXT_CONNECTING">Connecting</string>
+    <string name="US_TEXT_DISCOVERING_SERVICES">Discovering services</string>
+    <string name="US_TEXT_CONNECTED">Connected!</string>
+    <string name="US_TEXT_FIRMWARE_VERSION">"Firmware version: </string>
+    <string name="US_TEXT_USE_COUNT">Use count: </string>
+    <string name="US_TEXT_BATTERY_VOLTAGE">Batter voltage: </string>
+    <string name="US_TEXT_TRANSMIT_POWER">Transmit power: </string>
+    <string name="US_TEXT_COUNTDOWN">Countdown: </string>
+    <string name="US_TEXT_BLOW_NOW">Blow now!</string>
+    <string name="US_TEXT_KEEP_BLOWING">Keep blowing</string>
+    <string name="US_TEXT_ANALYZING">Analyzing</string>
+    <string name="US_TEXT_FINISHED">Done! Result: </string>
+    <string name="US_TEXT_ERR_NO_BREATHALYZERS_FOUND">Error: No breathalyzers found.</string>
+    <string name="US_TEXT_ERR_BT_NOT_ENABLED">Error: Bluetooth is not enabled.</string>
+    <string name="US_TEXT_ERR_BLE_NOT_SUPPORTED">Error: BLE is not supported on this device.</string>
+    <string name="US_TEXT_ERR_BLOW_ERROR">Error: Blow process failed.</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_driving_div">DrivingDivActivity</string>
+    <string name="title_activity_driver">DriverActivity</string>
+    <string name="title_activity_car_no">CarNoActivity</string>
+    <string name="title_activity_inspection">InspectionActivity</string>
+    <string name="title_activity_gps">GPSActivity</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="title_activity_send">SendActivity</string>
+    <string name="title_activity_finish">FinishActivity</string>
+    <string name="title_activity_company">CompanyActivity</string>
+    <string name="title_activity_camera_test">CameraTestActivity</string>
+    <string name="title_activity_send_list">SendListActivity</string>
+    <string name="title_activity_transmission_content">TransmissionContentActivity</string>
+    <string name="title_activity_remainder">RemainderActivity</string>
+    <string name="TEXT_RESULT_REMAIN_HEADER">アルコールの消化予定時刻は、</string>
+    <string name="TEXT_RESULT_REMAIN_VALUE">00:00です。</string>
+    <string name="TEXT_RESULT_REMAIN_FOOTER">※あくまで目安です</string>
+    <string name="AGREEMENT">
+アプリケーション利用規約\n
+\n
+この利用規約（以下「本規約」）は、有限会社ドリームチーム（以下「当社」）が提供するスマートフォン向けアプリ（以下「本アプリ」）をダウンロード、インストール、又は利用するに当たっての利用者（以下「利用者」）の権利と義務が規定されています。本アプリを利用される場合は、事前に本規約に規定する全ての条件に同意していただきます。本規格に同意していただけない場合、本アプリをご利用いただくことはできません。\n
+\n
+第1条（同意）\n
+1  利用者は、本アプリのインストール時に画面上に表示される「同意する」ボタンを押した時点で、本規約の全ての条件に同意したものとみなされます。\n
+\n
+第2条（本アプリの使用許諾）\n
+1　当社は、利用者に対し、本規約に定める条件に従い、本アプリの譲渡不能かつ非独占的な日本国内における使用権を無償で許諾します。なお、本規約は、将来開発される本アプリの仕様変更等に対する使用許諾を認めるものではありません。\n
+2　当社は、本規約において明示的に許諾する事項を除き、いかなる権利も利用者に対して付与するものではありません。\n
+\n
+第3条（環境）\n
+1　本アプリのダウンロート時及び本アプリを利用中にデータ通信費用が発生した場合は、利用者が自らの費用を負担するものとします。\n
+\n
+第4条（留意事項・禁止事項等）\n
+1　利用者は、本アプリを個人もしくは、定められた使用の目的のためにのみ使用することができるものとします。\n
+2　利用者は、以下の行為を行ってはならないものとします。\n
+(1) 個人使用目的のために本アプリをインストールする場合を除き、本アプリの一部又は全部を複製する行為\n
+(2) 本アプリを修正、変更、逆アセンブル、逆コンパイル、リバースエンジニアリング等の改変する行為\n
+(3) 本アプリ及びその使用権を第三者に販売・貸与・譲渡・配布、又は再許諾権の設定若しくは担保に供する行為\n
+(4) 当社又は第三者の知的財産権を含む法的権利を侵害する行為\n
+(5) 本アプリの提供に支障をきたす行為\n
+(6) 公序良俗に反する行為その他法令に違反する行為\n
+(7) 本規約に違反する行為その他当社が不適当と判断する行為\n
+(8) 本アプリが予定している利用目的と異なる目的で本アプリを利用する行為\n
+(9) その他、当社が不適切と判断する行為\n
+\n
+3　利用者が本規約に違反し、当社が損害を被った場合、その損害の全部又は一部を利用者に負担していただくことがあります。\n
+4　本アプリを利用者端末から削除した場合、再度本アプリをインストールしても、本アクセスに係わる削除前のデータ(前回値等)は利用できない場合があります。\n
+\n
+第5条（知的財産権）\n
+1　本アプリに関する著作権、商標権、特許権、意匠権、ノウハウその他一切の知的財産権は、全て当社又は正当な権限を有する第三者に帰属します。\n
+\n
+第6条（免責事項等）\n
+1　当社は、利用者、その他の第三者が本アプリの利用に関連して直接、間接に被ったいかなる損害に対しても、賠償等の責任を負わないものとします。\n
+2　当社は、本アプリ利用者に対し、本アプリの動作保証、使用目的への適合性の保証、使用結果についての的確性や信頼性の保証、第三者の権利侵害又は瑕疵担保責任も含め、いかなる責任も負いません。\n
+3　当社は、独自の判断に基づき、本アプリの仕様の変更又は修正、配布方法等の変更、使用許諾の中止をすることができます。その結果、利用者に損害が生じた場合でも、当社は一切責任を負いません。\n
+\n
+第7条（本アプリ使用上の注意事項）\n
+1　当社は、本アプリと他のソフトウェアとの互換性について何ら保証いたしません。\n
+2　本アプリは、利用者の使用環境により使用できない場合（一部機能を使用できない場合を含む）があります。また、当社の責によらない事由（利用者が使用する通信機器、ソフトウェア等の障害又はインターネット回線の不通等の障害等、OSのアップデート）により生じた損害については、当社は責任を負いません。\n
+3　利用者が本アプリを使用可能なAndroid/iOS搭載機器・対象OS(以下「対応端末」)は当社指定するものに限ります。利用者が使用する対応端末は利用者の費用と責任において準備するものとします。\n
+\n
+第8条（規約変更）\n
+1　当社は、利用者の承諾及び利用者への通知なしに、いつでも本規約の一部又は全部を改定できるものとします。なお、本規約の変更後に本アプリを利用した場合は、変更後の本規約に同意したものとみなします。\n
+\n
+第9条（準拠法及び裁判管轄）\n
+1　本規約の効力、解釈及び履行については日本国法に準拠するものとします。\n
+2　本規約に関する利用者と当社の間の紛争については、東京地方裁判所を第一審の専属の合意管轄裁判所とします。\n
+\n
+発行日　2015年12月22日\n
+    </string>
+
+</resources>

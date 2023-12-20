@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DrivingReportEditActivity">
+
+    <LinearLayout
+        android:id="@+id/driving_report_edit_linerLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/driving_report_edit_linerLayout2"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                tools:ignore="MissingConstraints">
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDriverCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/TEXT_DRIVER"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtDriverCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDriverCode"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:labelFor="@+id/driving_report_edit_lblDriverCode"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblCarNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtDriverCode"
+                    android:text="@string/TEXT_CAR_NO"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtCarNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblCarNumber"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:labelFor="@+id/driving_report_edit_lblCarNumber"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingStartYmd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtCarNumber"
+                    android:text="@string/TEXT_DRIVING_START_YMD"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <LinearLayout
+                    android:id="@+id/driving_report_edit_linerDrivingStartYmd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingStartYmd"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/driving_report_edit_txtDrivingStartYmd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:focusable="false"
+                        android:inputType="date"
+                        android:labelFor="@+id/driving_report_edit_lblDrivingStartYmd"
+                        android:singleLine="true"
+                        android:textSize="30sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/driving_report_edit_btnDrivingStartYmd"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@android:drawable/ic_delete"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingStartHm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_linerDrivingStartYmd"
+                    android:text="@string/TEXT_DRIVING_START_HM"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <LinearLayout
+                    android:id="@+id/driving_report_edit_linerDrivingStartHm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingStartHm"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/driving_report_edit_txtDrivingStartHm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:focusable="false"
+                        android:inputType="time"
+                        android:labelFor="@+id/driving_report_edit_lblDrivingStartHm"
+                        android:singleLine="true"
+                        android:textSize="30sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/driving_report_edit_btnDrivingStartHm"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@android:drawable/ic_delete"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingEndYmd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_linerDrivingStartHm"
+                    android:text="@string/TEXT_DRIVING_END_YMD"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <LinearLayout
+                    android:id="@+id/driving_report_edit_linerDrivingEndYmd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingEndYmd"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/driving_report_edit_txtDrivingEndYmd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:focusable="false"
+                        android:inputType="date"
+                        android:labelFor="@+id/driving_report_edit_lblDrivingEndYmd"
+                        android:singleLine="true"
+                        android:textSize="30sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/driving_report_edit_btnDrivingEndYmd"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@android:drawable/ic_delete"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingEndHm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_linerDrivingEndYmd"
+                    android:text="@string/TEXT_DRIVING_END_HM"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <LinearLayout
+                    android:id="@+id/driving_report_edit_linerDrivingEndHm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingEndHm"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/driving_report_edit_txtDrivingEndHm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:focusable="false"
+                        android:inputType="time"
+                        android:labelFor="@+id/driving_report_edit_lblDrivingEndHm"
+                        android:singleLine="true"
+                        android:textSize="30sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/driving_report_edit_btnDrivingEndHm"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@android:drawable/ic_delete"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingStartKm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_linerDrivingEndHm"
+                    android:text="@string/TEXT_DRIVING_START_KM"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtDrivingStartKm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingStartKm"
+                    android:autofillHints=""
+                    android:digits="0123456789"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:labelFor="@+id/driving_report_edit_lblDrivingStartKm"
+                    android:maxLength="9"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingEndKm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtDrivingStartKm"
+                    android:text="@string/TEXT_DRIVING_END_KM"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtDrivingEndKm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingEndKm"
+                    android:autofillHints=""
+                    android:digits="0123456789"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:labelFor="@+id/driving_report_edit_lblDrivingEndKm"
+                    android:maxLength="9"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblRefuelingStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtDrivingEndKm"
+                    android:text="@string/TEXT_REFUELING_STATUS"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtRefuelingStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblRefuelingStatus"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblRefuelingStatus"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblAbnormalReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtRefuelingStatus"
+                    android:text="@string/TEXT_ABNORMAL_REPORT"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtAbnormalReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblAbnormalReport"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblAbnormalReport"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblInstruction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtAbnormalReport"
+                    android:text="@string/TEXT_INSTRUCTION"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtInstruction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblInstruction"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblInstruction"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblFreeTitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtInstruction"
+                    android:text='                                         '
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtFreeFld1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblFreeTitle1"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblFreeTitle1"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblFreeTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtFreeFld1"
+                    android:text='                                         '
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtFreeFld2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblFreeTitle2"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblFreeTitle2"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblFreeTitle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtFreeFld2"
+                    android:text='                                         '
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtFreeFld3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblFreeTitle3"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/driving_report_edit_lblFreeTitle3"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/driving_report_edit_linerLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/driving_report_edit_linerLayout3">
+
+        <Button
+            android:id="@+id/driving_report_edit_btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/BTN_SAVE"
+            android:textSize="50sp" />
+
+        <Button
+            android:id="@+id/driving_report_edit_btnDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/BTN_DETAIL"
+            android:textSize="50sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/driving_report_edit_linerLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/driving_report_edit_btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/BTN_SEND"
+            android:textSize="50sp" />
+
+        <Button
+            android:id="@+id/driving_report_edit_btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/BTN_DELETE"
+            android:textSize="50sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
