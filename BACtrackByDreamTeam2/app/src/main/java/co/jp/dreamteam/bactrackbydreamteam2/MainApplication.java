@@ -16,7 +16,6 @@ public class MainApplication extends Application {
         Realm.init(this); // Initialize Realm
 
         String create_test_data_flg = getString(R.string.CREATE_TEST_DATA_FLG);
-
         if (create_test_data_flg.equals("1")) {
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();

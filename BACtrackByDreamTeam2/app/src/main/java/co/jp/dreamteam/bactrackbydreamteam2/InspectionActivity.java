@@ -734,7 +734,7 @@ public class InspectionActivity extends Activity {
                 progress_max = i;
                 progressBar.setMax(progress_max - 1);
             }
-            setProgressValue(progress_max - i);
+            setProgressValue(progress_max + 1 - i);
 //20231211
         }
 

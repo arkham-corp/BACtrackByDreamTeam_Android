@@ -55,7 +55,9 @@ public class DriverActivity extends Activity {
 
             // OK(肯定的な)ボタンの設定
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                // OKボタン押下時の処理
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
+                editor.commit();
                 driver_btnDecision.setEnabled(true);
             });
 
@@ -92,47 +94,62 @@ public class DriverActivity extends Activity {
     private void exec_post() {
         driver_btnDecision.setEnabled(false);
 
-        // 接続先
-        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
-        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-        // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
-                this,
-                strHttpUrl + getString(R.string.HTTP_DRIVER_CHECK),
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
+        if (status.equals("0")) {
 
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
+            // 接続先
+            String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+            String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+            // 非同期タスクを定義
+            HttpPostTask task = new HttpPostTask(
+                    this,
+                    strHttpUrl + getString(R.string.HTTP_DRIVER_CHECK),
 
-                    @Override
-                    public void onPostCompleted(String response) {
-                        // 受信結果をUIに表示
-                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
-                            // 値保存
-                            editor = pref.edit();
-                            editor.putString(getString(R.string.PREF_KEY_DRIVER), editTextDriver.getText().toString());
-                            editor.commit();
+                    // タスク完了時に呼ばれるUIのハンドラ
+                    new HttpPostHandler() {
 
-                            // 画面移動
-                            Intent intent = new Intent(getApplication(), CarNoActivity.class);
-                            startActivity(intent);
-                        } else {
-                            errorDriverNotFound();
+                        @Override
+                        public void onPostCompleted(String response) {
+                            // 受信結果をUIに表示
+                            if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+                                // 値保存
+                                editor = pref.edit();
+                                editor.putString(getString(R.string.PREF_KEY_DRIVER), editTextDriver.getText().toString());
+                                editor.commit();
+
+                                // 画面移動
+                                Intent intent = new Intent(getApplication(), CarNoActivity.class);
+                                startActivity(intent);
+                            } else {
+                                errorDriverNotFound();
+                            }
+                        }
+
+                        @Override
+                        public void onPostFailed(String response) {
+                            errorHttp(response);
                         }
                     }
+            );
 
-                    @Override
-                    public void onPostFailed(String response) {
-                        errorHttp(response);
-                    }
-                }
-        );
+            // パラメータセット
+            task.setVerify_hostname(strVerifyHostname);
+            task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
+            task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), editTextDriver.getText().toString());
 
-        // パラメータセット
-        task.setVerify_hostname(strVerifyHostname);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
-        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), editTextDriver.getText().toString());
+            // タスクを開始
+            task.execute();
 
-        // タスクを開始
-        task.execute();
+        } else {
+
+            editor = pref.edit();
+            editor.putString(getString(R.string.PREF_KEY_DRIVER), editTextDriver.getText().toString());
+            editor.commit();
+
+            Intent intent = new Intent(getApplication(), CarNoActivity.class);
+            startActivity(intent);
+
+        }
     }
 }

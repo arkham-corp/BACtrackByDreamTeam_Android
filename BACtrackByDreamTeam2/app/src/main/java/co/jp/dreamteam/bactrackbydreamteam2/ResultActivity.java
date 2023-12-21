@@ -13,10 +13,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ResultActivity extends Activity {
 
+    private Realm realm;
+    long transmission_id = 0;
     public static final double ALCOHOL_REMOVAL_RATE = 0.015;
 
     SharedPreferences pref;
@@ -37,6 +45,8 @@ public class ResultActivity extends Activity {
         setContentView(R.layout.activity_result);
 
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+
+        realm = Realm.getDefaultInstance();
 
         textViewSendingMessage = this.findViewById(R.id.result_textViewSendMessage);
         textViewMessage = this.findViewById(R.id.result_textViewResultMessage);
@@ -91,8 +101,16 @@ public class ResultActivity extends Activity {
         this.btnFinish = this.findViewById(R.id.result_btnFinish);
         btnFinish.setOnClickListener(btnFinishClicked);
 
-        // 自動送信
-        exec_post();
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
+        if (status.equals("0")) {
+            // 自動送信
+            exec_post();
+        } else {
+            btnFinish.setVisibility(View.VISIBLE);
+        }
+        SaveData();
+
     }
 
     View.OnClickListener btnFinishClicked = v -> {
@@ -278,5 +296,115 @@ public class ResultActivity extends Activity {
         // タスクを開始
         task.execute();
     }
+    public RealmLocalDataAlcoholResult readRecord() {
 
+        long recordCount = realm.where(RealmLocalDataAlcoholResult.class)
+                .equalTo("id", transmission_id)
+                .count();
+
+        if (recordCount == 0) {
+            return null;
+        } else {
+            return realm.where(RealmLocalDataAlcoholResult.class)
+                    .equalTo("id", transmission_id)
+                    .findFirst();
+        }
+    }
+    private void SaveData() {
+
+        realm.beginTransaction();
+        RealmLocalDataAlcoholResult alcoholResult = readRecord();
+        if (alcoholResult == null) {
+
+            long nextId = 1;
+            Number maxId = realm.where(RealmLocalDataAlcoholResult.class).max("id");
+            // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする
+            if (maxId != null) {
+                nextId = maxId.intValue() + 1;
+            }
+            transmission_id = nextId;
+            alcoholResult = realm.createObject(RealmLocalDataAlcoholResult.class, transmission_id);
+
+        }
+
+        // 値セット
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        alcoholResult.setInspection_time(pref.getString(getString(R.string.PREF_KEY_INSPECTION_TIME), ""));
+
+        String inspectionTime ="";
+        String inspectionYmd ="";
+        String inspectionHm ="";
+        inspectionTime = alcoholResult.getInspection_time();
+        if(inspectionTime.length()>= 17) {
+            inspectionYmd = inspectionTime.substring(0, 4) + inspectionTime.substring(5, 7) + inspectionTime.substring(8, 10);
+            inspectionHm = inspectionTime.substring(11, 13) + inspectionTime.substring(14, 16);
+        }
+        alcoholResult.setInspection_ymd(inspectionYmd);
+        alcoholResult.setInspection_hm(inspectionHm);
+
+        alcoholResult.setCompany_code(pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
+        alcoholResult.setDriver_code(pref.getString(getString(R.string.PREF_KEY_DRIVER), ""));
+        alcoholResult.setCar_number(pref.getString(getString(R.string.PREF_KEY_CAR_NO), ""));
+        alcoholResult.setDriving_div(pref.getString(getString(R.string.PREF_KEY_DRIVING_DIV), "0"));
+        alcoholResult.setBacktrack_id(pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), "0"));
+        alcoholResult.setUse_number(pref.getString(getString(R.string.PREF_KEY_BACTRACK_USE_COUNT), "0"));
+
+        // 測定値取得
+        String strMeasurement = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
+        double alcoholValue = Double.parseDouble(strMeasurement);
+        double alcoholValueBreath = Double.parseDouble(strMeasurement) * 5;
+        String strAlcoholValue = String.format(Locale.JAPAN, "%.2f", alcoholValue);
+        String strAlcoholValueBreath = String.format(Locale.JAPAN, "%.2f", alcoholValueBreath);
+        alcoholResult.setAlcohol_value(strAlcoholValue);
+
+        // 表示区分取得
+        String strAlcoholValueDiv = pref.getString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "");
+        if (strAlcoholValueDiv.equals("1")) {
+            // 呼気
+            alcoholResult.setBreath_alcohol_value(strAlcoholValueBreath);
+        } else if (strAlcoholValueDiv.equals("2")) {
+            // 呼気
+            alcoholResult.setBreath_alcohol_value(strAlcoholValueBreath);
+            // 血中
+            alcoholResult.setBlood_alcohol_value(strAlcoholValue);
+        } else {
+            // 血中
+            alcoholResult.setBlood_alcohol_value(strAlcoholValue);
+        }
+        alcoholResult.setLocation_name(pref.getString(getString(R.string.PREF_KEY_ADDRESS), ""));
+        alcoholResult.setLocation_lat(pref.getString(getString(R.string.PREF_KEY_LAT), "0"));
+        alcoholResult.setLocation_long(pref.getString(getString(R.string.PREF_KEY_LON), "0"));
+
+        // 画像取得
+        String strBitmap = pref.getString(getString(R.string.PREF_KEY_PHOTO), "");
+        alcoholResult.setPhoto_file(strBitmap);
+
+        realm.insertOrUpdate(alcoholResult);
+        realm.commitTransaction();
+
+
+        // 過去データ削除
+        RealmResults<RealmLocalDataAlcoholResult> resultList = realm.where(RealmLocalDataAlcoholResult.class)
+                .findAll();
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE,-7); // 7日減算
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.JAPAN);
+        String deleteDate = sdf.format(cal.getTime());
+
+        realm.beginTransaction();
+        for (RealmLocalDataAlcoholResult result:resultList) {
+            String start_ymd = result.getInspection_ymd();
+            if (start_ymd.compareTo(deleteDate) <= 0) {
+                result.deleteFromRealm();
+            }
+        }
+        realm.commitTransaction();
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 }

@@ -35,6 +35,7 @@ public class CompanyActivity extends Activity {
         editor = pref.edit();
         editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
         editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+        editor.putString(getString(R.string.PREF_KEY_STATUS), "0");
         editor.commit();
 
         this.editTextCompany = this.findViewById(R.id.company_editTextCompany);
@@ -93,7 +94,9 @@ public class CompanyActivity extends Activity {
 
             // OK(肯定的な)ボタンの設定
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                // OKボタン押下時の処理
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
+                editor.commit();
                 company_btnDecision.setEnabled(true);
             });
 
@@ -105,68 +108,89 @@ public class CompanyActivity extends Activity {
     private void exec_post() {
         company_btnDecision.setEnabled(false);
 
-        String test_flg = getString(R.string.TEST_FLG);
-        String host_name = "";
-        String http_url = "";
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
+        if (status.equals("0")) {
 
-        if (test_flg.equals("1")) {
-            host_name = getString(R.string.HTTP_TEST_HOST_NAME1);
-            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME1) + getString(R.string.HTTP_GET_API_URL);
-        } else if (test_flg.equals("2")) {
-            host_name = getString(R.string.HTTP_TEST_HOST_NAME2);
-            http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME2) + "/com" + getString(R.string.HTTP_GET_API_URL);
-        } else {
-            host_name = getString(R.string.HTTP_HOST_NAME);
-            http_url = "https://" + getString(R.string.HTTP_HOST_NAME) + getString(R.string.HTTP_GET_API_URL);
-        }
+            String test_flg = getString(R.string.TEST_FLG);
+            String host_name = "";
+            String http_url = "";
 
-        // 非同期タスクを定義
-        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
-                this,
-                http_url,
+            if (test_flg.equals("1")) {
+                host_name = getString(R.string.HTTP_TEST_HOST_NAME1);
+                http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME1) + getString(R.string.HTTP_GET_API_URL);
+            } else if (test_flg.equals("2")) {
+                host_name = getString(R.string.HTTP_TEST_HOST_NAME2);
+                http_url = "http://" + getString(R.string.HTTP_TEST_HOST_NAME2) + "/com" + getString(R.string.HTTP_GET_API_URL);
+            } else {
+                host_name = getString(R.string.HTTP_HOST_NAME);
+                http_url = "https://" + getString(R.string.HTTP_HOST_NAME) + getString(R.string.HTTP_GET_API_URL);
+            }
 
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
+            // 非同期タスクを定義
+            @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
+                    this,
+                    http_url,
 
-                    @Override
-                    public void onPostCompleted(String response) {
-                        try {
-                            JSONObject json = new JSONObject(response);
+                    // タスク完了時に呼ばれるUIのハンドラ
+                    new HttpPostHandler() {
 
-                            // 受信結果をUIに表示
-                            if (json.getString("status").equals("true")) {
-                                // 値保存
-                                String str_url = json.getString("data");
-                                URL url = new URL(str_url);
-                                String host_name = url.getHost();
+                        @Override
+                        public void onPostCompleted(String response) {
+                            try {
+                                JSONObject json = new JSONObject(response);
 
-                                editor = pref.edit();
-                                editor.putString(getString(R.string.PREF_KEY_HTTP_URL), str_url);
-                                editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), host_name);
-                                editor.commit();
+                                // 受信結果をUIに表示
+                                if (json.getString("status").equals("true")) {
+                                    // 値保存
+                                    String str_url = json.getString("data");
+                                    URL url = new URL(str_url);
+                                    String host_name = url.getHost();
 
-                                exec_post2();
-                            } else {
-                                errorCompanyNotFound();
+                                    editor = pref.edit();
+                                    editor.putString(getString(R.string.PREF_KEY_HTTP_URL), str_url);
+                                    editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), host_name);
+                                    editor.commit();
+
+                                    exec_post2();
+                                } else {
+                                    errorCompanyNotFound();
+                                }
+                            } catch (JSONException | MalformedURLException e) {
+                                errorHttp(response);
                             }
-                        } catch (JSONException | MalformedURLException e) {
+                        }
+
+                        @Override
+                        public void onPostFailed(String response) {
                             errorHttp(response);
                         }
                     }
+            );
 
-                    @Override
-                    public void onPostFailed(String response) {
-                        errorHttp(response);
-                    }
-                }
-        );
+            // パラメータセット
+            task.setVerify_hostname(host_name);
+            task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), editTextCompany.getText().toString());
 
-        // パラメータセット
-        task.setVerify_hostname(host_name);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), editTextCompany.getText().toString());
+            // タスクを開始
+            task.execute();
 
-        // タスクを開始
-        task.execute();
+        } else {
+
+            editor = pref.edit();
+            editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
+            editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+            editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "0");
+            editor.putString(getString(R.string.PREF_KEY_COMPANY), editTextCompany.getText().toString());
+            editor.putString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), "0");
+            editor.putString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), "0");
+            editor.putString(getString(R.string.PREF_KEY_MENU＿REMINDER_ENABLED), "0");
+            editor.commit();
+
+            // GPS画面移動
+            Intent intent = new Intent(getApplication(), GPSActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void exec_post2() {

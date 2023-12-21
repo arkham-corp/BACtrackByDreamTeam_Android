@@ -83,7 +83,9 @@ public class CarNoActivity extends Activity {
 
             // OK(肯定的な)ボタンの設定
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                // OKボタン押下時の処理
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
+                editor.commit();
                 car_no_btnDecision.setEnabled(true);
             });
 
@@ -95,48 +97,63 @@ public class CarNoActivity extends Activity {
     private void exec_post() {
         car_no_btnDecision.setEnabled(false);
 
-        // 接続先
-        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
-        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-        // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
-                this,
-                strHttpUrl + getString(R.string.HTTP_CAR_NO_CHECK),
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
+        if (status.equals("0")) {
 
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
+            // 接続先
+            String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+            String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+            // 非同期タスクを定義
+            HttpPostTask task = new HttpPostTask(
+                    this,
+                    strHttpUrl + getString(R.string.HTTP_CAR_NO_CHECK),
 
-                    @Override
-                    public void onPostCompleted(String response) {
-                        // 受信結果をUIに表示
-                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
-                            // 値保存
-                            editor = pref.edit();
-                            editor.putString(getString(R.string.PREF_KEY_CAR_NO), editTextCarNo.getText().toString());
-                            editor.commit();
+                    // タスク完了時に呼ばれるUIのハンドラ
+                    new HttpPostHandler() {
 
-                            // 画面移動
-                            Intent intent = new Intent(getApplication(), InspectionActivity.class);
-                            startActivity(intent);
-                        } else {
-                            errorDriverNotFound();
+                        @Override
+                        public void onPostCompleted(String response) {
+                            // 受信結果をUIに表示
+                            if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+                                // 値保存
+                                editor = pref.edit();
+                                editor.putString(getString(R.string.PREF_KEY_CAR_NO), editTextCarNo.getText().toString());
+                                editor.commit();
+
+                                // 画面移動
+                                Intent intent = new Intent(getApplication(), InspectionActivity.class);
+                                startActivity(intent);
+                            } else {
+                                errorDriverNotFound();
+                            }
+                        }
+
+                        @Override
+                        public void onPostFailed(String response) {
+                            errorHttp(response);
                         }
                     }
+            );
 
-                    @Override
-                    public void onPostFailed(String response) {
-                        errorHttp(response);
-                    }
-                }
-        );
+            // パラメータセット
+            task.setVerify_hostname(strVerifyHostname);
+            task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
+            task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), driver_code);
+            task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), editTextCarNo.getText().toString());
 
-        // パラメータセット
-        task.setVerify_hostname(strVerifyHostname);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), company_code);
-        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), driver_code);
-        task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), editTextCarNo.getText().toString());
+            // タスクを開始
+            task.execute();
 
-        // タスクを開始
-        task.execute();
+        } else {
+
+            editor = pref.edit();
+            editor.putString(getString(R.string.PREF_KEY_CAR_NO), editTextCarNo.getText().toString());
+            editor.commit();
+
+            Intent intent = new Intent(getApplication(), InspectionActivity.class);
+            startActivity(intent);
+
+        }
     }
 }

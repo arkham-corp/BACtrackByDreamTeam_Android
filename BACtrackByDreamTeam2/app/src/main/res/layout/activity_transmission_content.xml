@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TransmissionContentActivity">
+
+    <LinearLayout
+        android:id="@+id/transmission_content_linerLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/transmission_content_linerLayout2"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                tools:ignore="MissingConstraints">
+
+                <TextView
+                    android:id="@+id/transmission_content_lblInspectionYmd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/TEXT_INSPECTION_YMD"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <LinearLayout
+                    android:id="@+id/transmission_content_linerInspectionTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblInspectionYmd"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/transmission_content_lblInspectionTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="@dimen/label_size_middle"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/transmission_content_txtInspectionYmd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:focusable="false"
+                        android:inputType="date"
+                        android:labelFor="@+id/transmission_content_lblInspectionYmd"
+                        android:singleLine="true"
+                        android:textSize="30sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <EditText
+                        android:id="@+id/transmission_content_txtInspectionHm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:focusable="false"
+                        android:inputType="time"
+                        android:labelFor="@+id/transmission_content_txtInspectionYmd"
+                        android:singleLine="true"
+                        android:textSize="30sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/transmission_content_lblDriver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_linerInspectionTime"
+                    android:text="@string/TEXT_DRIVER"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtDriver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblDriver"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:labelFor="@+id/transmission_content_lblDriver"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblCarNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtDriver"
+                    android:text="@string/TEXT_CAR_NO"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtCarNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblCarNumber"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:labelFor="@+id/transmission_content_lblCarNumber"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtCarNumber"
+                    android:text="@string/TEXT_LOCATION_NAME"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblLocation"
+                    android:autofillHints=""
+                    android:inputType="text"
+                    android:ems="10"
+                    android:labelFor="@+id/transmission_content_lblLocation"
+                    android:singleLine="false"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblInspectionLat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblInspectionLong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblDrivingDiv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtLocation"
+                    android:text="@string/TEXT_DRIVING_DIV"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtDrivingDiv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblDrivingDiv"
+                    android:autofillHints=""
+                    android:inputType="text"
+                    android:ems="10"
+                    android:labelFor="@+id/transmission_content_lblDrivingDiv"
+                    android:singleLine="false"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblAlcoholValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtDrivingDiv"
+                    android:text="@string/TEXT_ALCOHOL_VALUE"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtAlcoholValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblAlcoholValue"
+                    android:autofillHints=""
+                    android:digits="0123456789"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:labelFor="@+id/transmisson_content_lblAlcoholValue"
+                    android:maxLength="9"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblBackTrackId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtAlcoholValue"
+                    android:text="@string/TEXT_BACKTRACK_ID"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtBackTrackId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblBackTrackId"
+                    android:autofillHints=""
+                    android:inputType="text"
+                    android:ems="10"
+                    android:labelFor="@+id/transmission_content_lblBackTrackId"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblUseNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtBackTrackId"
+                    android:text="@string/TEXT_USE_NUMBER"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtUseNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblUseNumber"
+                    android:autofillHints=""
+                    android:inputType="number"
+                    android:ems="10"
+                    android:labelFor="@+id/transmission_content_lblUseNumber"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/transmission_content_lblSendFlg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_txtUseNumber"
+                    android:text="@string/TEXT_SEND_STATUS"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/transmission_content_txtSendFlg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/transmission_content_lblSendFlg"
+                    android:autofillHints=""
+                    android:inputType="number"
+                    android:ems="10"
+                    android:labelFor="@+id/transmission_content_lblSendFlg"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageView
+                    android:id="@+id/transmission_content_photo"
+                    android:contentDescription="@string/PREF_KEY_PHOTO"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/transmission_content_txtSendFlg"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/transmission_content_linerLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/transmission_content_btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/BTN_SEND"
+            android:textSize="50sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
