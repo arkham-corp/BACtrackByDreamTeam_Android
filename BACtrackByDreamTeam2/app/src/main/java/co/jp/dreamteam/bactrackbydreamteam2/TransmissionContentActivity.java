@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
@@ -155,8 +156,10 @@ public class TransmissionContentActivity extends FragmentActivity {
             transmission_content_txtUseNumber.setText(alcoholResult.getUse_number());
             if (alcoholResult.getSend_flg().equals("0")) {
                 transmission_content_txtSendFlg.setText(getString(R.string.TEXT_SEND_FLG_0));
+                transmission_btnSend.setEnabled(true);
             } else if (!alcoholResult.getSend_flg().equals("1")) {
                 transmission_content_txtSendFlg.setText(getString(R.string.TEXT_SEND_FLG_1));
+                transmission_btnSend.setEnabled(true);
             } else  {
                 transmission_content_txtSendFlg.setText(getString(R.string.TEXT_SEND_FLG_2));
             }
@@ -191,20 +194,16 @@ public class TransmissionContentActivity extends FragmentActivity {
             return null;
         } else {
             return realm.where(RealmLocalDataAlcoholResult.class)
-                    .equalTo("id", transmission_id)
-                    .findFirst();
+                .equalTo("id", transmission_id)
+                .findFirst();
         }
     }
     View.OnClickListener btnSendClicked = v -> {
 
-        if (!SaveData()) {
-            return;
-        }
-
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
         if (capabilities != null) {
-            exec_post();
+            checkCompany();
         } else {
             //インターネットに接続していません
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
@@ -232,6 +231,52 @@ public class TransmissionContentActivity extends FragmentActivity {
     }
 
     /**
+     * 運転手エラー
+     */
+    private void errorDriverNotFound() {
+        runOnUiThread(() -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+            alertDialog.setMessage(getString(R.string.TEXT_ERR_DRIVER_NOT_FOUND));
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                transmission_btnSend.setEnabled(false);
+            });
+            alertDialog.show();
+        });
+    }
+
+
+    /**
+     * 車番エラー
+     */
+    private void errorCarNoNotFound() {
+        runOnUiThread(() -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+            alertDialog.setMessage(getString(R.string.TEXT_ERR_CAR_NO_NOT_FOUND));
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                transmission_btnSend.setEnabled(false);
+            });
+            alertDialog.show();
+        });
+    }
+
+    /**
+     * 送信エラー
+     */
+    private void errorSending() {
+        runOnUiThread(() -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
+            alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR_LAST));
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                transmission_btnSend.setEnabled(true);
+            });
+            alertDialog.show();
+        });
+    }
+
+    /**
      * HTTPコネクションエラー
      */
     private void errorHttp(final String response) {
@@ -244,15 +289,14 @@ public class TransmissionContentActivity extends FragmentActivity {
                 alertDialog.setMessage(response);
             }
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(false);
+                transmission_btnSend.setEnabled(true);
             });
             alertDialog.show();
         });
     }
 
     // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-    private void exec_post() {
-        transmission_btnSend.setEnabled(false);
+    private void checkCompany() {
 
         String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
         String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
@@ -269,7 +313,7 @@ public class TransmissionContentActivity extends FragmentActivity {
                     public void onPostCompleted(String response) {
                         // 受信結果をUIに表示
                         if (!response.equals("")) {
-                            exec_post3();
+                            checkDriver();
                         } else {
                             errorCompanyNotFound();
                         }
@@ -283,38 +327,187 @@ public class TransmissionContentActivity extends FragmentActivity {
         );
 
         // パラメータセット
-        task.setVerify_hostname(strVerifyHostname);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), editTextCompany.getText().toString());
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
 
         // タスクを開始
         task.execute();
 
     }
 
-    private boolean SaveData() {
+    private void checkDriver() {
 
+        // 接続先
+        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+        // 非同期タスクを定義
+        HttpPostTask task = new HttpPostTask(
+                this,
+                strHttpUrl + getString(R.string.HTTP_DRIVER_CHECK),
+
+                // タスク完了時に呼ばれるUIのハンドラ
+                new HttpPostHandler() {
+
+                    @Override
+                    public void onPostCompleted(String response) {
+                        // 受信結果をUIに表示
+                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+                            checkCarNo();
+                        } else {
+                            errorDriverNotFound();
+                        }
+                    }
+
+                    @Override
+                    public void onPostFailed(String response) {
+                        errorHttp(response);
+                    }
+                }
+        );
+
+        // パラメータセット
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        task.setVerify_hostname(strVerifyHostname);
+        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
+        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), pref.getString(getString(R.string.PREF_KEY_DRIVER), ""));
+
+        // タスクを開始
+        task.execute();
+    }
+    private void checkCarNo() {
+
+        // 接続先
+        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+        // 非同期タスクを定義
+        HttpPostTask task = new HttpPostTask(
+                this,
+                strHttpUrl + getString(R.string.HTTP_CAR_NO_CHECK),
+
+                // タスク完了時に呼ばれるUIのハンドラ
+                new HttpPostHandler() {
+
+                    @Override
+                    public void onPostCompleted(String response) {
+                        // 受信結果をUIに表示
+                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+                            exec_post();
+                        } else {
+                            errorCarNoNotFound();
+                        }
+                    }
+
+                    @Override
+                    public void onPostFailed(String response) {
+                        errorHttp(response);
+                    }
+                }
+        );
+
+        // パラメータセット
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        task.setVerify_hostname(strVerifyHostname);
+        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
+        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), pref.getString(getString(R.string.PREF_KEY_DRIVER), ""));
+        task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), pref.getString(getString(R.string.PREF_KEY_CAR_NO), ""));
+
+        // タスクを開始
+        task.execute();
+
+    }
+    public void exec_post() {
+        // 接続先
+        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
+        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+        // 非同期タスクを定義
+        HttpPostTask task = new HttpPostTask(this,
+                strHttpUrl + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
+
+                // タスク完了時に呼ばれるUIのハンドラ
+                new HttpPostHandler() {
+
+                    @Override
+                    public void onPostCompleted(String response) {
+                        // 受信結果をUIに表示
+                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
+                            alertDialog.setTitle(getString(R.string.TEXT_FINISH1));
+                            alertDialog.setMessage(getString(R.string.TEXT_FINISH1));
+                            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                            });
+                            alertDialog.show();
+                            SaveData();
+                            transmission_btnSend.setEnabled(false);
+                        } else if (response.startsWith(getString(R.string.HTTP_RESPONSE_KEY_NG))) {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
+                            alertDialog.setTitle(getString(R.string.TEXT_FINISH_DUPLICATE));
+                            alertDialog.setMessage(getString(R.string.TEXT_FINISH_DUPLICATE));
+                            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                            });
+                            alertDialog.show();
+                            transmission_btnSend.setEnabled(false);
+                        } else {
+                            errorSending();
+                        }
+                    }
+
+                    @Override
+                    public void onPostFailed(String response) {
+                        errorHttp(response);
+                    }
+                });
+
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        String strCompany = pref.getString(getString(R.string.PREF_KEY_COMPANY), "");
+        String strInspectionTime = String.valueOf(transmission_content_lblInspectionTime.getText());
+        String strAddress = String.valueOf(transmission_content_txtLocation.getText());
+        String strLat = String.valueOf(transmission_content_lblInspectionLat.getText());
+        String strLong = String.valueOf(transmission_content_lblInspectionLong.getText());
+        String strDriver = String.valueOf(transmission_content_txtDriver.getText());
+        String strCarNo = String.valueOf(transmission_content_txtCarNumber.getText());
+        String strAlcoholValue = String.valueOf(transmission_content_txtAlcoholValue.getText());
+        String strBacTrackId = String.valueOf(transmission_content_txtBackTrackId.getText());
+        String strUseCount = String.valueOf(transmission_content_txtUseNumber.getText());
+        String strDrivingDiv = "0";
+        if(String.valueOf(transmission_content_txtUseNumber.getText()).equals(getString(R.string.TEXT_DRIVING_DIV_1)))
+        {
+            strDrivingDiv = "1";
+        }
+
+        // 画像取得
+        byte[] photoByte = null;
+        String strBitmap = pref.getString(getString(R.string.PREF_KEY_PHOTO), "");
+        if (!strBitmap.equals("")) {
+            photoByte = Base64.decode(strBitmap, Base64.DEFAULT);
+        }
+
+        // パラメータセット
+        task.setVerify_hostname(strVerifyHostname);
+        task.setHttp_multipart(true);
+        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), strCompany);
+        task.addPostParam(getString(R.string.HTTP_PARAM_INSPECTION_TIME), strInspectionTime);
+        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), strDriver);
+        task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), strCarNo);
+        task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_NAME), strAddress);
+        task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LAT), strLat);
+        task.addPostParam(getString(R.string.HTTP_PARAM_LOCATION_LONG), strLong);
+        task.addPostParam(getString(R.string.HTTP_PARAM_ALCOHOL_VALUE), strAlcoholValue);
+        task.addPostParamJpeg(getString(R.string.HTTP_PARAM_PHOTO), photoByte);
+        task.addPostParam(getString(R.string.HTTP_PARAM_BACTRACK_ID), strBacTrackId);
+        task.addPostParam(getString(R.string.HTTP_PARAM_BACTRACK_USE_COUNT), strUseCount);
+        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVING_DIV), strDrivingDiv);
+        task.addPostParam(getString(R.string.HTTP_PARAM_APP_PROG), "Android");
+        task.addPostParam(getString(R.string.HTTP_PARAM_APP_ID), "Android");
+
+        // タスクを開始
+        task.execute();
+    }
+    private void SaveData() {
         realm.beginTransaction();
         RealmLocalDataAlcoholResult alcoholResult = readRecord();
-
-        // 値セット
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-
-        if (strDrivingStartKm.isEmpty()) {
-            drivingReport.setDriving_start_km(0D);
-        } else {
-            drivingReport.setDriving_start_km(Double.valueOf(strDrivingStartKm));
-        }
-        String strDrivingEndKm = String.valueOf(driving_report_edit_txtDrivingEndKm.getText()).replaceAll(",", "");
-        if (strDrivingEndKm.isEmpty()) {
-            drivingReport.setDriving_end_km(0D);
-        } else {
-            drivingReport.setDriving_end_km(Double.valueOf(strDrivingEndKm));
-        }
-
-        realm.insertOrUpdate(drivingReport);
-
+        alcoholResult.setSend_flg("2");
+        realm.insertOrUpdate(alcoholResult);
         realm.commitTransaction();
-        return true;
     }
 
     @Override
@@ -322,4 +515,5 @@ public class TransmissionContentActivity extends FragmentActivity {
         super.onDestroy();
         realm.close();
     }
+
 }

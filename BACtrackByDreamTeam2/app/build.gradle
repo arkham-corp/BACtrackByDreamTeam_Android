@@ -4,13 +4,13 @@ apply plugin: 'realm-android'
 android {
     signingConfigs {
         deubg {
-            storeFile file('D:\\Users\\DreamTeam\\AlcoholChecker2\\Android\\BACtrackByDreamTeam.keystore')
+            storeFile file('/Users/suzukitsuuno/StudioProjects/BACtrackByDreamTeam2/BACtrackByDreamTeam.keystore')
             storePassword 'dreamteam'
             keyAlias 'bactrackbydreamteam'
             keyPassword 'dreamteam'
         }
         release {
-            storeFile file('D:\\Users\\DreamTeam\\AlcoholChecker2\\Android\\BACtrackByDreamTeam.keystore')
+            storeFile file('/Users/suzukitsuuno/StudioProjects/BACtrackByDreamTeam2/BACtrackByDreamTeam.keystore')
             storePassword 'dreamteam'
             keyAlias 'bactrackbydreamteam'
             keyPassword 'dreamteam'
