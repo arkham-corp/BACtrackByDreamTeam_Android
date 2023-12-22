@@ -46,8 +46,8 @@ public class GPSActivity extends Activity implements LocationListener {
         // 設定初期化
         editor = pref.edit();
         editor.putString(getString(R.string.PREF_KEY_ADDRESS), "");
-        editor.putString(getString(R.string.PREF_KEY_LAT), "");
-        editor.putString(getString(R.string.PREF_KEY_LON), "");
+        editor.putString(getString(R.string.PREF_KEY_LAT), "0");
+        editor.putString(getString(R.string.PREF_KEY_LON), "0");
         editor.commit();
 
         // テキスト割当

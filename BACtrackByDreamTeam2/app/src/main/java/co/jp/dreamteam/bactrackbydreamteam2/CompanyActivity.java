@@ -180,7 +180,7 @@ public class CompanyActivity extends Activity {
             editor = pref.edit();
             editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
             editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-            editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "0");
+            editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "1");//0:血中1:呼気2:両方
             editor.putString(getString(R.string.PREF_KEY_COMPANY), editTextCompany.getText().toString());
             editor.putString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), "0");
             editor.putString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), "0");

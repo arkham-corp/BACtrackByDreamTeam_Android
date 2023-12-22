@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class ResultActivity extends Activity {
 
@@ -346,16 +347,21 @@ public class ResultActivity extends Activity {
         alcoholResult.setDriver_code(pref.getString(getString(R.string.PREF_KEY_DRIVER), ""));
         alcoholResult.setCar_number(pref.getString(getString(R.string.PREF_KEY_CAR_NO), ""));
         alcoholResult.setDriving_div(pref.getString(getString(R.string.PREF_KEY_DRIVING_DIV), "0"));
-        alcoholResult.setBacktrack_id(pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), "0"));
+        alcoholResult.setBacktrack_id(pref.getString(getString(R.string.PREF_KEY_BACTRACK_ID), ""));
+        if(alcoholResult.getBacktrack_id().equals("0"))
+        {
+            alcoholResult.setBacktrack_id("");
+        }
         alcoholResult.setUse_number(pref.getString(getString(R.string.PREF_KEY_BACTRACK_USE_COUNT), "0"));
 
         // 測定値取得
         String strMeasurement = pref.getString(getString(R.string.PREF_KEY_MEASUREMENT), "");
         double alcoholValue = Double.parseDouble(strMeasurement);
-        double alcoholValueBreath = Double.parseDouble(strMeasurement) * 5;
         String strAlcoholValue = String.format(Locale.JAPAN, "%.2f", alcoholValue);
-        String strAlcoholValueBreath = String.format(Locale.JAPAN, "%.2f", alcoholValueBreath);
         alcoholResult.setAlcohol_value(strAlcoholValue);
+
+        double alcoholValueBreath = Double.parseDouble(strMeasurement) * 5;
+        String strAlcoholValueBreath = String.format(Locale.JAPAN, "%.2f", alcoholValueBreath);
 
         // 表示区分取得
         String strAlcoholValueDiv = pref.getString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "");
@@ -373,7 +379,16 @@ public class ResultActivity extends Activity {
         }
         alcoholResult.setLocation_name(pref.getString(getString(R.string.PREF_KEY_ADDRESS), ""));
         alcoholResult.setLocation_lat(pref.getString(getString(R.string.PREF_KEY_LAT), "0"));
+        if(alcoholResult.getLocation_lat().equals(""))
+        {
+            alcoholResult.setLocation_lat("0");
+        }
         alcoholResult.setLocation_long(pref.getString(getString(R.string.PREF_KEY_LON), "0"));
+        if(alcoholResult.getLocation_long().equals(""))
+        {
+            alcoholResult.setLocation_long("0");
+        }
+        alcoholResult.setSend_flg("0");
 
         // 画像取得
         String strBitmap = pref.getString(getString(R.string.PREF_KEY_PHOTO), "");
@@ -385,6 +400,7 @@ public class ResultActivity extends Activity {
 
         // 過去データ削除
         RealmResults<RealmLocalDataAlcoholResult> resultList = realm.where(RealmLocalDataAlcoholResult.class)
+                .equalTo("company_code", pref.getString(getString(R.string.PREF_KEY_COMPANY), ""))
                 .findAll();
 
         Calendar cal = Calendar.getInstance();

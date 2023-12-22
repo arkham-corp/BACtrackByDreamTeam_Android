@@ -734,7 +734,7 @@ public class InspectionActivity extends Activity {
                 progress_max = i;
                 progressBar.setMax(progress_max - 1);
             }
-            setProgressValue(progress_max + 1 - i);
+            setProgressValue(progress_max - i);
 //20231211
         }
 
@@ -789,7 +789,9 @@ public class InspectionActivity extends Activity {
         }
 
         @Override
-        public void BACtrackAnalyzing() {
+        public void BACtrackAnalyzing()
+        {
+            setProgressValue(progress_max+1);
             setStatus(R.string.TEXT_ANALYZING);
         }
 

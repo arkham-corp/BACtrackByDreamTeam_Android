@@ -21,6 +21,8 @@
     <string name="HTTP_GET_FREE_TITLE">httpGetFreeTitleServlet</string>
     <string name="HTTP_RESPONSE_OK">OK</string>
     <string name="HTTP_RESPONSE_KEY_NG">KEY_NG</string>
+    <string name="HTTP_RESPONSE_DRIVER_NG">DRIVER_NG</string>
+    <string name="HTTP_RESPONSE_CAR_NUMBER_NG">CAR_NUMBER_NG</string>
     <string name="HTTP_HEADER_PARAM_KEY_AUTH">Authorization</string>
     <string name="HTTP_PARAM_JSON_DATA">jsonData</string>
     <string name="HTTP_PARAM_COMPANY_CODE">CompanyCode</string>
@@ -134,8 +136,8 @@
     <string name="TEXT_KEEP_BLOWING">息を吐き続けてください</string>
     <string name="TEXT_ANALYZING">解析中</string>
     <string name="TEXT_ERR_COMPANY_NOT_FOUND">会社が見つかりません</string>
-    <string name="TEXT_ERR_DRIVER_NOT_FOUND">運転者が見つかりません</string>
-    <string name="TEXT_ERR_CAR_NO_NOT_FOUND">車番が見つかりません</string>
+    <string name="TEXT_ERR_DRIVER_NOT_FOUND">運転者が登録されていません</string>
+    <string name="TEXT_ERR_CAR_NO_NOT_FOUND">車番が登録されていません</string>
     <string name="TEXT_ERR_CONNECTION_FILED">サーバーに接続できませんでした</string>
     <string name="TEXT_ERR_NO_BREATHALYZERS_FOUND">アルコールマネージャが検出できません</string>
     <string name="TEXT_ERR_BT_NOT_ENABLED">Bluetoothが無効です</string>
@@ -184,6 +186,8 @@
     <string name="TEXT_SEND_FLG_0">未送信</string>
     <string name="TEXT_SEND_FLG_1">送信NG</string>
     <string name="TEXT_SEND_FLG_2">送信済</string>
+    <string name="TEXT_TRANS_ERROR">該当する送信データが見つかりませんでした</string>
+    <string name="TEXT_SENDING_ERROR">送信エラー</string>
 
     <string name="TEXT_ERROR_DRIVER_CODE">運転者を入力してください</string>
     <string name="TEXT_ERROR_DRIVER_CODE_MAX_LENGTH">運転者が最大桁数を超えています</string>
