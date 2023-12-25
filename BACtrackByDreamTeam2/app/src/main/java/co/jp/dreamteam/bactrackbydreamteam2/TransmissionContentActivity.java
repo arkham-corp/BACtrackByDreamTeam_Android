@@ -32,6 +32,8 @@ import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.view.TextureView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
@@ -511,14 +513,9 @@ public class TransmissionContentActivity extends FragmentActivity {
                     public void onPostCompleted(String response) {
                         // 受信結果をUIに表示
                         if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
-                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
-                            alertDialog.setTitle(getString(R.string.TEXT_SENDING_ERROR));
-                            alertDialog.setMessage(getString(R.string.TEXT_FINISH1));
-                            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                            });
-                            alertDialog.show();
                             SaveData("2");
-                            transmission_btnSend.setEnabled(false);
+                            Toast.makeText(getApplicationContext(),getString(R.string.TEXT_FINISH1), Toast.LENGTH_SHORT).show();
+                            finish();
                         } else if (response.startsWith(getString(R.string.HTTP_RESPONSE_KEY_NG))) {
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
                             alertDialog.setTitle(getString(R.string.TEXT_SENDING_ERROR));

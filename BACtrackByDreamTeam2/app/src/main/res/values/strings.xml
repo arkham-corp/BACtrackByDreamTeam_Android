@@ -188,6 +188,8 @@
     <string name="TEXT_SEND_FLG_2">送信済</string>
     <string name="TEXT_TRANS_ERROR">該当する送信データが見つかりませんでした</string>
     <string name="TEXT_SENDING_ERROR">送信エラー</string>
+    <string name="TEXT_REMAINDER_TITLE">設定日時</string>
+    <string name="TEXT_REMAINDER_FINISH">リマインダーが設定されました</string>
 
     <string name="TEXT_ERROR_DRIVER_CODE">運転者を入力してください</string>
     <string name="TEXT_ERROR_DRIVER_CODE_MAX_LENGTH">運転者が最大桁数を超えています</string>
