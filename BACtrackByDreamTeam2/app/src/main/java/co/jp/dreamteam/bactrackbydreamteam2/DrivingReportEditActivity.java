@@ -23,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -285,13 +285,13 @@ public class DrivingReportEditActivity extends FragmentActivity {
         realm.close();
     }
 
-    View.OnClickListener txtDrivingStartYmdClicked = v -> showDatePickerDialogStartYmd(driving_report_edit_txtDrivingStartYmd,
+    View.OnClickListener txtDrivingStartYmdClicked = v -> showDatePickerDialogStartYmd(
             "DrivingStartYmd", String.valueOf(driving_report_edit_txtDrivingStartYmd.getText()));
-    View.OnClickListener txtDrivingStartHmClicked = v -> showTimePickerDialogStartHm(driving_report_edit_txtDrivingStartHm,
+    View.OnClickListener txtDrivingStartHmClicked = v -> showTimePickerDialogStartHm(
             "DrivingStartHm", String.valueOf(driving_report_edit_txtDrivingStartHm.getText()));
-    View.OnClickListener txtDrivingEndYmdClicked = v -> showDatePickerDialogEndYmd(driving_report_edit_txtDrivingEndYmd,
+    View.OnClickListener txtDrivingEndYmdClicked = v -> showDatePickerDialogEndYmd(
             "DrivingEndYmd", String.valueOf(driving_report_edit_txtDrivingEndYmd.getText()));
-    View.OnClickListener txtDrivingEndHmClicked = v -> showTimePickerDialogEndHm(driving_report_edit_txtDrivingEndHm,
+    View.OnClickListener txtDrivingEndHmClicked = v -> showTimePickerDialogEndHm(
             "DrivingEndHm", String.valueOf(driving_report_edit_txtDrivingEndHm.getText()));
 
     View.OnClickListener btnDrivingStartYmdClearClicked = v -> driving_report_edit_txtDrivingStartYmd.setText("");
@@ -302,7 +302,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
     View.OnClickListener btnDrivingEndHmClearClicked = v -> driving_report_edit_txtDrivingEndHm.setText("");
 
-    public void showDatePickerDialogStartYmd(View v, String tag, String defaultValue) {
+    public void showDatePickerDialogStartYmd(String tag, String defaultValue) {
         DatePickerDialog.OnDateSetListener listener = (datePicker, year, month, day) -> {
             String ymd = String.format(Locale.JAPAN, "%04d", year)
                     + "/" + String.format(Locale.JAPAN, "%02d", month)
@@ -316,7 +316,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
         newFragment.show(getSupportFragmentManager(), tag);
     }
 
-    public void showTimePickerDialogStartHm(View v, String tag, String defaultValue) {
+    public void showTimePickerDialogStartHm(String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
 //20231211
             String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
@@ -331,7 +331,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
     }
 
-    public void showDatePickerDialogEndYmd(View v, String tag, String defaultValue) {
+    public void showDatePickerDialogEndYmd(String tag, String defaultValue) {
         DatePickerDialog.OnDateSetListener listener = (datePicker, year, month, day) -> {
             String ymd = String.format(Locale.JAPAN, "%04d", year)
                     + "/" + String.format(Locale.JAPAN, "%02d", month)
@@ -345,7 +345,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
         newFragment.show(getSupportFragmentManager(), tag);
     }
 
-    public void showTimePickerDialogEndHm(View v, String tag, String defaultValue) {
+    public void showTimePickerDialogEndHm(String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
 //20231211
             String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
@@ -424,43 +424,9 @@ public class DrivingReportEditActivity extends FragmentActivity {
     };
 
     /**
-     * 送信エラー
-     */
-    private void errorSending() {
-        runOnUiThread(() -> {
-
-            errorCount += 1;
-
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DrivingReportEditActivity.this);
-            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-
-            if (errorCount < 3) {
-                // ダイアログの設定
-                alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR));
-
-                // OK(肯定的な)ボタンの設定
-                alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                    // OKボタン押下時の処理
-                    exec_post();
-                });
-            } else {
-                // ダイアログの設定
-                alertDialog.setMessage(getString(R.string.TEXT_SEND_FINISH_ERROR));
-
-                // OK(肯定的な)ボタンの設定
-                alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                    // OKボタン押下時の処理
-                });
-            }
-
-            alertDialog.show();
-        });
-    }
-
-    /**
      * HTTPコネクションエラー
      */
-    private void errorHttp(final String response) {
+    private void errorHttp() {
         runOnUiThread(() -> {
             errorCount += 1;
 
@@ -529,9 +495,10 @@ public class DrivingReportEditActivity extends FragmentActivity {
                                                 .equalTo("id", update_driving_report_id)
                                                 .findFirst();
 
-                                        drivingReport.setSendFlg("1");
-
-                                        realm.insertOrUpdate(drivingReport);
+                                        if (drivingReport != null) {
+                                            drivingReport.setSendFlg("1");
+                                            realm.insertOrUpdate(drivingReport);
+                                        }
                                     }
                                 }
                                 realm.commitTransaction();
@@ -576,7 +543,7 @@ public class DrivingReportEditActivity extends FragmentActivity {
 
                     @Override
                     public void onPostFailed(String response) {
-                        errorHttp(response);
+                        errorHttp();
                     }
                 });
 
@@ -674,13 +641,8 @@ public class DrivingReportEditActivity extends FragmentActivity {
             return 0;
         }
         // 文字列をUTF-8でエンコードしてバイト数を取得
-        try {
-            byte[] utf8Bytes = str.getBytes("UTF-8");
-            return utf8Bytes.length;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        byte[] utf8Bytes = str.getBytes(StandardCharsets.UTF_8);
+        return utf8Bytes.length;
     }
 
     private boolean isValidDate(String inputDate) {

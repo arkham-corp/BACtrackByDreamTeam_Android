@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
@@ -113,7 +114,7 @@ public class GPSActivity extends Activity implements LocationListener {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         // 先ほどの独自定義したrequestCodeの結果確認
         if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults.length != 0) {
@@ -121,8 +122,6 @@ public class GPSActivity extends Activity implements LocationListener {
                     // ユーザーが許可したとき
                     // 許可が必要な機能を改めて実行する
                     GetLocation();
-                } else {
-                    // ユーザーが許可しなかったとき
                 }
             }
         }
@@ -234,7 +233,7 @@ public class GPSActivity extends Activity implements LocationListener {
         try {
             List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 5);
 
-            if (!addressList.isEmpty()) {
+            if (addressList != null && !addressList.isEmpty()) {
                 Address address = addressList.get(0);
 
                 StringBuilder sb = new StringBuilder();

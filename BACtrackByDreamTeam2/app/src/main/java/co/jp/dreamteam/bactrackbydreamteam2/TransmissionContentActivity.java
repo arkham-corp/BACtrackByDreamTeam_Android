@@ -6,14 +6,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.SurfaceTexture;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
@@ -22,28 +21,13 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.fragment.app.FragmentActivity;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.SurfaceTexture;
-import android.os.Bundle;
-import android.view.TextureView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import io.realm.Realm;
 
@@ -185,51 +169,47 @@ public class TransmissionContentActivity extends FragmentActivity {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
             alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
             alertDialog.setMessage(getString(R.string.TEXT_TRANS_ERROR));
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(false);
-            });
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> transmission_btnSend.setEnabled(false));
             alertDialog.show();
         }
     }
     private final TextureView.SurfaceTextureListener surfaceTextureListener = new TextureView.SurfaceTextureListener() {
         @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height)  {
+        public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height)  {
             // TextureViewが利用可能になると呼ばれます
             try {
                 viewWidth  = width;
                 viewHeight = height;
-                drawBitmapOnSurfaceTexture(surface);
+                drawBitmapOnSurfaceTexture();
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
         }
         @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
         }
 
         @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
             // TextureViewが破棄されると呼ばれます
             return false;
         }
 
         @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
             try {
-                drawBitmapOnSurfaceTexture(surface);
+                drawBitmapOnSurfaceTexture();
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
         }
     };
-    private void drawBitmapOnSurfaceTexture(SurfaceTexture surfaceTexture) throws UnsupportedEncodingException {
+    private void drawBitmapOnSurfaceTexture() throws UnsupportedEncodingException {
         Canvas canvas = transmission_content_photo.lockCanvas();
         if (canvas != null) {
 
             String bitmapStr = alcoholResult.getPhoto_file();
             byte[] decodedByte = Base64.decode(bitmapStr, 0);
-//            InputStream is = new ByteArrayInputStream(decodedByte);
-//            Bitmap bitmap = BitmapFactory.decodeStream(is);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte,0,decodedByte.length);
 
             // イメージ描画
@@ -298,52 +278,6 @@ public class TransmissionContentActivity extends FragmentActivity {
     };
 
     /**
-     * 会社エラー
-     */
-    private void errorCompanyNotFound() {
-        runOnUiThread(() -> {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
-            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-            alertDialog.setMessage(getString(R.string.TEXT_ERR_COMPANY_NOT_FOUND));
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(false);
-            });
-            alertDialog.show();
-        });
-    }
-
-    /**
-     * 運転手エラー
-     */
-    private void errorDriverNotFound() {
-        runOnUiThread(() -> {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
-            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-            alertDialog.setMessage(getString(R.string.TEXT_ERR_DRIVER_NOT_FOUND));
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(false);
-            });
-            alertDialog.show();
-        });
-    }
-
-
-    /**
-     * 車番エラー
-     */
-    private void errorCarNoNotFound() {
-        runOnUiThread(() -> {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
-            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-            alertDialog.setMessage(getString(R.string.TEXT_ERR_CAR_NO_NOT_FOUND));
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(false);
-            });
-            alertDialog.show();
-        });
-    }
-
-    /**
      * 送信エラー
      */
     private void errorSending() {
@@ -351,9 +285,7 @@ public class TransmissionContentActivity extends FragmentActivity {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
             alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
             alertDialog.setMessage(getString(R.string.TEXT_SEND_ERROR_LAST));
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(true);
-            });
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> transmission_btnSend.setEnabled(true));
             alertDialog.show();
         });
     }
@@ -370,140 +302,17 @@ public class TransmissionContentActivity extends FragmentActivity {
             } else {
                 alertDialog.setMessage(response);
             }
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                transmission_btnSend.setEnabled(true);
-            });
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> transmission_btnSend.setEnabled(true));
             alertDialog.show();
         });
     }
 
-    // POST通信を実行（AsyncTaskによる非同期処理を使うバージョン）
-    private void checkCompany() {
-
-        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
-        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-
-        // 非同期タスクを定義
-        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
-                this,
-                strHttpUrl + getString(R.string.HTTP_COMPANY_CHECK),
-
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
-
-                    @Override
-                    public void onPostCompleted(String response) {
-                        // 受信結果をUIに表示
-                        if (!response.equals("")) {
-                            checkDriver();
-                        } else {
-                            errorCompanyNotFound();
-                        }
-                    }
-
-                    @Override
-                    public void onPostFailed(String response) {
-                        errorHttp(response);
-                    }
-                }
-        );
-
-        // パラメータセット
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-        task.setVerify_hostname(strVerifyHostname);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
-
-        // タスクを開始
-        task.execute();
-
-    }
-
-    private void checkDriver() {
-
-        // 接続先
-        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
-        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-        // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
-                this,
-                strHttpUrl + getString(R.string.HTTP_DRIVER_CHECK),
-
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
-
-                    @Override
-                    public void onPostCompleted(String response) {
-                        // 受信結果をUIに表示
-                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
-                            checkCarNo();
-                        } else {
-                            errorDriverNotFound();
-                        }
-                    }
-
-                    @Override
-                    public void onPostFailed(String response) {
-                        errorHttp(response);
-                    }
-                }
-        );
-
-        // パラメータセット
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-        task.setVerify_hostname(strVerifyHostname);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
-        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), String.valueOf(transmission_content_txtDriver.getText()));
-
-        // タスクを開始
-        task.execute();
-    }
-    private void checkCarNo() {
-
-        // 接続先
-        String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
-        String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-        // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(
-                this,
-                strHttpUrl + getString(R.string.HTTP_CAR_NO_CHECK),
-
-                // タスク完了時に呼ばれるUIのハンドラ
-                new HttpPostHandler() {
-
-                    @Override
-                    public void onPostCompleted(String response) {
-                        // 受信結果をUIに表示
-                        if (response.startsWith(getString(R.string.HTTP_RESPONSE_OK))) {
-                            exec_post();
-                        } else {
-                            errorCarNoNotFound();
-                        }
-                    }
-
-                    @Override
-                    public void onPostFailed(String response) {
-                        errorHttp(response);
-                    }
-                }
-        );
-
-        // パラメータセット
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-        task.setVerify_hostname(strVerifyHostname);
-        task.addPostParam(getString(R.string.HTTP_PARAM_COMPANY_CODE), pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
-        task.addPostParam(getString(R.string.HTTP_PARAM_DRIVER_CODE), String.valueOf(transmission_content_txtDriver.getText()));
-        task.addPostParam(getString(R.string.HTTP_PARAM_CAR_NO), String.valueOf(transmission_content_txtCarNumber.getText()));
-
-        // タスクを開始
-        task.execute();
-
-    }
     public void exec_post() {
         // 接続先
         String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
         String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
         // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(this,
+        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(this,
                 strHttpUrl + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
 
                 // タスク完了時に呼ばれるUIのハンドラ
@@ -517,14 +326,9 @@ public class TransmissionContentActivity extends FragmentActivity {
                             Toast.makeText(getApplicationContext(),getString(R.string.TEXT_FINISH1), Toast.LENGTH_SHORT).show();
                             finish();
                         } else if (response.startsWith(getString(R.string.HTTP_RESPONSE_KEY_NG))) {
-                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
-                            alertDialog.setTitle(getString(R.string.TEXT_SENDING_ERROR));
-                            alertDialog.setMessage(getString(R.string.TEXT_FINISH_DUPLICATE));
-                            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
-                            });
-                            alertDialog.show();
-                            SaveData("1");
-                            transmission_btnSend.setEnabled(false);
+                            SaveData("2");
+                            Toast.makeText(getApplicationContext(),getString(R.string.TEXT_FINISH_DUPLICATE), Toast.LENGTH_SHORT).show();
+                            finish();
                         } else if (response.startsWith(getString(R.string.HTTP_RESPONSE_DRIVER_NG))) {
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(TransmissionContentActivity.this);
                             alertDialog.setTitle(getString(R.string.TEXT_SENDING_ERROR));

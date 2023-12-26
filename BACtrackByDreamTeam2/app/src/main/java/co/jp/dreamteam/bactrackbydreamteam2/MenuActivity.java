@@ -35,9 +35,9 @@ public class MenuActivity extends Activity {
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
         // ボタン有効確認
-        String app_roll_call_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), "0");
-        String app_send_list_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), "0");
-        String app_reminder_enabled = pref.getString(getString(R.string.PREF_KEY_MENU＿REMINDER_ENABLED), "0");
+        String app_roll_call_enabled = pref.getString(getString(R.string.PREF_KEY_MENU_DRIVING_REPORT_ENABLED), "0");
+        String app_send_list_enabled = pref.getString(getString(R.string.PREF_KEY_MENU_SEND_LIST_ENABLED), "0");
+        String app_reminder_enabled = pref.getString(getString(R.string.PREF_KEY_MENU_REMINDER_ENABLED), "0");
 
         // スペース参照
         menu_spaceDrivingReport = this.findViewById(R.id.menu_spaceDrivingReport);

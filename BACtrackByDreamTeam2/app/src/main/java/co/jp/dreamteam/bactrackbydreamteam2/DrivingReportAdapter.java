@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -19,9 +20,9 @@ import io.realm.RealmRecyclerViewAdapter;
 
 public class DrivingReportAdapter extends RealmRecyclerViewAdapter<RealmLocalDataDrivingReport, DrivingReportAdapter.DrivignReportViewHolder> {
 
-    private Context context;
-    private OrderedRealmCollection<RealmLocalDataDrivingReport> drivingReportList;
-    private OnItemClickListener listener;
+    private final Context context;
+    private final OrderedRealmCollection<RealmLocalDataDrivingReport> drivingReportList;
+    private final OnItemClickListener listener;
 
     public DrivingReportAdapter(Context context, OrderedRealmCollection<RealmLocalDataDrivingReport> drivingReportList, OnItemClickListener onItemClickListener, boolean autoUpdate) {
         super(drivingReportList, autoUpdate);
@@ -36,35 +37,33 @@ public class DrivingReportAdapter extends RealmRecyclerViewAdapter<RealmLocalDat
     }
 
     @Override
-    public void onBindViewHolder(DrivignReportViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DrivignReportViewHolder holder, int position) {
         RealmLocalDataDrivingReport drivingReport = drivingReportList != null ? drivingReportList.get(position) : null;
 
         if (drivingReport != null) {
 
-            holder.list_item_driving_report_container.setOnClickListener(view -> {
-                listener.onItemClick(drivingReport);
-            });
+            holder.list_item_driving_report_container.setOnClickListener(view -> listener.onItemClick(drivingReport));
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.JAPAN);
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd", Locale.JAPAN);
 
-            String strStartYmd = "";
+            String strStartYmd= "";
             String strEndYmd = "";
             try {
                 Date dateStartYmd = sdf.parse(drivingReport.getDriving_start_ymd());
-                strStartYmd = sdf2.format(dateStartYmd);
+                if(dateStartYmd != null) strStartYmd = sdf2.format(dateStartYmd);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
             try {
                 if (!drivingReport.getDriving_end_ymd().equals("")) {
                     Date dateEndYmd = sdf.parse(drivingReport.getDriving_end_ymd());
-                    strEndYmd = sdf2.format(dateEndYmd);
+                    if(dateEndYmd != null) strEndYmd = sdf2.format(dateEndYmd);
                 }
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-            String strYmd = "";
+            String strYmd;
             if (strStartYmd.equals(strEndYmd)) {
                 strYmd = strStartYmd;
             } else {
@@ -80,13 +79,14 @@ public class DrivingReportAdapter extends RealmRecyclerViewAdapter<RealmLocalDat
         }
     }
 
+    @NonNull
     @Override
-    public DrivignReportViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public DrivignReportViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.list_item_driving_report, viewGroup, false);
         return new DrivignReportViewHolder(v);
     }
 
-    public class DrivignReportViewHolder extends RecyclerView.ViewHolder {
+    public static class DrivignReportViewHolder extends RecyclerView.ViewHolder {
         LinearLayout list_item_driving_report_container;
         TextView list_item_driving_report_text;
         TextView list_item_driving_report_text2;

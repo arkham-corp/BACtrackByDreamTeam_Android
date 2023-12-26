@@ -1,5 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class DrivingDivActivity extends Activity {
@@ -34,6 +34,7 @@ public class DrivingDivActivity extends Activity {
     }
 
     OnClickListener btnDecisionClicked = new OnClickListener() {
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View v) {
             // ラジオグループのオブジェクトを取得
@@ -41,7 +42,6 @@ public class DrivingDivActivity extends Activity {
             // チェックされているラジオボタンの ID を取得
             int selected_id = rg.getCheckedRadioButtonId();
             // チェックされているラジオボタンオブジェクトを取得
-            RadioButton selected_radio = (RadioButton) findViewById(selected_id);
             String DrivingDiv = "";
             switch (selected_id) {
                 case R.id.driving_div_radioGroupDrivingDiv_0:

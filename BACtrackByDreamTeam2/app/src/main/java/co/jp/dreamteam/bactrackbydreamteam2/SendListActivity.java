@@ -1,13 +1,9 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +13,6 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class SendListActivity extends Activity {
-
-    private SharedPreferences pref;
 
     private Realm realm;
 
@@ -34,7 +28,7 @@ public class SendListActivity extends Activity {
         realm = Realm.getDefaultInstance();
 
         // 一覧取得
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
         RealmResults<RealmLocalDataAlcoholResult> alcoholResult = realm.where(RealmLocalDataAlcoholResult.class)
                 .equalTo("company_code", pref.getString(getString(R.string.PREF_KEY_COMPANY), ""))
                 .findAll()

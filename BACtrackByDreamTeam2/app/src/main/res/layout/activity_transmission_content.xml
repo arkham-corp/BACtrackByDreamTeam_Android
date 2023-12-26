@@ -16,7 +16,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:ignore="UselessParent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,7 +51,8 @@
 
                     <TextView
                         android:id="@+id/transmission_content_lblInspectionYmd"
-                        android:layout_width="100dp"
+                        android:ems="10"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:autofillHints=""
@@ -63,7 +65,8 @@
 
                     <TextView
                         android:id="@+id/transmission_content_lblInspectionHm"
-                        android:layout_width="0dp"
+                        android:ems="5"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:autofillHints=""
@@ -87,16 +90,18 @@
 
                 <EditText
                     android:id="@+id/transmission_content_txtDriver"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_below="@id/transmission_content_lblDriver"
                     android:autofillHints=""
-                    android:ems="10"
+                    android:ems="11"
                     android:inputType="textEmailAddress"
                     android:labelFor="@+id/transmission_content_lblDriver"
                     android:singleLine="true"
                     android:textSize="30sp"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                    android:background="#ffff"
+                    android:textColor="#000000"
+                    tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
                 <TextView
                     android:id="@+id/transmission_content_lblCarNumber"
@@ -109,15 +114,18 @@
 
                 <EditText
                     android:id="@+id/transmission_content_txtCarNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_below="@id/transmission_content_lblCarNumber"
                     android:autofillHints=""
-                    android:ems="10"
+                    android:ems="11"
+                    android:inputType="text"
                     android:labelFor="@+id/transmission_content_lblCarNumber"
                     android:singleLine="true"
                     android:textSize="30sp"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                    android:background="#ffff"
+                    android:textColor="#000000"
+                    tools:ignore="LabelFor,SpeakableTextPresentCheck,TextFields" />
 
                 <TextView
                     android:id="@+id/transmission_content_lblLocatioNname"
@@ -134,7 +142,6 @@
                     android:layout_height="160dp"
                     android:layout_below="@id/transmission_content_lblLocatioNname"
                     android:autofillHints=""
-                    android:ems="10"
                     android:singleLine="false"
                     android:textSize="30sp"
                     android:orientation="horizontal"
@@ -307,7 +314,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/BTN_SEND"
-            android:textSize="50sp" />
+            android:textSize="50sp"
+            tools:ignore="InefficientWeight,VisualLintButtonSize" />
 
     </LinearLayout>
 

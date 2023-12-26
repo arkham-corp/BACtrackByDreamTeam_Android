@@ -1,5 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,16 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 public class ResultActivity extends Activity {
 
@@ -188,7 +185,7 @@ public class ResultActivity extends Activity {
     /**
      * HTTPコネクションエラー
      */
-    private void errorHttp(final String response) {
+    private void errorHttp() {
         runOnUiThread(() -> {
             errorCount += 1;
 
@@ -227,7 +224,7 @@ public class ResultActivity extends Activity {
         String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
         String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
         // 非同期タスクを定義
-        HttpPostTask task = new HttpPostTask(this,
+        @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(this,
                 strHttpUrl + getString(R.string.HTTP_WRITE_ALCOHOL_VALUE),
 
                 // タスク完了時に呼ばれるUIのハンドラ
@@ -251,7 +248,7 @@ public class ResultActivity extends Activity {
 
                     @Override
                     public void onPostFailed(String response) {
-                        errorHttp(response);
+                        errorHttp();
                     }
                 });
 
@@ -332,10 +329,9 @@ public class ResultActivity extends Activity {
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
         alcoholResult.setInspection_time(pref.getString(getString(R.string.PREF_KEY_INSPECTION_TIME), ""));
 
-        String inspectionTime ="";
         String inspectionYmd ="";
         String inspectionHm ="";
-        inspectionTime = alcoholResult.getInspection_time();
+        String inspectionTime = alcoholResult.getInspection_time();
         if(inspectionTime.length()>= 17) {
             inspectionYmd = inspectionTime.substring(0, 4) + inspectionTime.substring(5, 7) + inspectionTime.substring(8, 10);
             inspectionHm = inspectionTime.substring(11, 13) + inspectionTime.substring(14, 16);

@@ -1,7 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,30 +23,20 @@ public class AlarmNotification extends BroadcastReceiver {
     @Override   // データを受信した
     public void onReceive(Context context, Intent intent) {
 
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            // Set the alarm here.
-        }
-
         int requestCode = intent.getIntExtra("RequestCode", 0);
 
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(context, requestCode, intent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         String channelId = "default";
-        // app name
         String title = context.getString(R.string.app_name);
 
         long currentTime = System.currentTimeMillis();
-        SimpleDateFormat dataFormat =
-                new SimpleDateFormat("HH:mm:ss", Locale.JAPAN);
+        SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss", Locale.JAPAN);
         String cTime = dataFormat.format(currentTime);
-
-        // メッセージ　+ 11:22:331
         String message = "時間になりました。 " + cTime;
 
-
         // Notification　Channel 設定
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, title, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(message);
@@ -64,7 +53,6 @@ public class AlarmNotification extends BroadcastReceiver {
                         .setAutoCancel(true);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-
         // 通知
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

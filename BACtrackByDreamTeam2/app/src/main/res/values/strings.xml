@@ -43,9 +43,9 @@
     <string name="PREF_KEY_FINISH">PREF_KEY_FINISH</string>
     <string name="PREF_KEY_HTTP_URL">PREF_KEY_HTTP_URL</string>
     <string name="PREF_KEY_VERIFY_HOSTNAME">PREF_KEY_VERIFY_HOSTNAME</string>
-    <string name="PREF_KEY_MENU＿DRIVING_REPORT_ENABLED">PREF_KEY_MENU＿ROLL_CALL_ENABLED</string>
-    <string name="PREF_KEY_MENU＿SEND_LIST_ENABLED">PREF_KEY_MENU＿SEND_LIST_ENABLED</string>
-    <string name="PREF_KEY_MENU＿REMINDER_ENABLED">PREF_KEY_MENU＿REMINDER_ENABLED</string>
+    <string name="PREF_KEY_MENU_DRIVING_REPORT_ENABLED">PREF_KEY_MENU＿ROLL_CALL_ENABLED</string>
+    <string name="PREF_KEY_MENU_SEND_LIST_ENABLED">PREF_KEY_MENU＿SEND_LIST_ENABLED</string>
+    <string name="PREF_KEY_MENU_REMINDER_ENABLED">PREF_KEY_MENU＿REMINDER_ENABLED</string>
     <string name="PREF_KEY_AGREEMENT">PREF_KEY_AGREEMENT</string>
     <string name="PREF_KEY_FIRST_CONNECTION">PREF_KEY_FIRST_CONNECTION</string>
     <string name="PREF_KEY_COMPANY">PREF_KEY_COMPANY</string>
@@ -188,9 +188,11 @@
     <string name="TEXT_SEND_FLG_2">送信済</string>
     <string name="TEXT_TRANS_ERROR">該当する送信データが見つかりませんでした</string>
     <string name="TEXT_SENDING_ERROR">送信エラー</string>
+    <string name="TEXT_QUESTION_CONTINUE">インターネットに接続出来ません\n測定を続けますか？</string>
     <string name="TEXT_REMAINDER_TITLE">設定日時</string>
     <string name="TEXT_REMAINDER_FINISH">リマインダーが設定されました</string>
 
+    <string name="TEXT_ERROR_COMPANY_CODE">会社を入力してください</string>
     <string name="TEXT_ERROR_DRIVER_CODE">運転者を入力してください</string>
     <string name="TEXT_ERROR_DRIVER_CODE_MAX_LENGTH">運転者が最大桁数を超えています</string>
     <string name="TEXT_ERROR_CAR_NUMBER">車番を入力してください</string>

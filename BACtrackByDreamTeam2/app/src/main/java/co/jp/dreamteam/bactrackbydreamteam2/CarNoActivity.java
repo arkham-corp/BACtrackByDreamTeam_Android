@@ -1,5 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -69,26 +70,16 @@ public class CarNoActivity extends Activity {
     /**
      * HTTPコネクションエラー
      */
-    private void errorHttp(final String response) {
+    private void errorHttp() {
         runOnUiThread(() -> {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(CarNoActivity.this);
-
-            // ダイアログの設定
-            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-            if (response.startsWith("Hostname al-check.com not verified")) {
-                alertDialog.setMessage("Https通信のHostnameが不正です");
-            } else {
-                alertDialog.setMessage(response);
-            }
-
-            // OK(肯定的な)ボタンの設定
+            alertDialog.setMessage("インターネット接続時にエラーが発生しました。\nこのまま続けて測定は可能です");
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
                 editor = pref.edit();
                 editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
                 editor.commit();
                 car_no_btnDecision.setEnabled(true);
             });
-
             alertDialog.show();
         });
     }
@@ -105,7 +96,7 @@ public class CarNoActivity extends Activity {
             String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");
             String strVerifyHostname = pref.getString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
             // 非同期タスクを定義
-            HttpPostTask task = new HttpPostTask(
+            @SuppressLint("HandlerLeak") HttpPostTask task = new HttpPostTask(
                     this,
                     strHttpUrl + getString(R.string.HTTP_CAR_NO_CHECK),
 
@@ -131,7 +122,7 @@ public class CarNoActivity extends Activity {
 
                         @Override
                         public void onPostFailed(String response) {
-                            errorHttp(response);
+                            errorHttp();
                         }
                     }
             );
@@ -146,14 +137,20 @@ public class CarNoActivity extends Activity {
             task.execute();
 
         } else {
+            if(editTextCarNo.getText().toString().equals(""))
+            {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(CarNoActivity.this);
+                alertDialog.setMessage(getString(R.string.TEXT_ERROR_CAR_NUMBER));
+                alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> car_no_btnDecision.setEnabled(false));
+                alertDialog.show();
+            } else {
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_CAR_NO), editTextCarNo.getText().toString());
+                editor.commit();
 
-            editor = pref.edit();
-            editor.putString(getString(R.string.PREF_KEY_CAR_NO), editTextCarNo.getText().toString());
-            editor.commit();
-
-            Intent intent = new Intent(getApplication(), InspectionActivity.class);
-            startActivity(intent);
-
+                Intent intent = new Intent(getApplication(), InspectionActivity.class);
+                startActivity(intent);
+            }
         }
     }
 }

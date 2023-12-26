@@ -1,16 +1,20 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
@@ -70,6 +74,38 @@ public class MainActivity extends Activity {
             // 表示
             builder.create().show();
         }
+
+
+        //インターネット接毒出来ない場合の測定継続判断
+        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        editor = pref.edit();
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+        android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(MainActivity.this);
+        if (capabilities != null) {
+            //インターネットに接続あり
+
+            editor.putString(getString(R.string.PREF_KEY_STATUS), "0");
+            main_btnDecision.setEnabled(true);
+
+        } else {
+            //インターネットに接続なし
+
+            editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
+
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_SESSION_ERROR));
+            alertDialog.setMessage(getString(R.string.TEXT_QUESTION_CONTINUE));
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_YES), (dialog, which) -> {
+                main_btnDecision.setEnabled(true);
+            });
+            alertDialog.setNegativeButton(getString(R.string.ALERT_BTN_NO), (dialog, which) -> {
+                main_btnDecision.setEnabled(false);
+            });
+        }
+        editor.commit();
+        alertDialog.show();
+
     }
 
     public void UpdateCheck() {
@@ -130,4 +166,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
     }
+
+
 }

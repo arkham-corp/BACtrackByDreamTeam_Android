@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:autofillHints=""
-                        android:inputType="textEmailAddress"
+                        android:inputType="text"
                         android:labelFor="@+id/driving_report_detail_edit_lblDestination"
                         android:singleLine="true"
                         android:textSize="30sp"

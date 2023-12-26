@@ -35,7 +35,7 @@ public class CompanyActivity extends Activity {
         editor = pref.edit();
         editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
         editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-        editor.putString(getString(R.string.PREF_KEY_STATUS), "0");
+        //editor.putString(getString(R.string.PREF_KEY_STATUS), "0");
         editor.commit();
 
         this.editTextCompany = this.findViewById(R.id.company_editTextCompany);
@@ -80,26 +80,17 @@ public class CompanyActivity extends Activity {
     /**
      * HTTPコネクションエラー
      */
-    private void errorHttp(final String response) {
+    private void errorHttp() {
         runOnUiThread(() -> {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(CompanyActivity.this);
-
-            // ダイアログの設定
             alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
-            if (response.startsWith("Hostname al-check.com not verified")) {
-                alertDialog.setMessage("Https通信のHostnameが不正です");
-            } else {
-                alertDialog.setMessage(response);
-            }
-
-            // OK(肯定的な)ボタンの設定
+            alertDialog.setMessage("インターネット接続時にエラーが発生しました。\nこのまま続けて測定は可能です");
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
                 editor = pref.edit();
                 editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
                 editor.commit();
                 company_btnDecision.setEnabled(true);
             });
-
             alertDialog.show();
         });
     }
@@ -113,8 +104,8 @@ public class CompanyActivity extends Activity {
         if (status.equals("0")) {
 
             String test_flg = getString(R.string.TEST_FLG);
-            String host_name = "";
-            String http_url = "";
+            String host_name;
+            String http_url;
 
             if (test_flg.equals("1")) {
                 host_name = getString(R.string.HTTP_TEST_HOST_NAME1);
@@ -157,13 +148,13 @@ public class CompanyActivity extends Activity {
                                     errorCompanyNotFound();
                                 }
                             } catch (JSONException | MalformedURLException e) {
-                                errorHttp(response);
+                                errorHttp();
                             }
                         }
 
                         @Override
                         public void onPostFailed(String response) {
-                            errorHttp(response);
+                            errorHttp();
                         }
                     }
             );
@@ -176,21 +167,28 @@ public class CompanyActivity extends Activity {
             task.execute();
 
         } else {
+            if(editTextCompany.getText().toString().equals(""))
+            {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(CompanyActivity.this);
+                alertDialog.setMessage(getString(R.string.TEXT_ERROR_COMPANY_CODE));
+                alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> company_btnDecision.setEnabled(false));
+                alertDialog.show();
+            } else {
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
+                editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
+                editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "1");//0:血中1:呼気2:両方
+                editor.putString(getString(R.string.PREF_KEY_COMPANY), editTextCompany.getText().toString());
+                editor.putString(getString(R.string.PREF_KEY_MENU_DRIVING_REPORT_ENABLED), "0");
+                editor.putString(getString(R.string.PREF_KEY_MENU_SEND_LIST_ENABLED), "0");
+                editor.putString(getString(R.string.PREF_KEY_MENU_REMINDER_ENABLED), "0");
+                editor.commit();
 
-            editor = pref.edit();
-            editor.putString(getString(R.string.PREF_KEY_HTTP_URL), "");
-            editor.putString(getString(R.string.PREF_KEY_VERIFY_HOSTNAME), "");
-            editor.putString(getString(R.string.PREF_KEY_ALCOHOL_VALUE_DIV), "1");//0:血中1:呼気2:両方
-            editor.putString(getString(R.string.PREF_KEY_COMPANY), editTextCompany.getText().toString());
-            editor.putString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), "0");
-            editor.putString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), "0");
-            editor.putString(getString(R.string.PREF_KEY_MENU＿REMINDER_ENABLED), "0");
-            editor.commit();
-
-            // GPS画面移動
-            Intent intent = new Intent(getApplication(), GPSActivity.class);
-            startActivity(intent);
-        }
+                // GPS画面移動
+                Intent intent = new Intent(getApplication(), GPSActivity.class);
+                startActivity(intent);
+            }
+}
     }
 
     private void exec_post2() {
@@ -223,7 +221,7 @@ public class CompanyActivity extends Activity {
 
                     @Override
                     public void onPostFailed(String response) {
-                        errorHttp(response);
+                        errorHttp();
                     }
                 }
         );
@@ -239,8 +237,8 @@ public class CompanyActivity extends Activity {
     private void exec_post3() {
 
         String test_flg = getString(R.string.TEST_FLG);
-        String host_name = "";
-        String http_url = "";
+        String host_name;
+        String http_url;
 
         if (test_flg.equals("1")) {
             host_name = getString(R.string.HTTP_TEST_HOST_NAME1);
@@ -283,35 +281,36 @@ public class CompanyActivity extends Activity {
                                 }
 
                                 editor = pref.edit();
-                                editor.putString(getString(R.string.PREF_KEY_MENU＿DRIVING_REPORT_ENABLED), app_driving_report_enabled);
-                                editor.putString(getString(R.string.PREF_KEY_MENU＿SEND_LIST_ENABLED), app_send_list_enabled);
-                                editor.putString(getString(R.string.PREF_KEY_MENU＿REMINDER_ENABLED), app_reminder_enabled);
+                                editor.putString(getString(R.string.PREF_KEY_MENU_DRIVING_REPORT_ENABLED), app_driving_report_enabled);
+                                editor.putString(getString(R.string.PREF_KEY_MENU_SEND_LIST_ENABLED), app_send_list_enabled);
+                                editor.putString(getString(R.string.PREF_KEY_MENU_REMINDER_ENABLED), app_reminder_enabled);
                                 editor.commit();
 
+                                Intent intent;
                                 if (app_driving_report_enabled.equals("1") ||
                                         app_send_list_enabled.equals("1") ||
                                         app_reminder_enabled.equals("1")
-                                ) {
+                                )
+                                {
                                     // メニュー画面移動
-                                    Intent intent = new Intent(getApplication(), MenuActivity.class);
-                                    startActivity(intent);
+                                    intent = new Intent(getApplication(), MenuActivity.class);
                                 } else {
                                     // GPS画面移動
-                                    Intent intent = new Intent(getApplication(), GPSActivity.class);
-                                    startActivity(intent);
+                                    intent = new Intent(getApplication(), GPSActivity.class);
                                 }
+                                startActivity(intent);
 
                             } else {
                                 errorCompanyNotFound();
                             }
                         } catch (JSONException e) {
-                            errorHttp(response);
+                            errorHttp();
                         }
                     }
 
                     @Override
                     public void onPostFailed(String response) {
-                        errorHttp(response);
+                        errorHttp();
                     }
                 }
         );

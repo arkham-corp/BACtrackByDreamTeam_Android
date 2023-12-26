@@ -1,8 +1,6 @@
 package co.jp.dreamteam.bactrackbydreamteam2;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,9 +9,6 @@ import android.widget.Button;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,8 +20,6 @@ import io.realm.Sort;
 
 public class DrivingReportActivity extends Activity {
 
-    private SharedPreferences pref;
-
     private Realm realm;
     RecyclerView driving_report_recyclerView;
     Button driving_report_btnAdd;
@@ -36,7 +29,7 @@ public class DrivingReportActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving_report);
 
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
 
         driving_report_recyclerView = this.findViewById(R.id.driving_report_recyclerView);
         driving_report_btnAdd = this.findViewById(R.id.driving_report_btnAdd);
@@ -101,10 +94,5 @@ public class DrivingReportActivity extends Activity {
         realm.close();
     }
 
-    private RealmResults<RealmLocalDataDrivingReport> readAll() {
-        return realm.where(RealmLocalDataDrivingReport.class).findAll()
-                .sort("driving_start_ymd", Sort.DESCENDING)
-                .sort("driving_end_ymd", Sort.DESCENDING);
-    }
 
 }

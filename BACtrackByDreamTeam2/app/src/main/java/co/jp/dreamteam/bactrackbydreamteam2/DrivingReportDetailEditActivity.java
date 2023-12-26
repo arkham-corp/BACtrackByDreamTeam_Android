@@ -18,15 +18,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.realm.Realm;
 
 public class DrivingReportDetailEditActivity extends FragmentActivity {
-
-    private SharedPreferences pref;
 
     public static final String EXTRA_MESSAGE = "co.jp.dreamteam.bactrackbydreamteam2.MESSAGE";
     private Realm realm;
@@ -202,20 +200,16 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         resultLauncher.launch(intent);
     };
 
-    View.OnClickListener txtDrivingStartHmClicked = v -> showTimePickerDialogStartHm(driving_report_detail_edit_txtDrivingStartHm,
+    View.OnClickListener txtDrivingStartHmClicked = v -> showTimePickerDialogStartHm(
             "DrivingStartHm", String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText()));
-    View.OnClickListener txtDrivingEndHmClicked = v -> showTimePickerDialogEndHm(driving_report_detail_edit_txtDrivingEndHm,
+    View.OnClickListener txtDrivingEndHmClicked = v -> showTimePickerDialogEndHm(
             "DrivingEndHm", String.valueOf(driving_report_detail_edit_txtDrivingEndHm.getText()));
 
-    View.OnClickListener btnDrivingStartHmClearClicked = v -> {
-        driving_report_detail_edit_txtDrivingStartHm.setText("");
-    };
+    View.OnClickListener btnDrivingStartHmClearClicked = v -> driving_report_detail_edit_txtDrivingStartHm.setText("");
 
-    View.OnClickListener btnDrivingEndHmClearClicked = v -> {
-        driving_report_detail_edit_txtDrivingEndHm.setText("");
-    };
+    View.OnClickListener btnDrivingEndHmClearClicked = v -> driving_report_detail_edit_txtDrivingEndHm.setText("");
 
-    public void showTimePickerDialogStartHm(View v, String tag, String defaultValue) {
+    public void showTimePickerDialogStartHm(String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
 //23231211
             String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
@@ -229,7 +223,7 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         newFragment.show(getSupportFragmentManager(), tag);
     }
 
-    public void showTimePickerDialogEndHm(View v, String tag, String defaultValue) {
+    public void showTimePickerDialogEndHm(String tag, String defaultValue) {
         TimePickerDialog.OnTimeSetListener listener = (view, hourOfDay, minute) -> {
 //20231211
             String hm = String.format(Locale.JAPAN, "%02d", hourOfDay) + ":" + String.format(Locale.JAPAN, "%02d", minute);
@@ -307,13 +301,8 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             return 0;
         }
         // 文字列をUTF-8でエンコードしてバイト数を取得
-        try {
-            byte[] utf8Bytes = str.getBytes("UTF-8");
-            return utf8Bytes.length;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        byte[] utf8Bytes = str.getBytes(StandardCharsets.UTF_8);
+        return utf8Bytes.length;
     }
 
     private boolean isValidTime(String inputTime) {
@@ -416,22 +405,6 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
         }
 
 //20231211
-/*
-        if (errorMessage.equals(""))
-        {
-            String st = String.valueOf(driving_report_detail_edit_txtDrivingStartHm.getText());
-            String ed = String.valueOf(driving_report_detail_edit_txtDrivingEndHm.getText());
-            if(!st.equals("") && !ed.equals("")) {
-                st = st.replace(" ","0");
-                st = st.replace(":","");
-                ed = ed.replace(" ","0");
-                ed = ed.replace(":","");
-                if (Integer.parseInt(ed) < Integer.parseInt(st)) {
-                    errorMessage = getString(R.string.TEXT_ERROR_HM_INVALID);
-                }
-            }
-        }
-*/
         if (errorMessage.equals(""))
         {
             String st = String.valueOf(driving_report_detail_edit_txtDrivingStartKm.getText());
@@ -531,7 +504,7 @@ public class DrivingReportDetailEditActivity extends FragmentActivity {
             RealmLocalDataDrivingReportDestination drivingReportDestination = realm.createObject(RealmLocalDataDrivingReportDestination.class, id);
             drivingReportDestination.setDestination(String.valueOf(driving_report_detail_edit_txtDestination.getText()));
 //20231211
-            pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+            SharedPreferences pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
             drivingReportDestination.setCompany_code(pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
 //23231211
             realm.insert(drivingReportDestination);
