@@ -72,8 +72,14 @@ public class DriverActivity extends Activity {
     private void errorHttp() {
         runOnUiThread(() -> {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(DriverActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_ERROR));
             alertDialog.setMessage("インターネット接続時にエラーが発生しました。\nこのまま続けて測定は可能です");
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> driver_btnDecision.setEnabled(true));
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "2");
+                editor.commit();
+                driver_btnDecision.setEnabled(true);
+            });
             alertDialog.show();
         });
     }
@@ -84,7 +90,7 @@ public class DriverActivity extends Activity {
 
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
         String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
-        if (status.equals("0")) {
+        if (status.equals("1")) {
 
             // 接続先
             String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");

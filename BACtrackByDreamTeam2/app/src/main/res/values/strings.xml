@@ -67,6 +67,7 @@
     <string name="PREF_KEY_FREE_TITLE2">PREF_KEY_FREE_TITLE2</string>
     <string name="PREF_KEY_FREE_TITLE3">PREF_KEY_FREE_TITLE3</string>
     <string name="PREF_KEY_STATUS">PREF_KEY_STATUS</string>
+    <string name="PREF_KEY_CONNECTION">PREF_KEY_CONNECTION</string>
     <string name="ALERT_TITLE_INFO">情報</string>
     <string name="ALERT_TITLE_QUESTION">質問</string>
     <string name="ALERT_TITLE_WARNING">警告</string>

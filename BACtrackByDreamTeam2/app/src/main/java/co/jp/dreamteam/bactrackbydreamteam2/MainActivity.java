@@ -75,37 +75,6 @@ public class MainActivity extends Activity {
             builder.create().show();
         }
 
-
-        //インターネット接毒出来ない場合の測定継続判断
-        pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-        editor = pref.edit();
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
-        if (capabilities != null) {
-            //インターネットに接続あり
-
-            editor.putString(getString(R.string.PREF_KEY_STATUS), "0");
-            main_btnDecision.setEnabled(true);
-
-        } else {
-            //インターネットに接続なし
-
-            editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
-
-            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(MainActivity.this);
-            alertDialog.setTitle(getString(R.string.ALERT_TITLE_SESSION_ERROR));
-            alertDialog.setMessage(getString(R.string.TEXT_QUESTION_CONTINUE));
-            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_YES), (dialog, which) -> {
-                main_btnDecision.setEnabled(true);
-            });
-            alertDialog.setNegativeButton(getString(R.string.ALERT_BTN_NO), (dialog, which) -> {
-                main_btnDecision.setEnabled(false);
-            });
-            alertDialog.show();
-        }
-        editor.commit();
-
     }
 
     public void UpdateCheck() {

@@ -76,7 +76,7 @@ public class CarNoActivity extends Activity {
             alertDialog.setMessage("インターネット接続時にエラーが発生しました。\nこのまま続けて測定は可能です");
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
                 editor = pref.edit();
-                editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "2");
                 editor.commit();
                 car_no_btnDecision.setEnabled(true);
             });
@@ -90,7 +90,7 @@ public class CarNoActivity extends Activity {
 
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
         String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
-        if (status.equals("0")) {
+        if (status.equals("1")) {
 
             // 接続先
             String strHttpUrl = pref.getString(getString(R.string.PREF_KEY_HTTP_URL), "");

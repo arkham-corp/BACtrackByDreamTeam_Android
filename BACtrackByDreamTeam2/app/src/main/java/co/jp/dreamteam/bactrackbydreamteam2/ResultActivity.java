@@ -101,13 +101,21 @@ public class ResultActivity extends Activity {
 
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
         String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
-        if (status.equals("0")) {
+        if (status.equals("1")) {
             // 自動送信
             exec_post();
         } else {
             btnFinish.setVisibility(View.VISIBLE);
         }
         SaveData();
+
+        if (status.equals("2")) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(ResultActivity.this);
+            alertDialog.setMessage("測定データは送信されていません");
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
+            });
+            alertDialog.show();
+        }
 
     }
 

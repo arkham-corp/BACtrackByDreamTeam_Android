@@ -723,6 +723,8 @@ public class InspectionActivity extends Activity {
 
         @Override
         public void BACtrackStart() {
+            setProgressValue(0);
+            progressBar.setVisibility(View.GONE);
             setStatus(R.string.TEXT_BLOW_NOW);
         }
 
@@ -731,7 +733,8 @@ public class InspectionActivity extends Activity {
             SavePhoto();
 //20231211
 //            setStatus(R.string.TEXT_KEEP_BLOWING);
-            progressBar.setVisibility(View.INVISIBLE);
+            setProgressValue(0);
+            progressBar.setVisibility(View.GONE);
 
             float i = ((v - 1)  * -1);
             if(i>1) i=1;
@@ -742,8 +745,10 @@ public class InspectionActivity extends Activity {
             }
             setProgressValue(progress_max - i);
  */
-            String str = String.format(Locale.JAPAN,"%s %d％", R.string.TEXT_KEEP_BLOWING ,(int)i*10 );
-            statusMessageTextView.setText(str);
+            float progrss = (float) (i*100.0);
+            int j = (int)progrss;
+            String str = String.format(Locale.JAPAN,"%s　%d ％" ,getString(R.string.TEXT_KEEP_BLOWING),j );
+            setStatus(str);
 
 //20231211
         }

@@ -3,8 +3,11 @@ package co.jp.dreamteam.bactrackbydreamteam2;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,10 +45,43 @@ public class CompanyActivity extends Activity {
 
         company_btnDecision = this.findViewById(R.id.company_btnDecision);
         company_btnDecision.setOnClickListener(btnDecisionClicked);
+        company_btnDecision.setEnabled(false);
 
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
-
         editTextCompany.setText(pref.getString(getString(R.string.PREF_KEY_COMPANY), ""));
+
+
+        //インターネット接毒出来ない場合の測定継続判断
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+        if (capabilities != null) {
+            //インターネットに接続あり
+            editor = pref.edit();
+            editor.putString(getString(R.string.PREF_KEY_STATUS), "1");//0接続なし1接続する2接続なしで続ける
+            editor.commit();
+            company_btnDecision.setEnabled(true);
+        } else {
+            //インターネットに接続なし
+            editor = pref.edit();
+            editor.putString(getString(R.string.PREF_KEY_STATUS), "0");
+            editor.commit();
+
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(CompanyActivity.this);
+            alertDialog.setTitle(getString(R.string.ALERT_TITLE_SESSION_ERROR));
+            alertDialog.setMessage(getString(R.string.TEXT_QUESTION_CONTINUE));
+            alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_YES), (dialog, which) -> {
+                company_btnDecision.setEnabled(true);
+                pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
+                editor = pref.edit();
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "2");
+                editor.commit();
+            });
+            alertDialog.setNegativeButton(getString(R.string.ALERT_BTN_NO), (dialog, which) -> {
+                company_btnDecision.setEnabled(false);
+            });
+            alertDialog.show();
+        }
+
     }
 
     OnClickListener btnDecisionClicked = v -> exec_post();
@@ -53,7 +89,6 @@ public class CompanyActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        company_btnDecision.setEnabled(true);
     }
 
     /**
@@ -87,7 +122,7 @@ public class CompanyActivity extends Activity {
             alertDialog.setMessage("インターネット接続時にエラーが発生しました。\nこのまま続けて測定は可能です");
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_OK), (dialog, which) -> {
                 editor = pref.edit();
-                editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
+                editor.putString(getString(R.string.PREF_KEY_STATUS), "2");
                 editor.commit();
                 company_btnDecision.setEnabled(true);
             });
@@ -101,7 +136,7 @@ public class CompanyActivity extends Activity {
 
         pref = getSharedPreferences(getString(R.string.PREF_GLOBAL), Activity.MODE_PRIVATE);
         String status = pref.getString(getString(R.string.PREF_KEY_STATUS), "0");
-        if (status.equals("0")) {
+        if (status.equals("1")) {
 
             String test_flg = getString(R.string.TEST_FLG);
             String host_name;
