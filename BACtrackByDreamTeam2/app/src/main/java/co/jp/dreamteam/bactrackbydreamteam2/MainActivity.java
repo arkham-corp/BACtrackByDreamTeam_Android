@@ -82,7 +82,6 @@ public class MainActivity extends Activity {
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
-        android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(MainActivity.this);
         if (capabilities != null) {
             //インターネットに接続あり
 
@@ -94,6 +93,7 @@ public class MainActivity extends Activity {
 
             editor.putString(getString(R.string.PREF_KEY_STATUS), "1");
 
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(MainActivity.this);
             alertDialog.setTitle(getString(R.string.ALERT_TITLE_SESSION_ERROR));
             alertDialog.setMessage(getString(R.string.TEXT_QUESTION_CONTINUE));
             alertDialog.setPositiveButton(getString(R.string.ALERT_BTN_YES), (dialog, which) -> {
@@ -102,9 +102,9 @@ public class MainActivity extends Activity {
             alertDialog.setNegativeButton(getString(R.string.ALERT_BTN_NO), (dialog, which) -> {
                 main_btnDecision.setEnabled(false);
             });
+            alertDialog.show();
         }
         editor.commit();
-        alertDialog.show();
 
     }
 

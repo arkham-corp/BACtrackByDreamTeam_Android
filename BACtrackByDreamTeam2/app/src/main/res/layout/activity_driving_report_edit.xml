@@ -147,10 +147,34 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/driving_report_edit_lblDrivingEndYmd"
+                    android:id="@+id/driving_report_edit_lblDrivingStartKm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/driving_report_edit_linerDrivingStartHm"
+                    android:text="@string/TEXT_DRIVING_START_KM"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/label_size_middle" />
+
+                <EditText
+                    android:id="@+id/driving_report_edit_txtDrivingStartKm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_lblDrivingStartKm"
+                    android:autofillHints=""
+                    android:digits="0123456789"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:labelFor="@+id/driving_report_edit_lblDrivingStartKm"
+                    android:maxLength="9"
+                    android:singleLine="true"
+                    android:textSize="30sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/driving_report_edit_lblDrivingEndYmd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/driving_report_edit_txtDrivingStartKm"
                     android:text="@string/TEXT_DRIVING_END_YMD"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textSize="@dimen/label_size_middle" />
@@ -225,34 +249,10 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/driving_report_edit_lblDrivingStartKm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/driving_report_edit_linerDrivingEndHm"
-                    android:text="@string/TEXT_DRIVING_START_KM"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="@dimen/label_size_middle" />
-
-                <EditText
-                    android:id="@+id/driving_report_edit_txtDrivingStartKm"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/driving_report_edit_lblDrivingStartKm"
-                    android:autofillHints=""
-                    android:digits="0123456789"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:labelFor="@+id/driving_report_edit_lblDrivingStartKm"
-                    android:maxLength="9"
-                    android:singleLine="true"
-                    android:textSize="30sp"
-                    tools:ignore="SpeakableTextPresentCheck" />
-
-                <TextView
                     android:id="@+id/driving_report_edit_lblDrivingEndKm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/driving_report_edit_txtDrivingStartKm"
+                    android:layout_below="@id/driving_report_edit_linerDrivingEndHm"
                     android:text="@string/TEXT_DRIVING_END_KM"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textSize="@dimen/label_size_middle" />

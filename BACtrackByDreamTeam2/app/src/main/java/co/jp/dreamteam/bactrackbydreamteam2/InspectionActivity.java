@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ import androidx.core.app.ActivityCompat;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -727,14 +729,22 @@ public class InspectionActivity extends Activity {
         @Override
         public void BACtrackBlow(float v) {
             SavePhoto();
-            setStatus(R.string.TEXT_KEEP_BLOWING);
 //20231211
-            int i = (int)(v * 10);
+//            setStatus(R.string.TEXT_KEEP_BLOWING);
+            progressBar.setVisibility(View.INVISIBLE);
+
+            float i = ((v - 1)  * -1);
+            if(i>1) i=1;
+/*
             if (progress_max == -1) {
                 progress_max = i;
                 progressBar.setMax(progress_max - 1);
             }
             setProgressValue(progress_max - i);
+ */
+            String str = String.format(Locale.JAPAN,"%s %d％", R.string.TEXT_KEEP_BLOWING ,(int)i*10 );
+            statusMessageTextView.setText(str);
+
 //20231211
         }
 
